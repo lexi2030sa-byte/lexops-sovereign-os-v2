@@ -1,0 +1,63 @@
+{
+  "article_number": "57",
+  "article_title": "انتهاء عقد العمل",
+  "content": "ينتهي عقد العمل في الأحوال التالية",
+  "compliance_rules": [
+    {
+      "rule_id": "R131-1",
+      "rule_type": "إلزامي",
+      "description": "إذا اتفق الطرفان على إنهائه بشرط موافقة العامل كتابية",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R131-2",
+      "rule_type": "إلزامي",
+      "description": "إذا انتهت المدة المحددة في العقد",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R131-3",
+      "rule_type": "إلزامي",
+      "description": "بناءً على إرادة أحد الطرفين في العقود غير محددة المدة",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R131-4",
+      "rule_type": "إلزامي",
+      "description": "الاستقالة وفق التفصيل الوارد في المادة 75 مكرر",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R131-5",
+      "rule_type": "إلزامي",
+      "description": "بلوغ العامل سن التقاعد وفق نظام التأمينات الاجتماعية",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R131-6",
+      "rule_type": "إلزامي",
+      "description": "القوة القاهرة",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R131-7",
+      "rule_type": "إلزامي",
+      "description": "إغلاق المنشأة نهائياً",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R131-8",
+      "rule_type": "إلزامي",
+      "description": "إنهاء النشاط الذي يعمل فيه العامل",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    }
+  ]
+}

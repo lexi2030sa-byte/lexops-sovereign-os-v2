@@ -1,0 +1,507 @@
+{
+  "section_number": "3",
+  "section_title": "جداول المخالفات والجزاءات",
+  "tables": [
+    {
+      "table_number": "1",
+      "table_title": "المخالفات المتعلقة بمواعيد العمل",
+      "rows": [
+        {
+          "violation_id": "V1",
+          "violation_description": "التأخر عن مواعيد الحضور للعمل بحد أقصى 15 دقيقة دون إذن أو عذر مقبول - إذا لم يترتب عليه تعطيل عمال آخرين",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "5%",
+            "third_time": "10%",
+            "fourth_time": "20%"
+          }
+        },
+        {
+          "violation_id": "V2",
+          "violation_description": "التأخر عن مواعيد الحضور للعمل بحد أقصى 15 دقيقة دون إذن أو عذر مقبول - إذا ترتب عليه تعطيل عمال آخرين",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "15%",
+            "third_time": "25%",
+            "fourth_time": "50%"
+          }
+        },
+        {
+          "violation_id": "V3",
+          "violation_description": "التأخر عن مواعيد الحضور للعمل أكثر من 15 دقيقة وحتى 30 دقيقة دون إذن أو عذر مقبول - إذا لم يترتب عليه تعطيل عمال آخرين",
+          "penalties": {
+            "first_time": "50%",
+            "second_time": "25%",
+            "third_time": "15%",
+            "fourth_time": "10%"
+          }
+        },
+        {
+          "violation_id": "V4",
+          "violation_description": "التأخر عن مواعيد الحضور للعمل أكثر من 15 دقيقة وحتى 30 دقيقة دون إذن أو عذر مقبول - إذا ترتب عليه تعطيل عمال آخرين",
+          "penalties": {
+            "first_time": "25%",
+            "second_time": "50%",
+            "third_time": "75%",
+            "fourth_time": "يوم"
+          }
+        },
+        {
+          "violation_id": "V5",
+          "violation_description": "التأخر عن مواعيد الحضور للعمل أكثر من 30 دقيقة وحتى 60 دقيقة دون إذن أو عذر مقبول - إذا لم يترتب عليه تعطيل عمال آخرين",
+          "penalties": {
+            "first_time": "25%",
+            "second_time": "50%",
+            "third_time": "75%",
+            "fourth_time": "يوم"
+          }
+        },
+        {
+          "violation_id": "V6",
+          "violation_description": "التأخر عن مواعيد الحضور للعمل أكثر من 30 دقيقة وحتى 60 دقيقة دون إذن أو عذر مقبول - إذا ترتب عليه تعطيل عمال آخرين",
+          "penalties": {
+            "first_time": "30%",
+            "second_time": "50%",
+            "third_time": "يوم",
+            "fourth_time": "يومين"
+          }
+        },
+        {
+          "violation_id": "V7",
+          "violation_description": "التأخر عن مواعيد الحضور للعمل لمدة تزيد على ساعة دون إذن أو عذر مقبول - سواء ترتب عليه تعطيل عمال آخرين أم لا",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "يوم",
+            "third_time": "يومين",
+            "fourth_time": "ثلاثة أيام"
+          }
+        },
+        {
+          "violation_id": "V8",
+          "violation_description": "ترك العمل أو الانصراف قبل الموعد دون إذن أو عذر مقبول بما لا يتجاوز 15 دقيقة",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "10%",
+            "third_time": "25%",
+            "fourth_time": "يوم"
+          }
+        },
+        {
+          "violation_id": "V9",
+          "violation_description": "ترك العمل أو الانصراف قبل الموعد دون إذن أو عذر مقبول بما يتجاوز 15 دقيقة",
+          "penalties": {
+            "first_time": "10%",
+            "second_time": "25%",
+            "third_time": "50%",
+            "fourth_time": "يوم"
+          }
+        },
+        {
+          "violation_id": "V10",
+          "violation_description": "البقاء في أماكن العمل بعد انتهاء مواعيد العمل دون إذن سابق",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "10%",
+            "third_time": "25%",
+            "fourth_time": "يوم"
+          }
+        },
+        {
+          "violation_id": "V11",
+          "violation_description": "الغياب دون إذن كتابي أو عذر مقبول لمدة يوم خلال السنة العقدية الواحدة",
+          "penalties": {
+            "first_time": "50%",
+            "second_time": "يوم",
+            "third_time": "ثلاثة أيام",
+            "fourth_time": "خمسة أيام"
+          }
+        },
+        {
+          "violation_id": "V12",
+          "violation_description": "الغياب المتصل دون إذن كتابي أو عذر مقبول من يومين إلى ستة أيام خلال السنة العقدية الواحدة",
+          "penalties": {
+            "first_time": "يومين",
+            "second_time": "ثلاثة أيام",
+            "third_time": "أربعة أيام",
+            "fourth_time": "الحرمان من العلاوة أو تأجيل الترقية مرة واحدة"
+          }
+        },
+        {
+          "violation_id": "V13",
+          "violation_description": "الغياب المتصل دون إذن كتابي أو عذر مقبول من سبعة أيام إلى عشرة أيام خلال السنة العقدية الواحدة",
+          "penalties": {
+            "first_time": "ثلاثة أيام",
+            "second_time": "أربعة أيام",
+            "third_time": "خمسة أيام",
+            "fourth_time": "الحرمان من العلاوة أو تأجيل الترقية مرة واحدة مع الفصل من العمل إذا لم يتجاوز مجموع الغياب 30 يوماً"
+          }
+        },
+        {
+          "violation_id": "V14",
+          "violation_description": "الغياب المتصل دون إذن كتابي أو عذر مقبول من عشرة أيام إلى أربعة عشر يوماً خلال السنة العقدية الواحدة",
+          "penalties": {
+            "first_time": "خمسة أيام",
+            "second_time": "الحرمان من العلاوة أو تأجيل الترقية مرة واحدة مع الإنذار بالفصل وفق المادة 80 من نظام العمل",
+            "third_time": "الفصل من العمل وفق المادة 80 من نظام العمل",
+            "fourth_time": "---"
+          }
+        },
+        {
+          "violation_id": "V15",
+          "violation_description": "الانقطاع عن العمل دون سبب مشروع لمدة تزيد على خمسة عشر يوماً متصلة خلال السنة العقدية الواحدة",
+          "penalties": {
+            "first_time": "الفصل دون مكافأة أو تعويض بعد أن يسبقه إنذار كتابي لمدة عشرة أيام في نطاق حكم المادة 80 من النظام"
+          }
+        },
+        {
+          "violation_id": "V16",
+          "violation_description": "الغياب المتقطع دون سبب مشروع يزيد مجموعه على ثلاثين يوماً خلال السنة العقدية الواحدة",
+          "penalties": {
+            "first_time": "الفصل دون مكافأة أو تعويض بعد أن يسبقه إنذار كتابي لمدة عشرين يوماً في نطاق حكم المادة 80 من النظام"
+          }
+        }
+      ]
+    },
+    {
+      "table_number": "2",
+      "table_title": "المخالفات المتعلقة بتنظيم العمل",
+      "rows": [
+        {
+          "violation_id": "V17",
+          "violation_description": "التواجد دون مبرر في غير مكان العمل المخصص للعامل أثناء وقت الدوام",
+          "penalties": {
+            "first_time": "10%",
+            "second_time": "25%",
+            "third_time": "50%",
+            "fourth_time": "يوم"
+          }
+        },
+        {
+          "violation_id": "V18",
+          "violation_description": "استقبال زائرين في غير أمور العمل في أماكن العمل دون إذن من الإدارة",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "10%",
+            "third_time": "15%",
+            "fourth_time": "25%"
+          }
+        },
+        {
+          "violation_id": "V19",
+          "violation_description": "استعمال الآلات والمعدات والأدوات الخاصة بالمنشأة لأغراض خاصة دون إذن",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "10%",
+            "third_time": "25%",
+            "fourth_time": "50%"
+          }
+        },
+        {
+          "violation_id": "V20",
+          "violation_description": "تدخل العامل في عمل ليس من اختصاصه دون وجه حق أو لم يعهد إليه به",
+          "penalties": {
+            "first_time": "50%",
+            "second_time": "يوم",
+            "third_time": "ثلاثة أيام",
+            "fourth_time": "خمسة أيام"
+          }
+        },
+        {
+          "violation_id": "V21",
+          "violation_description": "الدخول أو الخروج من غير المكان المخصص لذلك",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "10%",
+            "third_time": "15%",
+            "fourth_time": "25%"
+          }
+        },
+        {
+          "violation_id": "V22",
+          "violation_description": "الإهمال في تنظيف الآلات وصيانتها وعدم العناية بها أو عدم الإبلاغ عما بها من خلل",
+          "penalties": {
+            "first_time": "50%",
+            "second_time": "يوم",
+            "third_time": "ثلاثة أيام",
+            "fourth_time": "خمسة أيام"
+          }
+        },
+        {
+          "violation_id": "V23",
+          "violation_description": "عدم وضع أدوات الإصلاح والصيانة والموازيل الأخرى في أماكنها المخصصة لها بعد الانتهاء من العمل",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "25%",
+            "third_time": "50%",
+            "fourth_time": "يومين"
+          }
+        },
+        {
+          "violation_id": "V24",
+          "violation_description": "إتلاف أو تمزيق الإعلانات وإخطارات إدارة المنشأة",
+          "penalties": {
+            "first_time": "ثلاثة أيام",
+            "second_time": "خمسة أيام",
+            "third_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V25",
+          "violation_description": "الإهمال في العهد التي بحوزته (مثل: سيارات، آلات، أجهزة، معدات، أدوات، ... الخ)",
+          "penalties": {
+            "first_time": "ثلاثة أيام",
+            "second_time": "خمسة أيام",
+            "third_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V26",
+          "violation_description": "الأكل في مكان العمل أو غير المكان المعد له أو في غير أوقات الراحة",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "10%",
+            "third_time": "15%",
+            "fourth_time": "25%"
+          }
+        },
+        {
+          "violation_id": "V27",
+          "violation_description": "النوم أثناء العمل",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "10%",
+            "third_time": "25%",
+            "fourth_time": "50%"
+          }
+        },
+        {
+          "violation_id": "V28",
+          "violation_description": "النوم في الحالات التي تستدعي يقظة مستمرة",
+          "penalties": {
+            "first_time": "50%",
+            "second_time": "يوم",
+            "third_time": "ثلاثة أيام",
+            "fourth_time": "خمسة أيام"
+          }
+        },
+        {
+          "violation_id": "V29",
+          "violation_description": "التسكع أو وجود العامل في غير مكان عمله أثناء ساعات العمل",
+          "penalties": {
+            "first_time": "10%",
+            "second_time": "25%",
+            "third_time": "50%",
+            "fourth_time": "يوم"
+          }
+        },
+        {
+          "violation_id": "V30",
+          "violation_description": "التلاعب في إثبات الحضور والانصراف",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "يومين",
+            "third_time": "الحرمان من العلاوة مرة واحدة",
+            "fourth_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V31",
+          "violation_description": "عدم إطاعة الأوامر العادية الخاصة بالعمل أو عدم تنفيذ التعليمات الخاصة بالعمل المعلقة في مكان ظاهر",
+          "penalties": {
+            "first_time": "25%",
+            "second_time": "50%",
+            "third_time": "يوم",
+            "fourth_time": "يومين"
+          }
+        },
+        {
+          "violation_id": "V32",
+          "violation_description": "التحريض على مخالفة الأوامر والتعليمات الخطية الخاصة بالعمل",
+          "penalties": {
+            "first_time": "ثلاثة أيام",
+            "second_time": "خمسة أيام",
+            "third_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V33",
+          "violation_description": "التدخين في الأماكن المحظورة والمعلن عنها للمحافظة على سلامة العمال والمنشأة",
+          "penalties": {
+            "first_time": "ثلاثة أيام",
+            "second_time": "خمسة أيام",
+            "third_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V34",
+          "violation_description": "الإهمال أو التهاون في العمل الذي قد ينشأ عنه ضرر في صحة العمال أو سلامتهم أو في المواد والأدوات والأجهزة",
+          "penalties": {
+            "first_time": "ثلاثة أيام",
+            "second_time": "خمسة أيام",
+            "third_time": "الفصل مع المكافأة"
+          }
+        }
+      ]
+    },
+    {
+      "table_number": "3",
+      "table_title": "المخالفات المتعلقة بسلوك العامل",
+      "rows": [
+        {
+          "violation_id": "V35",
+          "violation_description": "المشاجرة مع الزملاء أو مع الغير وإحداث شغب في مكان العمل",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "يومين",
+            "third_time": "ثلاثة أيام",
+            "fourth_time": "خمسة أيام"
+          }
+        },
+        {
+          "violation_id": "V36",
+          "violation_description": "التمارض أو ادعاء العامل كذباً أنه أصيب أثناء العمل أو بسببه",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "يومين",
+            "third_time": "ثلاثة أيام",
+            "fourth_time": "خمسة أيام"
+          }
+        },
+        {
+          "violation_id": "V37",
+          "violation_description": "الامتناع عن إجراء الكشف الطبي عند طلب طبيب المنشأة أو رفض اتباع التعليمات الطبية أثناء العلاج",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "يومين",
+            "third_time": "ثلاثة أيام",
+            "fourth_time": "خمسة أيام"
+          }
+        },
+        {
+          "violation_id": "V38",
+          "violation_description": "مخالفة التعليمات الصحية المعلقة بأماكن العمل",
+          "penalties": {
+            "first_time": "50%",
+            "second_time": "يوم",
+            "third_time": "يومين",
+            "fourth_time": "خمسة أيام"
+          }
+        },
+        {
+          "violation_id": "V39",
+          "violation_description": "الكتابة على جدران المنشأة أو لصق الإعلانات عليها",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "10%",
+            "third_time": "25%",
+            "fourth_time": "50%"
+          }
+        },
+        {
+          "violation_id": "V40",
+          "violation_description": "رفض التفتيش الإداري عند الانصراف",
+          "penalties": {
+            "first_time": "25%",
+            "second_time": "50%",
+            "third_time": "يوم",
+            "fourth_time": "يومين"
+          }
+        },
+        {
+          "violation_id": "V41",
+          "violation_description": "عدم تسليم النقود المحصلة لحساب المنشأة في المواعيد المحددة دون تبرير مقبول",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "ثلاثة أيام",
+            "third_time": "خمسة أيام",
+            "fourth_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V42",
+          "violation_description": "الامتناع عن ارتداء الملابس والأجهزة المقررة للوقاية والسلامة",
+          "penalties": {
+            "first_time": "إنذار كتابي",
+            "second_time": "يوم",
+            "third_time": "خمسة أيام",
+            "fourth_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V43",
+          "violation_description": "تعمد الخلوة مع الجنس الآخر في أماكن العمل",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "ثلاثة أيام",
+            "third_time": "خمسة أيام",
+            "fourth_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V44",
+          "violation_description": "الإيحاء للآخرين بما يخدش الحياء قولاً أو فعلاً",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "ثلاثة أيام",
+            "third_time": "خمسة أيام",
+            "fourth_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V45",
+          "violation_description": "الاعتداء على زملاء العمل بالقول أو الإشارة أو باستخدام وسائل الاتصال الإلكترونية أو بالشتيمة والتحقير",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "ثلاثة أيام",
+            "third_time": "خمسة أيام",
+            "fourth_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V46",
+          "violation_description": "الاعتداء بالإيذاء الجسدي على زملاء العمل أو على غيرهم بطريقة غير مشروعة",
+          "penalties": {
+            "first_time": "الفصل دون إشعار أو تعويض وفق المادة 80"
+          }
+        },
+        {
+          "violation_id": "V47",
+          "violation_description": "الاعتداء الجسدي أو القولي باستخدام أي وسيلة من وسائل الاتصال الإلكترونية على صاحب العمل أو المدير المسؤول أو أحد الرؤساء أثناء العمل أو بسببه",
+          "penalties": {
+            "first_time": "الفصل دون إشعار أو تعويض وفق المادة 80"
+          }
+        },
+        {
+          "violation_id": "V48",
+          "violation_description": "تقديم شكوى أو بلاغ كيدي",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "ثلاثة أيام",
+            "third_time": "خمسة أيام",
+            "fourth_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V49",
+          "violation_description": "عدم الامتثال لطلب لجنة التحقيق بالحضور",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "ثلاثة أيام",
+            "third_time": "خمسة أيام",
+            "fourth_time": "الفصل مع المكافأة"
+          }
+        },
+        {
+          "violation_id": "V50",
+          "violation_description": "عدم التقيد بالزي الرسمي المعتمد بالمنشأة",
+          "penalties": {
+            "first_time": "يوم",
+            "second_time": "ثلاثة أيام",
+            "third_time": "خمسة أيام",
+            "fourth_time": "خمسة أيام"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "article_number": "52",
+  "article_title": "الخدمات الاجتماعية",
+  "content": "تلتزم المنشأة بتقديم الخدمات الاجتماعية التالية",
+  "compliance_rules": [
+    {
+      "rule_id": "R126-1",
+      "rule_type": "إلزامي",
+      "description": "إعداد مكان لأداء الصلاة",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R126-2",
+      "rule_type": "إلزامي",
+      "description": "إعداد مكان لتناول الطعام",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R126-3",
+      "rule_type": "إلزامي",
+      "description": "توفير متطلبات وخدمات ومرافق تيسيرية لذوي الإعاقة",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    }
+  ]
+}
