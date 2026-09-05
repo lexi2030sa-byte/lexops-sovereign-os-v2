@@ -1,0 +1,52 @@
+// ============================================================
+// S8 — Sovereign Compliance Engine (محرك الامتثال السيادي)
+// تقييم الامتثال الداخلي بدون ربط حكومي
+// ============================================================
+import { SovereignEngine, EngineResult, EngineContext, generateC9Hash } from "./types";
+
+export const complianceEngine: SovereignEngine = {
+  id: "S8-2026",
+  name: "Sovereign Compliance Engine",
+  version: "2026.1.0",
+
+  async execute(payload: any, ctx: EngineContext): Promise<EngineResult> {
+    const ts = new Date().toISOString();
+    try {
+      const { violations, employees, branches, licenses } = payload;
+      const vCount = violations?.length || 0;
+      const eCount = employees?.length || 0;
+      const bCount = branches?.length || 0;
+      const lCount = licenses?.length || 0;
+
+      const baseScore = 100;
+      const violationPenalty = vCount * 5;
+      const licensePenalty = (bCount - lCount) > 0 ? (bCount - lCount) * 10 : 0;
+      let score = Math.max(0, baseScore - violationPenalty - licensePenalty);
+
+      const result = {
+        score: Number(score.toFixed(1)),
+        grade: score >= 95 ? "A+" : score >= 85 ? "A" : score >= 75 ? "B" : score >= 60 ? "C" : "D",
+        violationsImpact: violationPenalty,
+        licensesImpact: licensePenalty,
+        totalEmployees: eCount,
+        totalBranches: bCount,
+        activeLicenses: lCount,
+        entityId: ctx.entityId,
+      };
+
+      return {
+        success: true,
+        data: result,
+        timestamp: ts,
+        engineId: this.id,
+        c9Hash: generateC9Hash(this.id, result, ts),
+      };
+    } catch (err: any) {
+      return { success: false, error: err.message, timestamp: ts, engineId: this.id };
+    }
+  },
+
+  async healthCheck() {
+    return { status: "healthy", details: "S8 جاهز لتقييم الامتثال الداخلي" };
+  },
+};

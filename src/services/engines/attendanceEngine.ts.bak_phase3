@@ -1,0 +1,69 @@
+// ============================================================
+// SDE — Sovereign Geo-Attendance Engine (محرك الحضور الجغرافي)
+// معادلة Haversine + حماية Anti-Spoofing
+// ============================================================
+import { SovereignEngine, EngineResult, EngineContext, generateC9Hash } from "./types";
+
+function toRad(deg: number) { return deg * (Math.PI / 180); }
+
+function haversine(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371000;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+export const attendanceEngine: SovereignEngine = {
+  id: "SDE-2026",
+  name: "Sovereign Geo-Attendance Engine",
+  version: "2026.1.0",
+
+  async execute(payload: any, ctx: EngineContext): Promise<EngineResult> {
+    const ts = new Date().toISOString();
+    try {
+      const { employeeLat, employeeLng, branchLat, branchLng, accuracy, isMocked, employeeId, action } = payload;
+
+      if (isMocked === true) {
+        return { success: false, error: "🚫 رفض: تم اكتشاف محاولة تزييف الموقع (Mock GPS)", timestamp: ts, engineId: this.id };
+      }
+
+      if (accuracy > 150) {
+        return { success: false, error: `🚫 رفض: دقة GPS ضعيفة (${accuracy}م). الحد الأقصى 150م.`, timestamp: ts, engineId: this.id };
+      }
+
+      const distance = haversine(employeeLat, employeeLng, branchLat, branchLng);
+      const allowedRadius = payload.allowedRadiusMeters || 500;
+      const isInside = distance <= allowedRadius;
+
+      const result = {
+        employeeId,
+        action: action || "punch",
+        employeeLat,
+        employeeLng,
+        branchLat,
+        branchLng,
+        distance: Number(distance.toFixed(2)),
+        allowedRadius,
+        isInside,
+        accuracy,
+        timestamp: ts,
+        entityId: ctx.entityId,
+      };
+
+      return {
+        success: true,
+        data: result,
+        timestamp: ts,
+        engineId: this.id,
+        c9Hash: generateC9Hash(this.id, result, ts),
+      };
+    } catch (err: any) {
+      return { success: false, error: err.message, timestamp: ts, engineId: this.id };
+    }
+  },
+
+  async healthCheck() {
+    return { status: "healthy", details: "SDE جاهز للتحقق الجغرافي (Haversine + Anti-Spoofing)" };
+  },
+};
