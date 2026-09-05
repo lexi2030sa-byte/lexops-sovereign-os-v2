@@ -1,0 +1,70 @@
+/* ============================================================
+   LexOps Sovereign Visual Unifier — unified visual identity
+   ============================================================ */
+
+/* استيراد خط Tajawal الموحد */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+:root {
+  --bg-main-body: #0b132b;
+  --bg-cards-panels: rgba(28, 37, 65, 0.85);
+  --bg-inner-cards: rgba(14, 26, 56, 0.78);
+  --color-headings: #ffffff;
+  --color-subheadings: #6fffe9;
+  --color-body-text: #e0e1dd;
+  --color-muted-text: #a3cef1;
+  --border-color: rgba(58, 80, 107, 0.7);
+}
+
+body {
+  font-family: 'Tajawal', 'Segoe UI', system-ui, sans-serif !important;
+  background-color: var(--bg-main-body);
+  color: var(--color-body-text);
+}
+
+/* توحيد الحاويات الرئيسية في كل المكونات */
+.sovereign-panel,
+.sovereign-card,
+div[class*="bg-black"],
+div[class*="bg-[#000814]"],
+div[class*="bg-[#1A1A1A]"],
+div[class*="bg-[#0e1a38]"],
+div[class*="bg-[#0b132b]"] {
+  background-color: var(--bg-cards-panels) !important;
+  border-color: var(--border-color) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* تحسين الشفافية للبطاقات الداخلية */
+.sovereign-inner-card,
+div[class*="bg-black/"],
+div[class*="bg-[#0"] {
+  background-color: var(--bg-inner-cards) !important;
+  border-color: rgba(58, 80, 107, 0.4) !important;
+}
+
+/* توحيد الأزرار */
+button,
+input,
+select,
+textarea {
+  font-family: 'Tajawal', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* طبقة الخلفية المتحركة الدائمة */
+.sovereign-bg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(11, 19, 43, 0.92), rgba(11, 19, 43, 0.96)),
+    radial-gradient(circle at 50% 50%, rgba(28, 37, 65, 0.6), var(--bg-main-body));
+}
+
+/* طبقة المحتوى فوق الخلفية */
+.sovereign-content-overlay {
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(2px);
+}

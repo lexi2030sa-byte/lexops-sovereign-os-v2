@@ -1,0 +1,149 @@
+/* LexOps V2 Sovereign Design System - Core Theme Layer */
+
+:root {
+  --color-cosmic-black: #050505;
+  --color-cosmic-deep: #0A0A0F;
+
+  --color-gold-primary: #D4AF37;
+  --color-gold-light: #F9E272;
+  --color-gold-dark: #996515;
+
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+
+  --font-sans: "Inter", "Tajawal", "IBM Plex Sans Arabic", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Space Grotesk", "Tajawal", "IBM Plex Sans Arabic", system-ui, sans-serif;
+}
+
+/* ─── V2 BACKGROUND GRADIENT ─── */
+.sovereign-v2-bg {
+  background: radial-gradient(circle at center, #1a1a2e 0%, #050505 100%) !important;
+}
+
+/* ─── BENTO & GLASS LAYOUT ─── */
+.sovereign-glass-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sovereign-glass-card:hover {
+  border-color: rgba(212, 175, 55, 0.35) !important;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.1) !important;
+  transform: translateY(-2px);
+}
+
+/* ─── GOLD SOVEREIGN BUTTONS (V2 PRIMARY ACTIONS) ─── */
+.sovereign-btn-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #F9E272 50%, #996515 100%) !important;
+  color: #050505 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.025em !important;
+  text-shadow: 0 0.5px 1px rgba(255,255,255,0.2) !important;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: 1px solid rgba(249, 226, 114, 0.4) !important;
+}
+
+.sovereign-btn-gold:hover {
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.55) !important;
+  transform: translateY(-1px) scale(1.02) !important;
+}
+
+.sovereign-btn-gold:active {
+  transform: translateY(1px) scale(0.98) !important;
+}
+
+/* SECONDARY BUTTONS */
+.sovereign-btn-secondary {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.sovereign-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(212, 175, 55, 0.3) !important;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.1) !important;
+}
+
+/* ─── TABLES ─── */
+.sovereign-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.sovereign-table th {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding: 12px 16px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  font-size: 11px !important;
+  letter-spacing: 0.05em !important;
+}
+
+.sovereign-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+  padding: 14px 16px !important;
+}
+
+/* ─── MOTION & ANIMATIONS ─── */
+@keyframes sovereignFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.sovereign-float {
+  animation: sovereignFloat 4s ease-in-out infinite;
+}
+
+/* LEXI ring radar indicator */
+.lexi-ring-radar {
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50%;
+  animation: ripple 3s linear infinite;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* C9 Marquee Banner styles */
+.c9-marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+}
+
+.c9-marquee-content {
+  display: inline-flex;
+  animation: marquee 25s linear infinite;
+  gap: 32px;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-33.3333%, 0, 0);
+  }
+}

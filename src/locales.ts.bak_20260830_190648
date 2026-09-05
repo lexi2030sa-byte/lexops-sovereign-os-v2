@@ -1,0 +1,422 @@
+export type Language = "ar" | "en";
+
+export interface TranslationDict {
+  // Common
+  siteTitle: string;
+  siteSubtitle: string;
+  loginDiplomatic: string;
+  sovereignStatus: string;
+  connectedSecure: string;
+  activeRealtime: string;
+  backToLanding: string;
+  currentActiveRole: string;
+  logoutBtn: string;
+  cancelBtn: string;
+  submitOrgBtn: string;
+  submitFreeBtn: string;
+  localTimeLabel: string;
+  natureOfAccount: string;
+
+  // Landing
+  heroTitle1: string;
+  heroTitle2: string;
+  heroDesc: string;
+  betaReleaseTag: string;
+  registerNewOrgBtn: string;
+  registerNewOrgDesc: string;
+  registerNewFreeBtn: string;
+  registerNewFreeDesc: string;
+  registerNewJoinFree: string;
+  registerNewJoinOrg: string;
+  loginConsoleBtn: string;
+  loginConsoleDesc: string;
+  loginConsoleAction: string;
+  systemPreviewHeadline: string;
+  sandboxActive: string;
+
+  c1Title: string;
+  c1Desc: string;
+  c1Status: string;
+  c2Title: string;
+  c2Desc: string;
+  c2Status: string;
+  c3Title: string;
+  c3Desc: string;
+  c3Status: string;
+
+  problemTitle: string;
+  problemBullet1: string;
+  problemBullet2: string;
+  problemBullet3: string;
+  problemBullet4: string;
+
+  solutionTitle: string;
+  solutionBullet1: string;
+  solutionBullet2: string;
+  solutionBullet3: string;
+  solutionBullet4: string;
+
+  videoPatcherTitle: string;
+  videoPatcherDesc: string;
+  videoPatcherGateway: string;
+  videoTitle: string;
+  videoSub: string;
+  videoPlayerLive: string;
+  videoPlayerQuality: string;
+  videoPlayerSimulator: string;
+  videoPlayerPrompt: string;
+  videoPlayerGeofence: string;
+
+  pitchScreenshots: string;
+  screenshot1Title: string;
+  screenshot1Desc: string;
+  screenshot1Footer: string;
+  screenshot2Title: string;
+  screenshot2Desc: string;
+  screenshot2Footer: string;
+
+  allRightsReserved: string;
+  craftedBy: string;
+
+  // Register Org Form
+  orgRegTitle: string;
+  orgRegSub: string;
+  orgNameLabel: string;
+  orgNamePlaceholder: string;
+  orgCrLabel: string;
+  orgCrPlaceholder: string;
+  orgSectorLabel: string;
+  orgCityLabel: string;
+  orgCountLabel: string;
+  orgEmailLabel: string;
+  orgEmailPlaceholder: string;
+  orgPhoneLabel: string;
+  orgPhonePlaceholder: string;
+  orgViolationsLabel: string;
+  orgViolationsYes: string;
+  orgViolationsNo: string;
+  orgSubmitDisclaimer: string;
+
+  // Register Freelancer Form
+  freeRegTitle: string;
+  freeRegSub: string;
+  freeNameLabel: string;
+  freeNamePlaceholder: string;
+  freeIdLabel: string;
+  freeIdPlaceholder: string;
+  freeProfessionLabel: string;
+  freeProfessionPlaceholder: string;
+  freeCityLabel: string;
+  freeWorkTypeLabel: string;
+  freeWorkType1: string;
+  freeWorkType2: string;
+  freeWorkType3: string;
+  freeEmailLabel: string;
+  freeEmailPlaceholder: string;
+  freePhoneLabel: string;
+  freePhonePlaceholder: string;
+  freeSubmitDisclaimer: string;
+
+  // Login Form
+  authGatewayTitle: string;
+  authGatewaySub: string;
+  authHelperTitle: string;
+  authHelperFounder: string;
+  authHelperFounderSub: string;
+  authHelperOrg: string;
+  authHelperOrgSub: string;
+  authHelperEmp: string;
+  authHelperEmpSub: string;
+  authHelperFree: string;
+  authHelperFreeSub: string;
+  authEmailLabel: string;
+  authPasswordLabel: string;
+  authRoleSelectLabel: string;
+  authEnterBtn: string;
+
+  loginTitle: string;
+  demoLoginTitle: string;
+  loginEmailLabel: string;
+  loginPasswordLabel: string;
+  loginRoleLabel: string;
+  loginSubmitBtn: string;
+}
+
+export const translations: Record<Language, TranslationDict> = {
+  ar: {
+    siteTitle: "LexOps",
+    siteSubtitle: "✅✅✅ نظام التشغيل السيادي المحدث ✅✅✅",
+    loginDiplomatic: "تسجيل الدخول الدبلوماسي 🔑",
+    sovereignStatus: "الحالة السيادية:",
+    connectedSecure: "متصل وآمن",
+    activeRealtime: "نشط لحظياً 🖥️",
+    backToLanding: "الخروج والعودة للقناة الرئيسية",
+    currentActiveRole: "الهوية الرقابية الفعالة:",
+    logoutBtn: "جدولة الخروج والإنهاء",
+    cancelBtn: "← إلغاء والعودة",
+    submitOrgBtn: "تأصيل الطلب في السجل السيادي 🏢",
+    submitFreeBtn: "تأصيل وثيقة الممارس الحر 👨‍💻",
+    localTimeLabel: "التوقيت المحلي:",
+    natureOfAccount: "طبيعة الحساب:",
+
+    heroTitle1: "منصة",
+    heroTitle2: "✅✅✅ نظام التشغيل السيادي المحدث ✅✅✅",
+    heroDesc: "المنصة الرائدة المصممة خصيصاً لحماية منشأتك من المخالفات الحكومية وتجنب الغرامات غير المتوقعة، مع تمكين الاستقرار التشغيلي المستدام وحماية الأعمال بامتثال فوري متكامل.",
+    betaReleaseTag: "✅✅✅ تم التحديث بنجاح 100% - النسخة الجديدة ✅✅✅",
+    registerNewOrgBtn: "تسجيل منشأة جديدة",
+    registerNewOrgDesc: "سجل شركتك للانضمام إلى قائمة التعهيد وإثبات الحوكمة ومتابعة المنسوبين وجلب الامتثال الرقمي.",
+    registerNewJoinOrg: "أثبت منشأتك الآن ←",
+    registerNewFreeBtn: "تسجيل موظف مستقل",
+    registerNewFreeDesc: "ماتش تعاقداتك مع الجهات السيادية، وارفع إثباتات أعمالك، واستفد من صوغ الدفاعات والاعتراضات الآلية.",
+    registerNewJoinFree: "انضم كشريك تعهيد مستقل ←",
+    loginConsoleBtn: "تسجيل الدخول للواجهات",
+    loginConsoleDesc: "انتقِل فوراً إلى واجهات المسؤولين أو المستخدمين لاستعراض سجلات الحضور، الدفع، الحوكمة والـ C9 Ledger.",
+    loginConsoleAction: "أدخل لوحة التحكم المخصصة ←",
+    systemPreviewHeadline: "LexOps Sovereign OS — استعراض حي للنظام الأولي",
+    sandboxActive: "البيئة التجريبية نشطة",
+
+    c1Title: "1. C9 Ledger (سلسلة الحوكمة)",
+    c1Desc: "يقيد النظام كل عملية تسجيل حضور ومخالفة وتظلم داخل دفتر حسابات مشفر ومقاوم للتلاعب يسمى C9 Ledger.",
+    c1Status: "مصدق سيادياً ✓",
+    c2Title: "2. السياج الجغرافي بالأقمار",
+    c2Desc: "التحقق اللحظي عبر إحداثيات GPS المطبقة للتأكد من تواجد منسوبيك داخل الفروع الجغرافية المعتمدة وتجنب الغرامات.",
+    c2Status: "بموافقة الموظف",
+    c3Title: "3. صانع اللوائح والتظلمات الذكي",
+    c3Desc: "وكيل قانوني ذكي مدرب على السند القضائي السعودي لإنشاء اللوائح وتقديم دفوع الاعتراض المقاومة للأثر التشغيلي.",
+    c3Status: "Gemini AI Inside",
+
+    problemTitle: "المشكلة التنظيمية بالسوق",
+    problemBullet1: "تحمّل المنشآت غرامات مالية قاسية فورية نتيجة عدم الالتزام بلائحة العمل الميدانية ومخالفات حضور الأفراد.",
+    problemBullet2: "فروقات الإحداثيات المزيفة والـ GPS المخادع في تسجيلات حضور المهندسين والموظفين.",
+    problemBullet3: "فجوات حوكمة وتعهيد موظفي الاستقلال وصعوبة إثبات العمل المستندي الفعلي وتسليم الأوردرات القانونية.",
+    problemBullet4: "تعقيد الصياغة القانونية للوائح الجزاءات التفسيرية والاعتراض عليها أمام لجان التظلمات الحكومية بصيغة صحيحة.",
+
+    solutionTitle: "الحل الجذري: تطبيق LexOps",
+    solutionBullet1: "ترجمة فورية للائحة العمل السعودية وتأصيلها كأكواد برمجية تسري لحظياً وثبوتياً بالتعاقدات اليومية للجهات.",
+    solutionBullet2: "حظر تزييف الهوية والـ GPS من خلال جدار تحقق بيومتري جغرافي مشفَّر معزز بالاحداثيات من الأقمار الصناعية.",
+    solutionBullet3: "مسار تعهيد آمن للمستقل مدمج بالمنصة لرفع كشوف وتوثيق 'إثباتات الإنجاز الفعلي' بذاكرة C9 Ledger الموحدة.",
+    solutionBullet4: "استنفاد فوري للقرارات والاعتراضات بضغطة زر بدعم من الوكيل القانوني الذكي لـ Gemini السعودي.",
+
+    videoPatcherTitle: "السيناريو التعريفي بالفيديو (Interactive Pitch & Video Storyline)",
+    videoPatcherDesc: "سيناريو الحوكمة ككود برمجي لتعريف المنشآت بدعوة التعهيد الجماعي",
+    videoPatcherGateway: "دليل السيناريو التوضيحي للـ Pitch",
+    videoTitle: "فيديو تعريفي",
+    videoSub: "العرض التعريفي المرئي لمبادئ حوكمة العمليات والضبط السيادي",
+    videoPlayerLive: "مشهد البث الحي للمحاكاة",
+    videoPlayerQuality: "دقة 1080p | الصوت: عربي سيادي",
+    videoPlayerSimulator: "مشغل العرض التوضيحي السيادي الفوري",
+    videoPlayerPrompt: "هنا سيتم إدراج الفيديو التعريفي الشامل لـ LexOps OS. اضغط لتشغيل نموذج المحاكاة الصوتي التفاعلي لعرض الأثر التنظيمي وجودة الضبط.",
+    videoPlayerGeofence: "المجال الجغرافي: مفعل كلياً",
+
+    pitchScreenshots: "📸 لقطات شاشة تمثيلية للمنصة (System UI Gallery Mockups)",
+    screenshot1Title: "سلسلة كتل C9 Ledger المبرهنة",
+    screenshot1Desc: "مصفوفة العقود اللامركزية وتخزين أحراز التظلم والاعتراض الجغرافي محصنة من تزوير البيانات يدوياً.",
+    screenshot1Footer: "واجهة المؤسس — متوفرة حصرياً لحساب الإدارة السيادية العليا.",
+    screenshot2Title: "لوحة الفروع وبطاقات حضور الموظفين",
+    screenshot2Desc: "حصر حضور منسوبي المنشأة آلياً ومطابقتها بالسياج الديموجرافي المحدد للمدينة لحصار الفجوة الرقابية.",
+    screenshot2Footer: "لوحة مسؤول المنشأة — تعرض منسوبيها وبطاقات امتثالهم وصياغة استئنافاتهم.",
+
+    allRightsReserved: "جميع الحقوق محفوظة © LexOps OS — نظام التشغيل السيادي لسوق العمل، 2026",
+    craftedBy: "طُوّر بالكامل كنموذج أولي ذكي ومحمي داخل المصلحة القضائية بـ AI Studio v1.2",
+
+    // Org Form
+    orgRegTitle: "تسجيل منشأة جديدة في LexOps",
+    orgRegSub: "نموذج الانضمام والتعهيد الجماعي الرقمي للمنشآت",
+    orgNameLabel: "اسم المنشأة التجاري بالكامل *",
+    orgNamePlaceholder: "شركة مجموعة هامات للاستشارات الهندسية والمقاولات",
+    orgCrLabel: "رقم السجل التجاري (CR) *",
+    orgCrPlaceholder: "1010738291",
+    orgSectorLabel: "نشاط / قطاع المنشأة *",
+    orgCityLabel: "مدينة المنشأة الرئيسية *",
+    orgCountLabel: "عدد الموظفين الميدانيين",
+    orgEmailLabel: "البريد الإلكتروني الرسمي *",
+    orgEmailPlaceholder: "contact@hamatcorp.sa",
+    orgPhoneLabel: "رقم الجوال للتواصل *",
+    orgPhonePlaceholder: "05XXXXXXXX",
+    orgViolationsLabel: "هل لديكم مخالفات وإخطارات تشغيلية سابقة؟ *",
+    orgViolationsYes: "نعم، رُصد علينا سابقاً مخالفات",
+    orgViolationsNo: "لا، سجلنا نظيف وخالٍ بالكامل",
+    orgSubmitDisclaimer: "* بمجرد إرسال طلب منشأتكم، سيتم فوراً صبغ السجل التجاري وإدراجه في سلسلة كتل C9 Ledger السيادية الرقمية للمنظومة لحماية العمليات ومتابعة حضور الموظفين بامتثال تام للقرارات والأنظمة.",
+
+    // Free Form
+    freeRegTitle: "تسجيل هويتك كشريك مستقل (Freelancer)",
+    freeRegSub: "توثيق عقود التعهيد وحماية حقوق العمليات اللامركزية",
+    freeNameLabel: "اسم الممارس المستقل الكامل *",
+    freeNamePlaceholder: "م. خالد سليم العتيبي",
+    freeIdLabel: "رقم الهوية الوطنية / الإقامة *",
+    freeIdPlaceholder: "1102938475",
+    freeProfessionLabel: "الاختصاص المهني الرئيسي *",
+    freeProfessionPlaceholder: "مستشار حوكمة تقنية وسياج رقمي",
+    freeCityLabel: "منطقة / مدينة السكن الحالية *",
+    freeWorkTypeLabel: "طبيعة عقود العمليات المرغوبة",
+    freeWorkType1: "عمل حر مستقل (Freelance)",
+    freeWorkType2: "عقود تعهيد سيادية مجدولة",
+    freeWorkType3: "عقود موسمية ميدانية مؤقتة",
+    freeEmailLabel: "البريد الإلكتروني المهني *",
+    freeEmailPlaceholder: "khaled@legaltech-ksa.sa",
+    freePhoneLabel: "رقم جوال الواتساب الفوري *",
+    freePhonePlaceholder: "05XXXXXXXX",
+    freeSubmitDisclaimer: "* بمجرد إرسال تسجيل هويتكم كممارس حر، سيقوم النظام بتسجيل هويتكم السيادية بسلسلة الكتل C9 Ledger، مما يمكنك من التقدم لعقود التعهيد الحكومية، ورفع إثباتات الإنجاز لمهام لجان الامتثال في فضاء آمن وموثق.",
+
+    // Login Form
+    authGatewayTitle: "بوابة تسجيل الدخول السيادي",
+    authGatewaySub: "LexOps Sovereign OS Authentication Gateway",
+    authHelperTitle: "🎯 الدخول التجريبي الذكي والسريع بضغطة واحدة:",
+    authHelperFounder: "المؤسس Founder",
+    authHelperFounderSub: "كامل الميزات السيادية",
+    authHelperOrg: "مسؤول منشأة Corporate",
+    authHelperOrgSub: "منسوبيه وفروعه فقط",
+    authHelperEmp: "موظف الميدان Employee",
+    authHelperEmpSub: "بطاقته وسجل حضوره",
+    authHelperFree: "الممارس المستقل Freelancer",
+    authHelperFreeSub: "العقود وإثبات الإنجاز",
+    authEmailLabel: "البريد الإلكتروني *",
+    authPasswordLabel: "كلمة المرور *",
+    authRoleSelectLabel: "اختر مستوى الصلاحية الرقابية المطلوبة *",
+    authEnterBtn: "الولوج الآمن للغرفة الرقابية 🔒",
+    loginTitle: "بوابة تسجيل الدخول السيادي",
+    demoLoginTitle: "🎯 الدخول التجريبي الذكي والسريع بضغطة واحدة:",
+    loginEmailLabel: "البريد الإلكتروني *",
+    loginPasswordLabel: "كلمة المرور الآمنة *",
+    loginRoleLabel: "مستوى الصلاحية / فئة الحساب *",
+    loginSubmitBtn: "تسجيل الدخول والضبط السيادي 🔑"
+  },
+  en: {
+    siteTitle: "LexOps",
+    siteSubtitle: "Sovereign Unified Operating System for Government Compliance",
+    loginDiplomatic: "Diplomatic Sign-In 🔑",
+    sovereignStatus: "Sovereign Status:",
+    connectedSecure: "Connected and Secure",
+    activeRealtime: "Live Monitoring Active 🖥️",
+    backToLanding: "Exit and Return to Main Channel",
+    currentActiveRole: "Active Compliance Role:",
+    logoutBtn: "Schedule Exit and Terminate",
+    cancelBtn: "← Cancel & Go Back",
+    submitOrgBtn: "Confirm & Enroll Entity in Sovereign Registry 🏢",
+    submitFreeBtn: "Authorize Freelancer Sovereign ID 👨‍💻",
+    localTimeLabel: "Local Time:",
+    natureOfAccount: "Channel Auth Level:",
+
+    heroTitle1: "Platform",
+    heroTitle2: "Sovereign Unified Operating System for Government Compliance",
+    heroDesc: "The premier platform custom-engineered to protect your enterprise from government compliance violations and operational fines, ensuring long-term operational stability and business protection through proactive automated compliance.",
+    betaReleaseTag: "Grand Sovereign Sandbox v1.2 Preview Launch",
+    registerNewOrgBtn: "Register New Corporate Entity",
+    registerNewOrgDesc: "Enroll your organization into the on-demand registry, verify legal compliance, track field forces, and minimize administrative penalties.",
+    registerNewJoinOrg: "Verify Entity Now ←",
+    registerNewFreeBtn: "Register as Independent Freelancer",
+    registerNewFreeDesc: "Manage sovereign consulting covenants, submit your proof-of-work indicators, and generate automated AI dispute sheets instantaneously.",
+    registerNewJoinFree: "Join as Unified Delivery Partner ←",
+    loginConsoleBtn: "Console Access Gateways",
+    loginConsoleDesc: "Step directly into the specialized controls and dashboards for founders, administrators, dynamic workforces, and the C9 Ledger.",
+    loginConsoleAction: "Access Designated Workspace Console ←",
+    systemPreviewHeadline: "LexOps Sovereign OS — Sandbox Real-time Terminal Demo",
+    sandboxActive: "SANDBOX PREVIEW ACTIVE",
+
+    c1Title: "1. The Sovereign C9 Ledger",
+    c1Desc: "The system logs every verified check-in, violation notice, and strategic appeal into an immutable, mathematically secured decentralised transaction block.",
+    c1Status: "Sovereign Certified ✓",
+    c2Title: "2. Precision Satellite Geofencing",
+    c2Desc: "Instantaneous geo-location checks to ensure physical forces remain natively within validated regional offices & terminals, mitigating legal compliance gaps.",
+    c2Status: "Consenting Employee Only",
+    c3Title: "3. Smart AI Appeals & Regulatory Builder",
+    c3Desc: "A legal AI advisor trained natively on KSA civil codes to synthesize highly customized dispute defenses and formal administrative objections.",
+    c3Status: "Gemini AI Inside",
+
+    problemTitle: "Market Regulatory Challenges",
+    problemBullet1: "Organizations face harsh financial penalties due to lack of adherence to labor rules and dynamic site workforce shifts.",
+    problemBullet2: "Device location spoofing, mock coordinates, and virtual VPN mock check-ins distort attendance records.",
+    problemBullet3: "Freelance compliance voids and high vulnerability in verifying step-by-step deliverable checks and document trails.",
+    problemBullet4: "High friction and cost in drafting formally valid regulatory claims when submitting strategic appeals to governmental nodes.",
+
+    solutionTitle: "The Solution: LexOps Paradigm",
+    solutionBullet1: "Civil work specifications are encoded directly as programmable code executed in real-time.",
+    solutionBullet2: "Location fraud checks with biometric tokens and military-grade satellite location verification.",
+    solutionBullet3: "Dedicated freelance checkpoints for cryptographically sealed 'Proof of Work' logs directly inside the C9 Ledger.",
+    solutionBullet4: "Instantaneous automated generation of formal objection files and administrative defense letters with a single tap.",
+
+    videoPatcherTitle: "Interactive Pitch & Video Storyline Explainer",
+    videoPatcherDesc: "Governance as code sequence defining deep organizational crowd-onboarding",
+    videoPatcherGateway: "Video Pitch Narrative Outline",
+    videoTitle: "Introductory Video",
+    videoSub: "Visual intro to operational governance & sovereign control foundations",
+    videoPlayerLive: "System Live Stream Preview",
+    videoPlayerQuality: "1080p Quality | Audio: Arabic Sovereign",
+    videoPlayerSimulator: "Sovereign Video Simulator Hub",
+    videoPlayerPrompt: "This is where the introductory video for LexOps OS will go. Click to play the interactive voice mockup representing strategic compliance flow.",
+    videoPlayerGeofence: "GEOFENCING SYSTEM: SEAMLESSLY ARMED",
+
+    pitchScreenshots: "📸 Simulated Live Screenshots (System UI Gallery Mockups)",
+    screenshot1Title: "Verified Immutable C9 Ledger View",
+    screenshot1Desc: "Cryptographic index mapping smart contracts, physical check-ins, and legal files preventing retrospective tampering.",
+    screenshot1Footer: "Founder Dashboard Console View — Reserved exclusively for administrative levels.",
+    screenshot2Title: "Organization Branches & Attendance Ledger",
+    screenshot2Desc: "Audit real-time branch activities, geofence compliance scores, and draft quick-appeal solutions instantly.",
+    screenshot2Footer: "Corporate Administrator View — View localized personnel trackers & compliance reports.",
+
+    allRightsReserved: "All Rights Reserved © LexOps OS — Sovereign Labor Market Operating System, 2026",
+    craftedBy: "Constructed natively inside highly defended judicial sandboxes, powered by AI Studio v1.2",
+
+    // Org Form
+    orgRegTitle: "Enroll Corporate Entity in LexOps",
+    orgRegSub: "Unified corporate intake registry & dynamic geofencing portal",
+    orgNameLabel: "Official Corporate Name *",
+    orgNamePlaceholder: "Hamat Group for Engineering and Contracting",
+    orgCrLabel: "Commercial Registration Number (CR) *",
+    orgCrPlaceholder: "1010738291",
+    orgSectorLabel: "Corporate Sector Group *",
+    orgCityLabel: "Primary Headquarter City *",
+    orgCountLabel: "Estimated Field Employee Headcount",
+    orgEmailLabel: "Corporate Email Address *",
+    orgEmailPlaceholder: "contact@hamatcorp.sa",
+    orgPhoneLabel: "Corporate Hotline / Mobile *",
+    orgPhonePlaceholder: "05XXXXXXXX",
+    orgViolationsLabel: "Does your company have existing administrative violations? *",
+    orgViolationsYes: "Yes, we have active/unresolved violations",
+    orgViolationsNo: "No, our operational record is fully pristine",
+    orgSubmitDisclaimer: "* Upon submission, your entity registers directly into the immutable C9 Ledger, matching corporate profiles with geofencing check points to protect assets under national labor rules.",
+
+    // Free Form
+    freeRegTitle: "Register Independent Freelancer Sovereign ID",
+    freeRegSub: "Track sovereign covenants, protect payment trails, and ensure legal transparency",
+    freeNameLabel: "Sovereign Practitioner Full Name *",
+    freeNamePlaceholder: "Eng. Khaled Bin Saleem Al-Otaibi",
+    freeIdLabel: "National ID / Iqama Number *",
+    freeIdPlaceholder: "1102938475",
+    freeProfessionLabel: "Core Professional Specialty *",
+    freeProfessionPlaceholder: "Strategic Tech Governance & Security Consultant",
+    freeCityLabel: "Primary Operating Base *",
+    freeWorkTypeLabel: "Preferred Collaborative Terms",
+    freeWorkType1: "Freelance Practitioner (General/On-demand)",
+    freeWorkType2: "Sovereign Scheduled Contracts",
+    freeWorkType3: "Temporary Mapped Field Covenants",
+    freeEmailLabel: "Professional Email *",
+    freeEmailPlaceholder: "khaled@legaltech-ksa.sa",
+    freePhoneLabel: "Immediate Whitelist Whatsapp *",
+    freePhonePlaceholder: "05XXXXXXXX",
+    freeSubmitDisclaimer: "* Upon validation of your practitioner ID, your profile initiates inside the C9 Ledger, enabling instant applications to sovereign consultancies and secure uploading of verified deliverables under civil laws.",
+
+    // Login Form
+    authGatewayTitle: "Sovereign Authentication Gateway",
+    authGatewaySub: "Secure access control to LexOps sandboxed interfaces",
+    authHelperTitle: "🎯 Fast Access Demo Portal (Click to auto-populate credentials):",
+    authHelperFounder: "Founder Console Access",
+    authHelperFounderSub: "Complete unrestricted sovereign capabilities",
+    authHelperOrg: "Corporate Admin Console",
+    authHelperOrgSub: "Branch tracking & personnel monitoring",
+    authHelperEmp: "Sovereign Worker Client",
+    authHelperEmpSub: "Employee identity & location logs",
+    authHelperFree: "Freelance Partner Client",
+    authHelperFreeSub: "Covenants and deliverables check-sheets",
+    authEmailLabel: "Email Credentials *",
+    authPasswordLabel: "Authentication Passcode *",
+    authRoleSelectLabel: "Select Authorization Context Level *",
+    authEnterBtn: "Initiate Secure Sovereign Session 🔒",
+    loginTitle: "Sovereign Authentication Gateway",
+    demoLoginTitle: "🎯 Fast Access Demo Portal (Click to auto-populate credentials):",
+    loginEmailLabel: "Email Credentials *",
+    loginPasswordLabel: "Authentication Passcode *",
+    loginRoleLabel: "Select Authorization Context Level *",
+    loginSubmitBtn: "Initiate Secure Sovereign Session 🔑"
+  }
+};
