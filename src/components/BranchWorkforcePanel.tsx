@@ -1,0 +1,1512 @@
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { 
+  Users, 
+  UserCheck, 
+  Trash2, 
+  Plus, 
+  ShieldCheck, 
+  FileCheck, 
+  AlertTriangle, 
+  CheckCircle,
+  Clock,
+  Briefcase,
+  AlertCircle,
+  MapPin,
+  Wifi,
+  Grid,
+  List,
+  Search
+} from "lucide-react";
+import { LEXI, LexiResult } from "../lib/lexi";
+import { Branch, municipalTypeLabels } from "./EntityManagerBranchesView";
+
+export interface HealthCertificate {
+  number: string;
+  expiryDate: string; // YYYY-MM-DD
+  issuer: string;
+}
+
+export interface WorkforceMember {
+  id: string;
+  name: string;
+  nationalId: string;
+  role: string;
+  healthCertificate?: HealthCertificate;
+}
+
+export interface WorkforceAssignments {
+  [branchId: string]: WorkforceMember[];
+}
+
+interface BranchWorkforcePanelProps {
+  branches: Branch[];
+  selectedBranchId: string;
+  setSelectedBranchId: (id: string) => void;
+  workforce: WorkforceAssignments;
+  setWorkforce: React.Dispatch<React.SetStateAction<WorkforceAssignments>>;
+  employeesPool: Array<{ id: string; name: string; nationalId: string; role: string; email?: string; healthCertificate?: HealthCertificate; shift?: string; }>;
+  setEmployees?: React.Dispatch<React.SetStateAction<any[]>>;
+  activeOrgId?: string;
+  pushNewC9Event: (type: string, refId: string, payload: any) => void;
+  addAlert: (text: string, severity: "low" | "medium" | "high") => void;
+  lang: "ar" | "en";
+  isDark: boolean;
+  attendanceLogs?: any[]; // Dynamic integration with GPS coordinates check-ins
+}
+
+export function BranchWorkforcePanel({
+  branches,
+  selectedBranchId,
+  setSelectedBranchId,
+  workforce,
+  setWorkforce,
+  employeesPool,
+  setEmployees,
+  activeOrgId,
+  pushNewC9Event,
+  addAlert,
+  lang,
+  isDark,
+  attendanceLogs = []
+}: BranchWorkforcePanelProps) {
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [workforceTab, setWorkforceTab] = useState<"branches" | "all-employees">("branches");
+  const [employeeSearchTerm, setEmployeeSearchTerm] = useState("");
+  const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState<any | null>(null);
+  
+  const selectedBranch = branches.find(b => b.id === selectedBranchId) || branches[0];
+  const activeStaff = workforce[selectedBranchId] || [];
+
+  const handleRemoveEmployee = (empId: string, empName: string) => {
+    // Confirm first for majestic command integrity
+    const confirmMsg = lang === "ar"
+      ? `هل أنت متأكد من تفكيك وعزل الموظف "${empName}" من الفرع الوطني؟`
+      : `Are you sure you want to de-authorize user "${empName}" from this branch?`;
+    
+    if (!window.confirm(confirmMsg)) return;
+
+    const updatedList = activeStaff.filter(w => w.id !== empId);
+    setWorkforce({
+      ...workforce,
+      [selectedBranchId]: updatedList
+    });
+
+    // Stamping C9 ledger
+    pushNewC9Event("أرشفة وتفكيك ارتباط موظف بفرع تجاري مكاني", selectedBranchId, {
+      employee_id: empId,
+      employee_name: empName,
+      branch_name: selectedBranch.branch_name
+    });
+
+    addAlert(
+      lang === "ar"
+        ? `تم عزل وتفكيك ارتباط الموظف "${empName}" من طاقم فرع "${selectedBranch.branch_name}" سيادياً.`
+        : `Successfully removed "${empName}" from branch list. C9 ledger updated.`,
+      "low"
+    );
+  };
+
+  // High quality stats of assigned staff
+  const totalAssignedCount = activeStaff.length;
+  
+  const healthRestrictedBranch = ["restaurant", "cafe", "health", "salon"].includes(selectedBranch?.branch_type);
+  
+  const compliantCount = activeStaff.filter(w => {
+    if (!healthRestrictedBranch) return true;
+    if (!w.healthCertificate) return false;
+    const isExpired = new Date(w.healthCertificate.expiryDate) < new Date("2026-05-20");
+    return !isExpired;
+  }).length;
+
+  const onSiteGPSCount = activeStaff.filter(w => {
+    const logs = attendanceLogs.filter(l => l.employeeName === w.name);
+    return logs.length > 0 && !logs[0].alert;
+  }).length;
+
+  return (
+    <div className="space-y-6 text-right font-sans">
+      {/* Sub-tab selection with beautiful high-contrast borders */}
+      <div className={`p-2 rounded-xl border flex gap-1.5 justify-end ${isDark ? "bg-[#1c2541] border-white/5" : "bg-white border-neutral-200 shadow-sm"}`}>
+        <button
+          onClick={() => setWorkforceTab("all-employees")}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer outline-none ${
+            workforceTab === "all-employees"
+              ? "bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/15"
+              : isDark
+                ? "text-gray-400 hover:text-white hover:bg-white/5"
+                : "text-neutral-600 hover:bg-neutral-100"
+          }`}
+        >
+          <span>👥 {lang === "ar" ? "قائمة موظفي الكيان وسجلات الـ CRUD" : "Corporate Registry & CRUD Profiles"}</span>
+        </button>
+        <button
+          onClick={() => setWorkforceTab("branches")}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer outline-none ${
+            workforceTab === "branches"
+              ? "bg-[#D4AF37] text-black shadow-md shadow-[#D4AF37]/15"
+              : isDark
+                ? "text-gray-400 hover:text-white hover:bg-white/5"
+                : "text-neutral-600 hover:bg-neutral-100"
+          }`}
+        >
+          <span>📍 {lang === "ar" ? "ربط وتوزيع الموظفين بالمواقع الجغرافية" : "Sub-Branch Field Allocation"}</span>
+        </button>
+      </div>
+
+      {workforceTab === "branches" ? (
+        <div className="space-y-6">
+          {/* Selector & Statistics Summary Header */}
+          <div className={`p-5 rounded-2xl border flex flex-col md:flex-row justify-between items-stretch gap-4 ${isDark ? "bg-[#1c2541] border-white/5" : "bg-white border-neutral-200"}`}>
+            <div className="w-full md:w-5/12 text-right flex flex-col justify-between">
+              <div>
+                <label className="block text-[10px] text-gray-400 mb-1 font-bold">
+                  {lang === "ar" ? "اختر الفرع التجاري لإدارة الكفاءات والمطابقة الصحية:" : "Select branch geography to manage worker assignments:"}
+                </label>
+                <select
+                  value={selectedBranchId}
+                  onChange={e => setSelectedBranchId(e.target.value)}
+                  className={`w-full text-xs p-2.5 rounded-lg border focus:outline-none focus:border-[#D4AF37] ${isDark ? "bg-[#1c2541] text-gray-200 border-white/10" : "bg-neutral-50 text-neutral-800 border-neutral-300 shadow-sm"}`}
+                >
+                  {branches.map(b => (
+                    <option key={b.id} value={b.id}>
+                      {b.branch_name} ({b.id} • {lang === "ar" ? municipalTypeLabels[b.branch_type]?.ar : municipalTypeLabels[b.branch_type]?.en})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Toggle View Mode Button */}
+              <div className="flex items-center gap-1.5 mt-3 justify-end">
+                <span className="text-[9px] text-gray-400 font-sans">{lang === "ar" ? "تخطيط العرض:" : "View Mode:"}</span>
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-1.5 rounded transition cursor-pointer ${viewMode === "grid" ? "bg-[#D4AF37] text-black" : "bg-neutral-800 text-gray-400 hover:text-white"}`}
+                  title="Grid View"
+                >
+                  <Grid className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`p-1.5 rounded transition cursor-pointer ${viewMode === "list" ? "bg-[#D4AF37] text-black" : "bg-neutral-800 text-gray-400 hover:text-white"}`}
+                  title="List View"
+                >
+                  <List className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Dynamic Activity Summary Info Row */}
+            <div className="w-full md:w-7/12 flex flex-col md:flex-row gap-4 items-stretch">
+              
+              {/* Quick Metrics */}
+              <div className="grid grid-cols-3 gap-2.5 flex-1 select-none">
+                <div className={`p-3 rounded-xl border flex flex-col justify-center text-center ${isDark ? "bg-[#1c2541] border-white/5" : "bg-neutral-50 border-neutral-200"}`}>
+                  <span className="text-[8px] text-gray-400 font-sans font-bold uppercase">{lang === "ar" ? "إجمالي الكوادر" : "Total Staff"}</span>
+                  <span className="text-sm font-black text-[#D4AF37] font-mono mt-1">{totalAssignedCount}</span>
+                </div>
+                
+                <div className={`p-3 rounded-xl border flex flex-col justify-center text-center ${isDark ? "bg-[#1c2541] border-white/5" : "bg-neutral-50 border-neutral-200"}`}>
+                  <span className="text-[8px] text-gray-400 font-sans font-bold uppercase">{lang === "ar" ? "الامتثال الصحي" : "Sanitary Cert"}</span>
+                  <span className={`text-sm font-black font-mono mt-1 ${compliantCount === totalAssignedCount && totalAssignedCount > 0 ? "text-emerald-400" : "text-amber-400"}`}>
+                    {compliantCount}/{totalAssignedCount}
+                  </span>
+                </div>
+
+                <div className={`p-3 rounded-xl border flex flex-col justify-center text-center ${isDark ? "bg-[#1c2541] border-white/5" : "bg-neutral-50 border-neutral-200"}`}>
+                  <span className="text-[8px] text-gray-400 font-sans font-bold uppercase">{lang === "ar" ? "داخل النطاق" : "On Geofence"}</span>
+                  <span className="text-sm font-black text-rose-400 font-mono mt-1 flex items-center justify-center gap-0.5">
+                    <Wifi className="w-3 h-3 text-emerald-400 animate-pulse" />
+                    <span>{onSiteGPSCount}</span>
+                  </span>
+                </div>
+              </div>
+
+              <div className="w-full md:w-1/2 flex items-start gap-2.5 bg-white/5 p-3 rounded-xl border border-white/5 text-right font-mono text-[9px] text-gray-300">
+                <div className="flex-1">
+                  <span className="font-sans block text-white font-black text-xs mb-1">
+                    {lang === "ar" ? "اشتراطات نشاط الفرع فئة بلدي:" : "Municipal Branch Activity Directives:"}
+                  </span>
+                  {healthRestrictedBranch ? (
+                    <p className="text-amber-400 leading-relaxed font-sans font-medium text-[9px]">
+                      {lang === "ar" 
+                        ? "🚨 يتطلب نشاط الفرع حيازة الكوادر الميدانية لكرت صحي بلدي ساري الصلاحية والربط الطبي الإجباري. يمنع تشغيل الموظفين ببطاقات غير مسجلة أو منتهية منعاً كلياً." 
+                        : "🚨 Strict Requirement: Valid Balady Health Certificate & electronic medical records are mandatory for all staff inside the geofence."}
+                    </p>
+                  ) : (
+                    <p className="text-emerald-400 leading-relaxed font-sans font-medium text-[9px]">
+                      {lang === "ar" 
+                        ? "✓ تخضع الكفاءات للاشتراطات العامة لنظام العمل السعودي والمسح الفني للمطابقة المكانية. لست بحاجة إلى ملف تراخيص صحي إضافي." 
+                        : "✓ Standard compliance metrics. Basic location geogate verification active. No sanitary municipal documents requested."}
+                    </p>
+                  )}
+                </div>
+                <AlertCircle className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+              </div>
+
+            </div>
+          </div>
+
+          {/* Workforce assigned list table */}
+          <div className={`p-5 rounded-2xl border space-y-4 ${isDark ? "bg-[#1c2541] border-white/5" : "bg-white border-neutral-200 shadow-sm"}`}>
+            <div className="flex justify-between items-center border-b border-neutral-700/20 pb-3 flex-row-reverse1 flex-row-reverse">
+              <h4 className="text-xs font-black text-[#D4AF37] flex items-center justify-end gap-1.5 font-sans">
+                <Users className="w-4 h-4 text-[#D4AF37]" />
+                <span>{lang === "ar" ? "طاقم العمل والشركاء المسجلين جغرافياً بالفرع" : "Geolocated Workforce Assigned to Branch Location"}</span>
+              </h4>
+              <button
+                id="assign-employee-btn"
+                onClick={() => setShowAssignModal(true)}
+                className="cursor-pointer bg-blue-950/40 text-blue-300 border border-blue-500/30 font-extrabold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 hover:bg-blue-950/60 transition duration-150 active:scale-95 shadow-sm"
+              >
+                <Plus className="w-4 h-4 stroke-[2.5]" />
+                <span>{lang === "ar" ? "ربط موظف بالفرع" : "Assign Worker to Branch"}</span>
+              </button>
+            </div>
+
+            {activeStaff.length === 0 ? (
+              <div className="py-12 text-center text-gray-500 italic font-mono text-xs">
+                {lang === "ar" ? "لا توجد كوادر مسجلة جغرافياً داخل هذا الفرع حالياً." : "No spatial workforce is registered within this branch geography."}
+              </div>
+            ) : viewMode === "grid" ? (
+              
+              /* Premium Holographic Grid Card Layout */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {activeStaff.map(w => {
+                  const hasHealthRequirement = healthRestrictedBranch;
+                  const isExpired = w.healthCertificate && (new Date(w.healthCertificate.expiryDate) < new Date("2026-05-20"));
+                  const isNotPresent = !w.healthCertificate;
+
+                  // Health certificate compliance label v10.0
+                  let complianceBadge = { 
+                    status: "complete", 
+                    textAr: "🟢 مكتمل ومطابق", 
+                    textEn: "🟢 Compliant (Complete)", 
+                    style: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-extrabold" 
+                  };
+                  
+                  if (hasHealthRequirement) {
+                    if (isNotPresent) {
+                      complianceBadge = { 
+                        status: "non-compliant", 
+                        textAr: "🔴 غير مطابق (ملف مفقود)", 
+                        textEn: "🔴 Non-compliant (Missing)", 
+                        style: "bg-red-500/10 text-rose-400 border border-red-500/30 animate-pulse font-black" 
+                      };
+                    } else if (isExpired) {
+                      complianceBadge = { 
+                        status: "expired", 
+                        textAr: "🟡 غير مطابق جزئياً (منتهية)", 
+                        textEn: "🟡 Partial (Expired)", 
+                        style: "bg-amber-500/10 text-amber-500 border border-amber-500/30 font-extrabold animate-pulse" 
+                      };
+                    }
+                  } else {
+                    complianceBadge = { 
+                      status: "not-required", 
+                      textAr: "⚪ نشاط عام غير مقيد", 
+                      textEn: "⚪ General (Not requested)", 
+                      style: "bg-neutral-800 text-gray-400 border border-neutral-700/50" 
+                    };
+                  }
+
+                  // Dynamic GPS lookup
+                  const empLogs = attendanceLogs.filter(l => l.employeeName === w.name);
+                  const latestLog = empLogs[0];
+                  
+                  let gpsBadge = { textAr: "خارج التغطية 📡", textEn: "Awaiting Check-in 📡", style: "bg-gray-500/10 text-gray-400 border border-gray-500/20" };
+                  let lastCheckIn = lang === "ar" ? "لم يسجل حضور اليوم" : "No logs today";
+                  let accuracy = "";
+
+                  if (latestLog) {
+                    lastCheckIn = latestLog.time;
+                    if (latestLog.alert) {
+                      gpsBadge = { textAr: "تجاوز جغرافي 🚨", textEn: "Breached Geofence 🚨", style: "bg-rose-500/10 text-rose-400 border border-rose-500/30 animate-pulse font-bold" };
+                      accuracy = latestLog.coords ? `📍 ${latestLog.coords}` : "";
+                    } else {
+                      gpsBadge = { textAr: "داخل السياج 🟢", textEn: "Safe Geofence 🟢", style: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold" };
+                      accuracy = "GPS Gated: Precision 5m";
+                    }
+                  }
+
+                  // Retrieve work shift from employees state to display visually
+                  const fullEmp = employeesPool.find(item => item.id === w.id);
+                  const displayShift = fullEmp?.shift || (lang === "ar" ? "فترة صباحية (08:00 - 16:00)" : "Morning Shift (08:00 - 16:00)");
+
+                  return (
+                    <div 
+                      key={w.id}
+                      className={`p-4 rounded-xl border flex flex-col justify-between text-right transition-all duration-200 ${
+                        isDark 
+                          ? "bg-[#1c2541] border-white/5 hover:border-[#D4AF37]/30 shadow-md"
+                          : "bg-[#fafafa] border-neutral-200 hover:border-neutral-300 shadow-sm text-neutral-800"
+                      }`}
+                    >
+                      <div>
+                        {/* Header ID/Role */}
+                        <div className="flex justify-between items-center border-b border-neutral-700/10 pb-2 mb-2">
+                          <span className="text-[8px] font-mono text-[#D4AF37] font-black uppercase">Staff Member</span>
+                          <span className="text-[8.5px] font-mono text-gray-400">ID: {w.id}</span>
+                        </div>
+
+                        {/* Employee Profile */}
+                        <div className="space-y-1 text-right">
+                          <h5 className="font-extrabold text-white text-xs flex items-center justify-end gap-1.5 flex-row-reverse">
+                            <Users className="w-3.5 h-3.5 text-[#D4AF37]" />
+                            <span className={isDark ? "text-white" : "text-neutral-900"}>{w.name}</span>
+                          </h5>
+                          <p className="text-[10px] text-gray-400 font-sans flex items-center justify-end gap-1 flex-row-reverse font-medium">
+                            <Briefcase className="w-3 h-3 text-blue-400" />
+                            <span>{w.role}</span>
+                          </p>
+                          <div className="mt-1 flex justify-end">
+                            <span className="px-1.5 py-0.5 rounded text-[8.5px] bg-blue-500/10 text-blue-300 font-sans border border-blue-500/15">
+                              🕒 {displayShift}
+                            </span>
+                          </div>
+                          <p className="text-[9.5px] font-mono text-gray-400 mt-1">
+                            {lang === "ar" ? "السجل المدني:" : "National ID:"} <span className="text-gray-300 font-bold font-mono">{w.nationalId}</span>
+                          </p>
+                        </div>
+
+                        {/* Health Certificate details */}
+                        <div className={`mt-3 p-2.5 rounded-lg border text-[9.5px] space-y-1 ${isDark ? "bg-[#1c2541] border-white/5" : "bg-white border-neutral-200"}`}>
+                          <div className="flex justify-between flex-row-reverse">
+                            <span className="text-gray-400 font-sans">{lang === "ar" ? "الشهادة الصحية المعتمدة:" : "Balady Health Certificate:"}</span>
+                            <span className={`px-1.5 py-0.5 rounded text-[7.5px] font-bold ${complianceBadge.style}`}>
+                              {lang === "ar" ? complianceBadge.textAr : complianceBadge.textEn}
+                            </span>
+                          </div>
+                          {w.healthCertificate ? (
+                            <div className="pt-1 mt-1 border-t border-neutral-700/10 space-y-1 font-mono text-[8px] text-gray-400">
+                              <div className="flex justify-between flex-row-reverse">
+                                <span>{lang === "ar" ? "الرقم:" : "Number:"}</span>
+                                <span className="text-emerald-400 font-bold">{w.healthCertificate.number}</span>
+                              </div>
+                              <div className="flex justify-between flex-row-reverse">
+                                <span>{lang === "ar" ? "الانتهاء:" : "Expiry:"}</span>
+                                <span className="text-white">{w.healthCertificate.expiryDate}</span>
+                              </div>
+                            </div>
+                          ) : null}
+                        </div>
+
+                        {/* GPS tracking status */}
+                        <div className={`mt-2.5 p-2.5 rounded-lg border text-[9.5px] space-y-1 bg-[#1c2541] border-white/5 ${isDark ? "" : "bg-neutral-50"}`}>
+                          <div className="flex justify-between flex-row-reverse">
+                            <span className="text-gray-400 font-sans flex items-center gap-1 flex-row-reverse">
+                              <Wifi className="w-3 h-3 text-blue-400" />
+                              <span>{lang === "ar" ? "حالة ربط الـ GPS ورصد الموقع:" : "GPS Signal Tracking:"}</span>
+                            </span>
+                            <span className={`px-1.5 py-0.5 rounded text-[7px] font-bold ${gpsBadge.style}`}>
+                              {lang === "ar" ? gpsBadge.textAr : gpsBadge.textEn}
+                            </span>
+                          </div>
+                          <div className="pt-1 mt-1 border-t border-neutral-700/10 flex justify-between items-center flex-row-reverse font-mono text-[8.5px] text-gray-400">
+                            <span>{lang === "ar" ? "آخر تسجيل:" : "Last Check:"}</span>
+                            <span className="text-white font-bold flex items-center gap-1">
+                              <Clock className="w-2.5 h-2.5 text-amber-500" />
+                              {lastCheckIn}
+                            </span>
+                          </div>
+                          {accuracy && (
+                            <p className="text-[7.5px] text-gray-500 mt-1 font-mono text-left">{accuracy}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* De-Authorize Button */}
+                      <div className="mt-4 pt-2 border-t border-neutral-700/10 flex justify-between items-center">
+                        <button
+                          onClick={() => handleRemoveEmployee(w.id, w.name)}
+                          className="cursor-pointer text-rose-400 hover:text-white hover:bg-rose-500/10 font-bold text-[9.5px] px-2 py-1.5 rounded-lg transition-all flex items-center gap-1 uppercase"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>{lang === "ar" ? "تفكيك الرابط" : "De-authorize"}</span>
+                        </button>
+                        <span className="text-[7px] font-mono text-gray-500 font-bold">SEAL C9-BOND</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+            ) : (
+
+              /* Professional Classic List/Table View */
+              <div className="overflow-x-auto">
+                <table className="w-full text-right text-xs">
+                  <thead>
+                    <tr className="border-b border-white/10 text-gray-500 font-mono text-[10px]">
+                      <th className="pb-2 text-right">{lang === "ar" ? "اسم الموظف وسجله" : "Staff Member Target ID"}</th>
+                      <th className="pb-2 text-center">{lang === "ar" ? "المسمى الوظيفي المعتمد" : "Operational Role"}</th>
+                      <th className="pb-2 text-center">{lang === "ar" ? "جدول نوبة العمل" : "Work Shift"}</th>
+                      <th className="pb-2 text-center">{lang === "ar" ? "الشهادة الصحية المعتمدة" : "Municipal Sanitary Card"}</th>
+                      <th className="pb-2 text-center">{lang === "ar" ? "حالة سياج ה-GPS" : "GPS Signal Status"}</th>
+                      <th className="pb-2 text-center">{lang === "ar" ? "حالة الامتثال بلدي" : "Sovereign Health State"}</th>
+                      <th className="pb-2 text-left">{lang === "ar" ? "إجراء العزل" : "De-authorize"}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {activeStaff.map(w => {
+                      const hasHealthRequirement = healthRestrictedBranch;
+                      const isExpired = w.healthCertificate && (new Date(w.healthCertificate.expiryDate) < new Date("2026-05-20"));
+                      const isNotPresent = !w.healthCertificate;
+
+                      // Evaluate compliance v10.0
+                      let complianceLabel = lang === "ar" ? "🟢 مكتمل ومطابق" : "🟢 Compliant";
+                      let complianceStyle = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+
+                      if (hasHealthRequirement) {
+                        if (isNotPresent) {
+                          complianceLabel = lang === "ar" ? "🔴 غير مطابق (ملف مفقود)" : "🔴 Non-compliant";
+                          complianceStyle = "bg-red-500/10 text-rose-400 border border-red-500/20 animate-pulse font-extrabold";
+                        } else if (isExpired) {
+                          complianceLabel = lang === "ar" ? "🟡 غير مطابق جزئياً (منتهية)" : "🟡 Partial (Expired)";
+                          complianceStyle = "bg-amber-500/10 text-amber-500 border border-amber-500/20 font-bold animate-pulse";
+                        }
+                      } else {
+                        complianceLabel = lang === "ar" ? "⚪ نشاط عام غير مقيد" : "⚪ General";
+                        complianceStyle = "bg-neutral-800 text-gray-400 border border-[#444]/50";
+                      }
+
+                      // Dynamic GPS lookup
+                      const empLogs = attendanceLogs.filter(l => l.employeeName === w.name);
+                      const latestLog = empLogs[0];
+                      
+                      let gpsText = lang === "ar" ? "خارج التغطية 📡" : "No GPS lock";
+                      let gpsStyle = "text-gray-400 bg-gray-500/10";
+                      let lastCheck = lang === "ar" ? "أمس" : "Yesterday";
+
+                      if (latestLog) {
+                        lastCheck = latestLog.time;
+                        if (latestLog.alert) {
+                          gpsText = lang === "ar" ? "تجاوز جغرافي 🚨" : "Geofence Breached 🚨";
+                          gpsStyle = "text-rose-400 bg-rose-500/10 border border-rose-500/20 animate-pulse font-bold";
+                        } else {
+                          gpsText = lang === "ar" ? "داخل السياج 🟢" : "Inside Fence 🟢";
+                          gpsStyle = "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20";
+                        }
+                      }
+
+                      const fullEmp = employeesPool.find(item => item.id === w.id);
+                      const displayShift = fullEmp?.shift || (lang === "ar" ? "فترة صباحية (08:00 - 16:00)" : "Morning Shift");
+
+                      return (
+                        <tr key={w.id} className="hover:bg-white/5 transition duration-150">
+                          <td className="py-3 font-bold">
+                            <span className={`block text-xs ${isDark ? "text-white" : "text-neutral-800"}`}>{w.name}</span>
+                            <span className="text-[9px] text-gray-400 font-mono block">ID: {w.id} | السجل المدني: {w.nationalId}</span>
+                          </td>
+                          
+                          <td className="py-3 text-center font-mono text-gray-300">{w.role}</td>
+                          
+                          <td className="py-3 text-center">
+                            <span className="px-2 py-0.5 rounded text-[8.5px] bg-blue-500/10 text-blue-300 font-sans font-medium">
+                              {displayShift}
+                            </span>
+                          </td>
+
+                          <td className="py-3 text-center">
+                            {w.healthCertificate ? (
+                              <div className="flex flex-col items-center">
+                                <span className="px-2 py-0.5 rounded text-[9px] bg-white/5 text-gray-300 font-mono border border-white/5">
+                                  {w.healthCertificate.number}
+                                </span>
+                                <span className="text-[7.5px] text-gray-400 font-mono mt-0.5">Exp: {w.healthCertificate.expiryDate}</span>
+                              </div>
+                            ) : (
+                              <span className="text-gray-500 font-mono text-[10px]">-</span>
+                            )}
+                          </td>
+
+                          <td className="py-3 text-center">
+                            <div className="flex flex-col items-center gap-0.5">
+                              <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold ${gpsStyle}`}>
+                                {gpsText}
+                              </span>
+                              <span className="text-[7px] text-gray-500 font-mono">{lastCheck}</span>
+                            </div>
+                          </td>
+
+                          <td className="py-3 text-center">
+                            <span className={`px-2 py-0.5 rounded text-[8px] font-bold ${complianceStyle}`}>
+                              {complianceLabel}
+                            </span>
+                          </td>
+
+                          <td className="py-3 text-left">
+                            <button
+                              onClick={() => handleRemoveEmployee(w.id, w.name)}
+                              className="cursor-pointer text-rose-400 hover:text-white hover:bg-rose-500/10 p-1.5 rounded-lg transition"
+                              title={lang === "ar" ? "إلغاء الترخيص والربط الجغرافي" : "De-authorize link"}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        /* ======================================================== */
+        /* CRUD General Organization Employee Registry tab */
+        /* ======================================================== */
+        <div className="space-y-6">
+          {/* Controls bar */}
+          <div className={`p-4 rounded-xl border flex flex-col md:flex-row gap-4 justify-between items-center ${isDark ? "bg-[#1c2541] border-white/5" : "bg-white border-neutral-200 shadow-sm"}`}>
+            <span className="text-xs font-bold text-[#D4AF37]">
+              {lang === "ar" ? `إجمالي سجلات الكفاءات بالكيان: ${employeesPool.length} موظف` : `Unified Employee Records: ${employeesPool.length} Active`}
+            </span>
+            <div className="flex items-center gap-2 w-full md:w-auto flex-row-reverse flex-wrap">
+              <button
+                onClick={() => setShowAddEmployeeModal(true)}
+                className="cursor-pointer bg-[#D4AF37] hover:bg-[#b08f2e] text-black font-extrabold px-3 py-2 rounded-lg text-xs flex items-center gap-1 shadow-md transition"
+              >
+                <Plus className="w-4 h-4 text-black stroke-[2.5]" />
+                <span>{lang === "ar" ? "إنشاء بطاقة موظف جديد" : "Establish New Personnel"}</span>
+              </button>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder={lang === "ar" ? "البحث بالاسم أو السجل الوطني..." : "Search corporate roster..."}
+                  value={employeeSearchTerm}
+                  onChange={e => setEmployeeSearchTerm(e.target.value)}
+                  className={`text-xs p-2 pr-8 rounded-lg border text-right focus:outline-none focus:border-[#D4AF37] ${isDark ? "bg-[#1c2541] text-gray-200 border-white/10" : "bg-white text-neutral-800 border-neutral-300"}`}
+                />
+                <Search className="w-3.5 h-3.5 text-gray-400 absolute right-2.5 top-3" />
+              </div>
+            </div>
+          </div>
+
+          {/* Table display */}
+          <div className={`p-5 rounded-2xl border ${isDark ? "bg-[#1c2541] border-white/5" : "bg-white border-neutral-200 shadow-sm"}`}>
+            <div className="overflow-x-auto">
+              <table className="w-full text-right text-xs">
+                <thead>
+                  <tr className="border-b border-white/10 text-gray-500 font-mono text-[10px]">
+                    <th className="pb-2 text-right">{lang === "ar" ? "الاسم التعريفي ونوع الهوية" : "Employee Identity & Identifier"}</th>
+                    <th className="pb-2 text-center">{lang === "ar" ? "المسمى الوظيفي" : "Role"}</th>
+                    <th className="pb-2 text-center">{lang === "ar" ? "البريد الإلكتروني المعتمد" : "Corporate Mail"}</th>
+                    <th className="pb-2 text-center">{lang === "ar" ? "نوبة وجدول العمل" : "Shift Schedule"}</th>
+                    <th className="pb-2 text-center">{lang === "ar" ? "رخصة كرت البلدية" : "Sanitary Certificate"}</th>
+                    <th className="pb-2 text-left">{lang === "ar" ? "إجراءات التحكم" : "Control"}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {employeesPool.filter(emp => {
+                    const search = employeeSearchTerm.toLowerCase();
+                    return (emp.name || "").toLowerCase().includes(search) ||
+                           (emp.nationalId || "").includes(search) ||
+                           (emp.role || "").toLowerCase().includes(search);
+                  }).map(emp => {
+                    const workShift = emp.shift || (lang === "ar" ? "صباحية (08:00 - 16:00)" : "Morning (08:00 - 16:00)");
+                    const hasCert = emp.healthCertificate && emp.healthCertificate.number;
+                    return (
+                      <tr key={emp.id} className="hover:bg-white/5 transition duration-150">
+                        <td className="py-3 font-bold">
+                          <span className={isDark ? "text-white" : "text-neutral-800"}>{emp.name}</span>
+                          <span className="text-[9px] text-gray-400 font-mono block">ID: {emp.id} | {lang === "ar" ? "سجل:" : "National ID:"} {emp.nationalId}</span>
+                        </td>
+                        <td className="py-3 text-center text-gray-300 font-mono">{emp.role}</td>
+                        <td className="py-3 text-center font-mono text-gray-400 text-[10px]">{emp.email || "partner@sovereign.sa"}</td>
+                        <td className="py-3 text-center">
+                          <span className="px-2 py-0.5 rounded text-[9px] bg-blue-500/10 text-blue-300 font-semibold border border-blue-500/20 font-sans">
+                            🕒 {workShift}
+                          </span>
+                        </td>
+                        <td className="py-3 text-center font-mono">
+                          {hasCert ? (
+                            <span className="text-emerald-400 font-bold text-[10px]">
+                              {emp.healthCertificate?.number} (Exp: {emp.healthCertificate?.expiryDate})
+                            </span>
+                          ) : (
+                            <span className="text-gray-500">-</span>
+                          )}
+                        </td>
+                        <td className="py-3 text-left">
+                          <div className="flex justify-start gap-1.5">
+                            <button
+                              onClick={() => setEditingEmployee(emp)}
+                              className="cursor-pointer bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 p-1 px-2 rounded font-bold text-[9px] transition"
+                            >
+                              {lang === "ar" ? "تعديل" : "Edit"}
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (window.confirm(lang === "ar" ? `هل ترغب بالفعل في حذف الموظف "${emp.name}" نهائياً من سجل الكيان وكافة الفروع؟` : `Are you sure you want to delete employee "${emp.name}" from the system?`)) {
+                                  if (setEmployees) {
+                                    setEmployees(prev => prev.filter(item => item.id !== emp.id));
+                                  }
+                                  // Cleanse assignments in local state
+                                  const cleanedWF = { ...workforce };
+                                  Object.keys(cleanedWF).forEach(brId => {
+                                    cleanedWF[brId] = (cleanedWF[brId] || []).filter(item => item.id !== emp.id);
+                                  });
+                                  setWorkforce(cleanedWF);
+                                  
+                                  pushNewC9Event("حذف وإلغاء سجل موظف من الكيان", emp.id, { id: emp.id, name: emp.name });
+                                  addAlert(
+                                    lang === "ar" 
+                                      ? `تم حذف سجل الموظف "${emp.name}" وتطهير كافة تفرعاته الجغرافية.` 
+                                      : `Successfully deleted employee "${emp.name}"!`, 
+                                    "medium"
+                                  );
+                                }
+                              }}
+                              className="cursor-pointer bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 p-1 px-2 rounded font-bold text-[9px] transition"
+                            >
+                              {lang === "ar" ? "حذف" : "Delete"}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assign Employee Modal inclusion */}
+      <AnimatePresence>
+        {showAssignModal && (
+          <AssignEmployeeToBranchModal
+            lang={lang}
+            isDark={isDark}
+            selectedBranch={selectedBranch}
+            employeesPool={employeesPool}
+            addAlert={addAlert}
+            onClose={() => setShowAssignModal(false)}
+            onAssignEmployee={(empData) => {
+              // Add assigned workforce
+              const currentList = workforce[selectedBranchId] || [];
+              const targetMem: WorkforceMember = {
+                id: empData.id,
+                name: empData.name,
+                nationalId: empData.nationalId,
+                role: empData.role,
+                ...(empData.healthCertificate ? { healthCertificate: empData.healthCertificate } : {})
+              };
+
+              setWorkforce({
+                ...workforce,
+                [selectedBranchId]: [...currentList, targetMem]
+              });
+
+              pushNewC9Event("توطين وتثبيت موظف بالفرع", selectedBranchId, targetMem);
+              addAlert(
+                lang === "ar"
+                  ? `تم توحيد وربط الموظف "${empData.name}" بالفرع ممتثلاً.`
+                  : `Successfully assigned "${empData.name}" to the branch workforce ledger.`,
+                "medium"
+              );
+              setShowAssignModal(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Corporate Registry ADD Employee Modal */}
+      <AnimatePresence>
+        {showAddEmployeeModal && (
+          <AddEmployeeModal
+            lang={lang}
+            isDark={isDark}
+            onClose={() => setShowAddEmployeeModal(false)}
+            onSave={(newEmp) => {
+              const formattedEmp = {
+                ...newEmp,
+                entityId: activeOrgId || "7009418374",
+                entityName: "المنشأة المعتمدة الحالية"
+              };
+              if (setEmployees) {
+                setEmployees(prev => [formattedEmp, ...prev]);
+              }
+              pushNewC9Event("توثيق بطاقة أخصائي ميداني (Employee Registered)", formattedEmp.id, formattedEmp);
+              addAlert(lang === "ar" ? `تم تسجيل وتدقيق الموظف الجديد "${newEmp.name}" في السجل العام بنجاح!` : `Successfully registered "${newEmp.name}" on general ledger!`, "medium");
+              setShowAddEmployeeModal(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Corporate Registry EDIT Employee Modal */}
+      <AnimatePresence>
+        {editingEmployee && (
+          <EditEmployeeModal
+            lang={lang}
+            isDark={isDark}
+            employee={editingEmployee}
+            onClose={() => setEditingEmployee(null)}
+            onSave={(updated) => {
+              if (setEmployees) {
+                setEmployees(prev => prev.map(item => item.id === updated.id ? { ...item, ...updated } : item));
+              }
+              
+              // Maintain synchronous update in workforce branch assignments
+              const updatedWF = { ...workforce };
+              Object.keys(updatedWF).forEach(brId => {
+                updatedWF[brId] = (updatedWF[brId] || []).map(item => {
+                  if (item.id === updated.id) {
+                    return {
+                      ...item,
+                      name: updated.name,
+                      nationalId: updated.nationalId,
+                      role: updated.role,
+                      ...(updated.healthCertificate ? { healthCertificate: updated.healthCertificate } : {})
+                    };
+                  }
+                  return item;
+                });
+              });
+              setWorkforce(updatedWF);
+
+              pushNewC9Event("تحرير وتحديث بيانات كادر fني", updated.id, updated);
+              addAlert(lang === "ar" ? `تم تحديث بطاقة وحالة الموظف "${updated.name}" بنجاح!` : `Successfully updated employee card for "${updated.name}"!`, "low");
+              setEditingEmployee(null);
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ==========================================
+// AddEmployeeModal
+// ==========================================
+interface AddEmployeeModalProps {
+  onClose: () => void;
+  lang: "ar" | "en";
+  isDark: boolean;
+  onSave: (emp: {
+    id: string;
+    name: string;
+    nationalId: string;
+    role: string;
+    email: string;
+    shift: string;
+    healthCertificate?: {
+      number: string;
+      expiryDate: string;
+      issuer: string;
+    };
+  }) => void;
+}
+
+export function AddEmployeeModal({ onClose, lang, isDark, onSave }: AddEmployeeModalProps) {
+  const [name, setName] = useState("");
+  const [nationalId, setNationalId] = useState("");
+  const [role, setRole] = useState("أخصائي أغذية وكفاءة فنية");
+  const [email, setEmail] = useState("");
+  const [shift, setShift] = useState(lang === "ar" ? "فترة صباحية (08:00 - 16:00)" : "Morning Shift (08:00 - 16:00)");
+  
+  const [hasHC, setHasHC] = useState(false);
+  const [hcNumber, setHcNumber] = useState("");
+  const [hcExpiry, setHcExpiry] = useState("2027-05-20");
+  const [hcIssuer, setHcIssuer] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !nationalId.trim()) return;
+
+    onSave({
+      id: `EMP-${Date.now()}`,
+      name,
+      nationalId,
+      role,
+      email: email || `${name.trim().toLowerCase().replace(/\s+/g, '')}@sovereign.sa`,
+      shift,
+      healthCertificate: hasHC && hcNumber ? {
+        number: hcNumber,
+        expiryDate: hcExpiry,
+        issuer: hcIssuer || (lang === "ar" ? "أمانة منطقة الرياض" : "Balady Health Dept")
+      } : undefined
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1c2541] backdrop-blur-sm font-sans text-right" dir="rtl">
+      <div className={`w-full max-w-md p-6 rounded-2xl border text-right ${isDark ? "bg-[#040811] border-[#D4AF37]/20 text-white" : "bg-white border-neutral-200 text-neutral-800"}`}>
+        <div className="flex justify-between items-center border-b border-white/10 pb-3 mb-4 flex-row-reverse">
+          <h3 className="text-sm font-black text-[#D4AF37]">
+            {lang === "ar" ? "إنشاء وتوثيق بطاقة موظف جديد" : "Establish New Employee Profile"}
+          </h3>
+          <button type="button" onClick={onClose} className="cursor-pointer text-gray-400 hover:text-white font-bold text-sm">✕</button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-right">
+          <div>
+            <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "الاسم الرباعي الكامل:" : "Full Name:"}</label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={lang === "ar" ? "مثال: عبد المطلب محمد الخالدي" : "e.g. Abdulmuttalib Al-Khaldi"}
+              className={`w-full p-2.5 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+            />
+          </div>
+
+          <div>
+            <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "رقم الهوية الوطنية / الإقامة:" : "National/Iqama ID:"}</label>
+            <input
+              type="text"
+              required
+              pattern="[0-9]{10}"
+              maxLength={10}
+              value={nationalId}
+              onChange={(e) => setNationalId(e.target.value.replace(/\D/g, ""))}
+              placeholder="10XXXXXXXX"
+              className={`w-full p-2.5 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 text-right">
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "البريد الإلكتروني المهنـي:" : "Corporate Email:"}</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="user@sovereign.sa"
+                className={`w-full p-2.5 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "المسمى الوظيفي:" : "Job Role:"}</label>
+              <input
+                type="text"
+                required
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                placeholder={lang === "ar" ? "مثال: أخصائي كفاءة أغذية" : "e.g. Salon Technician"}
+                className={`w-full p-2.5 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "جدول نوبة العمل:" : "Assigned Work Shift Scheduled:"}</label>
+            <select
+              value={shift}
+              onChange={(e) => setShift(e.target.value)}
+              className={`w-full text-xs p-2 rounded border focus:outline-none focus:border-[#D4AF37] ${isDark ? "bg-[#1c2541] text-gray-200 border-white/10" : "bg-neutral-50 text-neutral-800 border-neutral-300"}`}
+            >
+              <option value={lang === "ar" ? "فترة صباحية (08:00 - 16:00)" : "Morning Shift (08:00 - 16:00)"}>
+                {lang === "ar" ? "فترة صباحية (08:00 - 16:00)" : "Morning Shift (08:00 - 16:00)"}
+              </option>
+              <option value={lang === "ar" ? "فترة مسائية (16:00 - 00:00)" : "Evening Shift (16:00 - 00:00)"}>
+                {lang === "ar" ? "فترة مسائية (16:00 - 00:00)" : "Evening Shift (16:00 - 00:00)"}
+              </option>
+              <option value={lang === "ar" ? "فترة ليلية (00:00 - 08:00)" : "Night Shift (00:00 - 08:00)"}>
+                {lang === "ar" ? "فترة ليلية (00:00 - 08:00)" : "Night Shift (00:00 - 08:00)"}
+              </option>
+            </select>
+          </div>
+
+          {/* Conditional health card attributes */}
+          <div className="border-t border-white/10 pt-3 mt-2 text-right">
+            <label className="flex items-center gap-2 justify-end cursor-pointer text-xs mb-2">
+              <span className="font-bold">{lang === "ar" ? "هل يحمل هذا الموظف كرت صحي بلدي؟" : "Add sanitary municipal certificate?"}</span>
+              <input
+                type="checkbox"
+                checked={hasHC}
+                onChange={(e) => setHasHC(e.target.checked)}
+                className="accent-[#D4AF37]"
+              />
+            </label>
+
+            {hasHC && (
+              <div className="space-y-3 bg-white/5 p-3 rounded border border-white/5 text-right">
+                <div>
+                  <label className="block text-[9px] text-gray-400 mb-0.5 font-bold">{lang === "ar" ? "رقم مرجع الكرت الصحي:" : "License Card No:"}</label>
+                  <input
+                    type="text"
+                    required
+                    value={hcNumber}
+                    onChange={(e) => setHcNumber(e.target.value)}
+                    placeholder="HC-14XXXXXXXX"
+                    className={`w-full p-2 text-xs rounded border focus:outline-none text-right font-mono ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-white text-neutral-900 border-neutral-200"}`}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-right">
+                  <div>
+                    <label className="block text-[9px] text-gray-400 mb-0.5 font-bold">{lang === "ar" ? "تاريخ انتهاء الصلاحية:" : "Expiry Date:"}</label>
+                    <input
+                      type="date"
+                      required
+                      value={hcExpiry}
+                      onChange={(e) => setHcExpiry(e.target.value)}
+                      className={`w-full p-2 text-xs rounded border focus:outline-none text-center font-mono ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-white text-neutral-900 border-neutral-200"}`}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[9px] text-gray-400 mb-0.5 font-bold">{lang === "ar" ? "جهة الاعتماد الطبية:" : "Medical Issuer:"}</label>
+                    <input
+                      type="text"
+                      value={hcIssuer}
+                      onChange={(e) => setHcIssuer(e.target.value)}
+                      placeholder={lang === "ar" ? "أمانة منطقة الرياض" : "Balady Health Dept"}
+                      className={`w-full p-2 text-xs text-white rounded border focus:outline-none text-right ${isDark ? "bg-[#1c2541] border border-white/10" : "bg-neutral-50 text-neutral-950 border-neutral-300"}`}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-between items-center pt-4 border-t border-white/10 flex-row-reverse text-right">
+            <button
+              type="submit"
+              className="cursor-pointer bg-[#D4AF37] hover:bg-[#b08f2e] text-black font-extrabold px-5 py-2 rounded-lg text-xs font-sans"
+            >
+              {lang === "ar" ? "تسجيل الموظف وتدقيقه آلياً" : "Add and Verify"}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className={`px-4 py-2 rounded-lg text-xs border font-sans ${isDark ? "border-white/10 text-gray-300 hover:bg-white/5" : "border-neutral-300 text-neutral-600 hover:bg-neutral-100"}`}
+            >
+              {lang === "ar" ? "إلغاء الأمر" : "Cancel"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// EditEmployeeModal
+// ==========================================
+interface EditEmployeeModalProps {
+  employee: any;
+  onClose: () => void;
+  lang: "ar" | "en";
+  isDark: boolean;
+  onSave: (emp: any) => void;
+}
+
+export function EditEmployeeModal({ employee, onClose, lang, isDark, onSave }: EditEmployeeModalProps) {
+  const [name, setName] = useState(employee.name);
+  const [nationalId, setNationalId] = useState(employee.nationalId);
+  const [role, setRole] = useState(employee.role);
+  const [email, setEmail] = useState(employee.email || "");
+  const [shift, setShift] = useState(employee.shift || (lang === "ar" ? "فترة صباحية (08:00 - 16:00)" : "Morning Shift (08:00 - 16:00)"));
+  
+  const [hasHC, setHasHC] = useState(!!employee.healthCertificate);
+  const [hcNumber, setHcNumber] = useState(employee.healthCertificate?.number || "");
+  const [hcExpiry, setHcExpiry] = useState(employee.healthCertificate?.expiryDate || "2027-05-20");
+  const [hcIssuer, setHcIssuer] = useState(employee.healthCertificate?.issuer || "");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !nationalId.trim()) return;
+
+    onSave({
+      ...employee,
+      name,
+      nationalId,
+      role,
+      email,
+      shift,
+      healthCertificate: hasHC && hcNumber ? {
+        number: hcNumber,
+        expiryDate: hcExpiry,
+        issuer: hcIssuer || (lang === "ar" ? "أمانة منطقة الرياض" : "Balady Health Dept")
+      } : undefined
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1c2541] backdrop-blur-sm font-sans text-right" dir="rtl">
+      <div className={`w-full max-w-md p-6 rounded-2xl border text-right ${isDark ? "bg-[#040811] border-[#D4AF37]/20 text-white" : "bg-white border-neutral-200 text-neutral-800"}`}>
+        <div className="flex justify-between items-center border-b border-white/10 pb-3 mb-4 flex-row-reverse">
+          <h3 className="text-sm font-black text-[#D4AF37]">
+            {lang === "ar" ? `تعديل بطاقة الموظف: ${employee.name}` : `Edit Profile: ${employee.name}`}
+          </h3>
+          <button type="button" onClick={onClose} className="cursor-pointer text-gray-400 hover:text-white font-bold text-sm">✕</button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-right">
+          <div>
+            <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "الاسم الكامل المعتمد:" : "Full Name:"}</label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={`w-full p-2.5 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+            />
+          </div>
+
+          <div>
+            <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "رقم الهوية الوطنية / الإقامة:" : "National/Iqama ID:"}</label>
+            <input
+              type="text"
+              required
+              pattern="[0-9]{10}"
+              maxLength={10}
+              value={nationalId}
+              onChange={(e) => setNationalId(e.target.value.replace(/\D/g, ""))}
+              className={`w-full p-2.5 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 text-right">
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "البريد الإلكتروني المهنـي:" : "Corporate Email:"}</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`w-full p-2.5 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "المسمى الوظيفي المعين:" : "Job Role:"}</label>
+              <input
+                type="text"
+                required
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className={`w-full p-2.5 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "جدول نوبة العمل:" : "Assigned Work Shift Scheduled:"}</label>
+            <select
+              value={shift}
+              onChange={(e) => setShift(e.target.value)}
+              className={`w-full text-xs p-2 rounded border focus:outline-none focus:border-[#D4AF37] ${isDark ? "bg-[#1c2541] text-gray-200 border-white/10" : "bg-neutral-50 text-neutral-800 border-neutral-300"}`}
+            >
+              <option value={lang === "ar" ? "فترة صباحية (08:00 - 16:00)" : "Morning Shift (08:00 - 16:00)"}>
+                {lang === "ar" ? "فترة صباحية (08:00 - 16:00)" : "Morning Shift (08:00 - 16:00)"}
+              </option>
+              <option value={lang === "ar" ? "فترة مسائية (16:00 - 00:00)" : "Evening Shift (16:00 - 00:00)"}>
+                {lang === "ar" ? "فترة مسائية (16:00 - 00:00)" : "Evening Shift (16:00 - 00:00)"}
+              </option>
+              <option value={lang === "ar" ? "فترة ليلية (00:00 - 08:00)" : "Night Shift (00:00 - 08:00)"}>
+                {lang === "ar" ? "فترة ليلية (00:00 - 08:00)" : "Night Shift (00:00 - 08:00)"}
+              </option>
+            </select>
+          </div>
+
+          {/* Conditional health card attributes */}
+          <div className="border-t border-white/10 pt-3 mt-2 text-right">
+            <label className="flex items-center gap-2 justify-end cursor-pointer text-xs mb-2">
+              <span className="font-bold">{lang === "ar" ? "هل يحمل كرت صحي بلدي معتمد؟" : "Add/Edit sanitary certificate?"}</span>
+              <input
+                type="checkbox"
+                checked={hasHC}
+                onChange={(e) => setHasHC(e.target.checked)}
+                className="accent-[#D4AF37]"
+              />
+            </label>
+
+            {hasHC && (
+              <div className="space-y-3 bg-white/5 p-3 rounded border border-white/5 text-right">
+                <div>
+                  <label className="block text-[9px] text-gray-400 mb-0.5 font-bold">{lang === "ar" ? "رقم مرجع الكرت الصحي:" : "License Card No:"}</label>
+                  <input
+                    type="text"
+                    required
+                    value={hcNumber}
+                    onChange={(e) => setHcNumber(e.target.value)}
+                    className={`w-full p-2 text-xs rounded border focus:outline-none text-right font-mono ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-white text-neutral-900 border-neutral-200"}`}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-right">
+                  <div>
+                    <label className="block text-[9px] text-gray-400 mb-0.5 font-bold">{lang === "ar" ? "تاريخ لانتهاء التراخيص:" : "Expiry Date:"}</label>
+                    <input
+                      type="date"
+                      required
+                      value={hcExpiry}
+                      onChange={(e) => setHcExpiry(e.target.value)}
+                      className={`w-full p-2 text-xs rounded border focus:outline-none text-center font-mono ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-white text-neutral-900 border-neutral-200"}`}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[9px] text-gray-400 mb-0.5 font-bold">{lang === "ar" ? "الجهة المصدرة للكرت:" : "Medical Issuer:"}</label>
+                    <input
+                      type="text"
+                      value={hcIssuer}
+                      onChange={(e) => setHcIssuer(e.target.value)}
+                      className={`w-full p-2 text-xs rounded border focus:outline-none text-right ${isDark ? "bg-[#1c2541] border-white/10 text-white" : "bg-white text-neutral-900 border-neutral-200"}`}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-between items-center pt-4 border-t border-white/10 flex-row-reverse text-right">
+            <button
+              type="submit"
+              className="cursor-pointer bg-[#D4AF37] hover:bg-[#b08f2e] text-black font-extrabold px-5 py-2 rounded-lg text-xs font-sans"
+            >
+              {lang === "ar" ? "حفظ وتوثيق التحديثات" : "Save changes"}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className={`px-4 py-2 rounded-lg text-xs border font-sans ${isDark ? "border-white/10 text-gray-300 hover:bg-white/5" : "border-neutral-300 text-neutral-600 hover:bg-neutral-100"}`}
+            >
+              {lang === "ar" ? "إلغاء وترك التعديل" : "Cancel"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// AssignEmployeeToBranchModal (Specific Modal Component Request)
+// ==========================================
+interface AssignEmployeeToBranchModalProps {
+  onClose: () => void;
+  lang: "ar" | "en";
+  isDark: boolean;
+  selectedBranch: Branch;
+  employeesPool: Array<{ id: string; name: string; nationalId: string; role: string; }>;
+  addAlert: (text: string, severity: "low" | "medium" | "high") => void;
+  onAssignEmployee: (emp: {
+    id: string;
+    name: string;
+    nationalId: string;
+    role: string;
+    healthCertificate?: HealthCertificate;
+  }) => void;
+}
+
+export function AssignEmployeeToBranchModal({
+  onClose,
+  lang,
+  isDark,
+  selectedBranch,
+  employeesPool,
+  addAlert,
+  onAssignEmployee
+}: AssignEmployeeToBranchModalProps) {
+  const [selectedEmpId, setSelectedEmpId] = useState("");
+  const [hcNumber, setHcNumber] = useState("");
+  const [hcExpiry, setHcExpiry] = useState("2027-05-20");
+  const [hcIssuer, setHcIssuer] = useState("");
+  
+  // Simulated OCR & drag uploader states v9.0
+  const [isScanning, setIsScanning] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+
+  const handleSimulatedOCR = () => {
+    setIsScanning(true);
+    setTimeout(() => {
+      const randomID = "HC-PENDING";
+      setHcNumber(randomID);
+      setHcExpiry("2027-11-14");
+      setHcIssuer(lang === "ar" ? "وزارة الشؤون البلدية والقروية والإسكان" : "MOMRAH Balady Portal");
+      setIsScanning(false);
+      
+      addAlert(
+        lang === "ar" 
+          ? "نجاح استخراج بيانات كرت بلدي الموحد وتعبئتها بواسطة مساعد LEXI!" 
+          : "Successfully extracted Balady credentials using Sovereign AI!", 
+        "medium"
+      );
+    }, 1200);
+  };
+  
+  const [lexiResult, setLexiResult] = useState<LexiResult | null>(null);
+
+  const isHealthSector = ["restaurant", "cafe", "health", "salon"].includes(selectedBranch?.branch_type);
+
+  // Real-time LEXI validation checks as user edits the certificate form fields
+  useEffect(() => {
+    if (!selectedEmpId) {
+      setLexiResult(null);
+      return;
+    }
+
+    const matchedEmp = employeesPool.find(e => e.id === selectedEmpId);
+    if (!matchedEmp) return;
+
+    const check: LexiResult = LEXI.validateWorkforceAssignment({
+      branch_type: selectedBranch.branch_type,
+      employee_id: matchedEmp.id,
+      employee_name: matchedEmp.name,
+      health_certificate_number: isHealthSector ? hcNumber : undefined,
+      health_certificate_expiry: isHealthSector ? hcExpiry : undefined,
+      health_certificate_issuer: isHealthSector ? hcIssuer : undefined,
+      currentDate: "2026-05-20"
+    });
+
+    setLexiResult(check);
+  }, [selectedEmpId, hcNumber, hcExpiry, hcIssuer, selectedBranch]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const matchedEmp = employeesPool.find(e => e.id === selectedEmpId);
+    if (!matchedEmp) {
+      alert(lang === "ar" ? "يرجى اختيار موظف من القائمة." : "Select employee first.");
+      return;
+    }
+
+    // Double check with latest validation
+    const check: LexiResult = LEXI.validateWorkforceAssignment({
+      branch_type: selectedBranch.branch_type,
+      employee_id: matchedEmp.id,
+      employee_name: matchedEmp.name,
+      health_certificate_number: isHealthSector ? hcNumber : undefined,
+      health_certificate_expiry: isHealthSector ? hcExpiry : undefined,
+      health_certificate_issuer: isHealthSector ? hcIssuer : undefined,
+      currentDate: "2026-05-20"
+    });
+
+    setLexiResult(check);
+
+    if (check.decision === "block") {
+      // Reject submission immediately if health requirements are not met or blocked
+      return;
+    }
+
+    // Success - short delay to show sealed log
+    setTimeout(() => {
+      onAssignEmployee({
+        id: matchedEmp.id,
+        name: matchedEmp.name,
+        nationalId: matchedEmp.nationalId,
+        role: matchedEmp.role,
+        ...(isHealthSector ? {
+          healthCertificate: {
+            number: hcNumber,
+            expiryDate: hcExpiry,
+            issuer: hcIssuer || (lang === "ar" ? "أمانة منطقة الرياض المعتمدة" : "Balady Municipal Hub")
+          }
+        } : {})
+      });
+      onClose();
+    }, 1200);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-[#1c2541] backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className={`w-full max-w-md p-6 rounded-2xl border shadow-2xl relative text-right ${isDark ? "bg-[#0b1019] border-[#D4AF37]/30 text-white" : "bg-white text-neutral-800 border-neutral-300"}`}
+      >
+        <div className="flex justify-between items-center border-b border-white/10 pb-3 flex-row-reverse mb-4">
+          <h3 className="text-sm font-black text-[#D4AF37] flex items-center gap-1.5">
+            <UserCheck className="w-4.5 h-4.5 text-[#D4AF37]" />
+            <span>{lang === "ar" ? "ربط وتفويض كفاءة بالفرع الجغرافي" : "Authorize Workforce Coordinates Binding"}</span>
+          </h3>
+          <button 
+            type="button"
+            onClick={onClose}
+            className="text-gray-400 hover:text-white font-bold cursor-pointer font-mono"
+          >
+            ❌
+          </button>
+        </div>
+
+        {/* Banner with Target Branch Type Details */}
+        <div className="bg-blue-500/10 border border-blue-500/20 text-blue-300 rounded-lg p-3 text-xs mb-3 text-right">
+          <div className="flex justify-between flex-row-reverse">
+            <strong>{lang === "ar" ? "الفرع المختار:" : "Selected Branch:"}</strong>
+            <span className="text-white font-bold">{selectedBranch?.branch_name}</span>
+          </div>
+          <div className="flex justify-between flex-row-reverse mt-1">
+            <strong>{lang === "ar" ? "نوع النشاط التجاري بلدي:" : "Municipal Category:"}</strong>
+            <span className="text-[#D4AF37] font-bold font-mono">
+              {lang === "ar" ? municipalTypeLabels[selectedBranch?.branch_type]?.ar : municipalTypeLabels[selectedBranch?.branch_type]?.en}
+            </span>
+          </div>
+        </div>
+
+        {/* 🏢 MOMRAH LEXI Health Assistant HUD v9.0 */}
+        <div className={`p-3 rounded-xl border text-[10px] leading-relaxed flex items-start gap-2 flex-row-reverse mb-4 ${isDark ? "bg-[#D4AF37]/5 border-[#D4AF37]/25 text-[#D4AF37]" : "bg-amber-50 border-amber-200 text-amber-800"}`}>
+          <div className="flex-1 min-w-0 pr-1 text-right">
+            <span className="font-extrabold block text-[10.5px] border-b border-white/5 pb-0.5 mb-1">
+              {lang === "ar" ? "💬 مساعد الصحة بلدي من LEXI:" : "💬 MOMRAH LEXI Health Assistant:"}
+            </span>
+            {isHealthSector ? (
+              <p className="font-sans font-medium">
+                {lang === "ar" 
+                  ? "يتطلب هذا النشاط الغذائي/الصحي شهادة صحية رقمية سارية المفعول ومصادقة من أمانة المنطقة للامتثال. يمكنك محاكاة القراءة السريعة برفع كرت مستند أو محاكاة OCR." 
+                  : "This food/hygiene sector mandates a valid Balady sanitary permit. Use the OCR uploader/simulation below to instantly parse and populate certificates."}
+              </p>
+            ) : (
+              <p className="font-sans font-medium text-gray-400">
+                {lang === "ar" 
+                  ? "النشاط الحالي غير المقيّد بالشهادات الصحية المكثفة. تفويض الموظفين يتم تلقائياً تحت الفحص الجغرافي العادي دون كرت صحي." 
+                  : "This retail/office sector doesn't require health permits. Authorization is processed under location geofencing rules."}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-right">
+          
+          {/* Select Employee */}
+          <div>
+            <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "اختر الكادر المعتمد بالمؤسسة:" : "Choose Employee Target:"}</label>
+            <select
+              required
+              value={selectedEmpId}
+              onChange={e => setSelectedEmpId(e.target.value)}
+              className={`w-full p-2.5 text-xs text-white rounded focus:border-[#D4AF37] focus:outline-none text-right ${isDark ? "bg-[#1c2541] border border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+            >
+              <option value="">{lang === "ar" ? "-- اختر موظف متاح --" : "-- Select Employee Pool --"}</option>
+              {employeesPool.map(e => (
+                <option key={e.id} value={e.id}>{e.name} (Iqama: {e.nationalId} • {e.role})</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Conditional Health Certificate inputs */}
+          {isHealthSector && (
+            <div className={`p-4 rounded-xl border space-y-3.5 text-right ${isDark ? "bg-[#040811] border-white/10" : "bg-neutral-50 border-neutral-200"}`}>
+              <span className="text-[10px] text-[#D4AF37] font-bold block pb-1 border-b border-white/5 flex items-center justify-end gap-1 flex-row-reverse">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                <span>{lang === "ar" ? "إقرار الشهادة الصحية البلدية بلدي:" : "Balady Municipal Health Card Mandate:"}</span>
+              </span>
+
+              {/* Drag & Drop OCR Certificate Parser v9.0 */}
+              <div 
+                onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+                onDragLeave={() => setDragActive(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setDragActive(false);
+                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    handleSimulatedOCR();
+                  }
+                }}
+                className={`p-3 border-2 border-dashed rounded-xl text-center transition-all ${
+                  dragActive 
+                    ? "border-[#D4AF37] bg-[#D4AF37]/10" 
+                    : isDark ? "border-white/10 bg-[#1c2541] hover:border-white/20" : "border-neutral-300 bg-white hover:border-neutral-400"
+                }`}
+              >
+                {isScanning ? (
+                  <div className="space-y-2 py-2">
+                    <div className="w-5 h-5 border-2 border-t-[#D4AF37] border-white/10 rounded-full animate-spin mx-auto" />
+                    <p className="text-[9px] text-[#D4AF37] font-sans font-black animate-pulse">
+                      {lang === "ar" 
+                        ? "جاري مَسْح الكرت بالذكاء الاصطناعي في بلدي..." 
+                        : "AI OCR processing... verifying with Balady system..."}
+                    </p>
+                  </div>
+                ) : (
+                  <label className="cursor-pointer block space-y-1">
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*,application/pdf"
+                      onChange={() => handleSimulatedOCR()}
+                    />
+                    <span className="block text-xs font-bold text-blue-400 font-sans hover:underline">
+                      📁 {lang === "ar" ? "اسحب وأسقط أو ارفع صورة كرت بلدي" : "Drag & drop or upload Balady Card"}
+                    </span>
+                    <span className="block text-[8px] text-gray-400">
+                      {lang === "ar" ? "يتيح القراءة والتعرف التلقائي بلمسة واحدة" : "Detects card details automatically via simulated OCR extraction"}
+                    </span>
+                  </label>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "رقم الشهادة الصحية:" : "Health card/certificate ID:"}</label>
+                <input
+                  type="text"
+                  placeholder="HC-14XXXXXXXX"
+                  value={hcNumber}
+                  onChange={e => setHcNumber(e.target.value)}
+                  className={`w-full p-2 text-xs text-white rounded focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-[#1c2541] border border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[9px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "تاريخ انتهاء الصلاحية:" : "Expiration Date:"}</label>
+                  <input
+                    type="date"
+                    value={hcExpiry}
+                    required={hcNumber.trim().length > 0}
+                    onChange={e => setHcExpiry(e.target.value)}
+                    className={`w-full p-2 text-xs text-white rounded focus:border-[#D4AF37] focus:outline-none font-mono ${isDark ? "bg-[#1c2541] border border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[9px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "الجهة الطبية المصدرة:" : "Certified Issuer:"}</label>
+                  <input
+                    type="text"
+                    placeholder={lang === "ar" ? "أمانة منطقة الرياض" : "Balady Health Dept"}
+                    value={hcIssuer}
+                    onChange={e => setHcIssuer(e.target.value)}
+                    className={`w-full p-2 text-xs text-white rounded focus:border-[#D4AF37] focus:outline-none text-right ${isDark ? "bg-[#1c2541] border border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Interactive LEXI Evaluative Guard v7.0 */}
+          {lexiResult && (
+            <div className={`p-4 rounded-xl text-right text-xs space-y-1.5 transition-all ${lexiResult.decision === "block" ? "bg-red-500/10 border border-red-500/30 text-red-200" : "bg-emerald-500/10 border border-emerald-500/35 text-emerald-200"}`}>
+              <div className="flex justify-between items-center border-b border-neutral-500/20 pb-1 flex-row-reverse mb-1">
+                <span className="font-sans font-black text-[#D4AF37] flex items-center gap-1.5">
+                  <FileCheck className="w-4 h-4" />
+                  <span>{lang === "ar" ? "تقييم العمالة بمحرك التحقق LEXI" : "LEXI WORKFORCE DECISION"}</span>
+                </span>
+                <span className="font-mono text-[9px] font-bold bg-[#D4AF37]/20 text-[#D4AF37] px-1.5 rounded">{lexiResult.sealId}</span>
+              </div>
+              <p className="font-sans text-[10px] text-gray-400">
+                <strong className="text-white">{lang === "ar" ? "المادة النظامية:" : "Statutory Labor Article:"}</strong> {lexiResult.article}
+              </p>
+              <p className="font-medium text-xs font-sans leading-relaxed pt-1">
+                <strong className="text-white">{lang === "ar" ? "نتيجة التدقيق:" : "Validation Outcome:"}</strong> {lexiResult.reason}
+              </p>
+              {lexiResult.decision === "block" && (
+                <div className="flex items-center gap-1.5 justify-end text-rose-400 font-extrabold font-sans text-[10px] pt-1.5 border-t border-red-500/10 mt-2">
+                  <span>{lang === "ar" ? "لا يمكن إضافة الموظف — اشتراطات النشاط الصحي غير مكتملة." : "CANNOT ASSIGN STAFF — HEALTH STANDARDS INCOMPLETE."}</span>
+                  <AlertTriangle className="w-4 h-4 text-rose-400 stroke-[2.5]" />
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="flex justify-between items-center pt-3 border-t border-white/10 flex-row-reverse">
+            <button
+              type="submit"
+              disabled={lexiResult?.decision === "block"}
+              className={`bg-[#D4AF37] hover:bg-[#b08f2e] text-black font-extrabold px-6 py-2 rounded-lg text-xs transition active:scale-95 cursor-pointer flex items-center gap-1.5 ${lexiResult?.decision === "block" ? "opacity-30 cursor-not-allowed" : ""}`}
+            >
+              <ShieldCheck className="w-4.5 h-4.5 text-black" />
+              <span>{lang === "ar" ? "توثيق وتفويض الموظف" : "De-authorize & Commit Binding"}</span>
+            </button>
+            <span className="text-[9px] font-mono text-gray-500 font-bold">SEAL C9-SOCIETY-MATCH</span>
+          </div>
+
+        </form>
+      </motion.div>
+    </div>
+  );
+}

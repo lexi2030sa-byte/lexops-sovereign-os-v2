@@ -1,0 +1,1994 @@
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  ShieldCheck,
+  AlertTriangle,
+  Building2,
+  Users,
+  Compass,
+  FileText,
+  Clock,
+  CheckCircle,
+  HelpCircle,
+  Cpu,
+  TrendingUp,
+  Sliders,
+  AlertCircle,
+  X,
+  MapPin,
+  Flame,
+  UserCheck,
+  Zap,
+  Globe,
+  Plus,
+  ArrowRight,
+  Sparkles,
+  Video,
+  Play,
+  Image,
+  FileSpreadsheet,
+  Paperclip,
+  BookOpen
+} from "lucide-react";
+import SovereignMap from "./SovereignMap";
+import LexiVideoGenerator from "./LexiVideoGenerator";
+import SovereignUserGuide from "./SovereignUserGuide";
+
+interface SovereignGovernmentProps {
+  lang?: "ar" | "en";
+  setLang?: (lang: "ar" | "en") => void;
+  pilotModeEnabled: boolean;
+  setPilotModeEnabled: (enabled: boolean) => void;
+  citations?: any[];
+  objections?: any[];
+  pushNewC9Event?: (type: string, refId: string, payload: any) => void;
+}
+
+export default function SovereignGovernment({
+  lang = "ar",
+  setLang,
+  pilotModeEnabled,
+  setPilotModeEnabled,
+  citations = [],
+  objections = [],
+  pushNewC9Event
+}: SovereignGovernmentProps) {
+  const isAr = lang === "ar";
+
+  // State controls
+  const [activeCategoryTab, setActiveCategoryTab] = useState<"radar" | "preemptive" | "adaptive" | "selfaudit" | "pilot" | "investigations" | "guide">("radar");
+  const [isScreenLoading, setIsScreenLoading] = useState<boolean>(false);
+  const [selectedRegion, setSelectedRegion] = useState<string>("Riyadh");
+  const [showFaq, setShowFaq] = useState(false);
+  const [hapticTrigger, setHapticTrigger] = useState<string | null>(null);
+
+  // Investigations & Audit Terminal state
+  const [selectedCaseId, setSelectedCaseId] = useState<string>("CASE-101");
+  const [caseStatuses, setCaseStatuses] = useState<Record<string, "نشط (Active)" | "تحت المراجعة (Reviewing)" | "مغلَق بنجاح (Closed)">>({
+    "CASE-101": "نشط (Active)",
+    "CASE-102": "تحت المراجعة (Reviewing)",
+    "CASE-103": "نشط (Active)"
+  });
+  const [evidenceRequested, setEvidenceRequested] = useState<Record<string, boolean>>({
+    "CASE-101": false,
+    "CASE-102": true,
+    "CASE-103": false
+  });
+  const [caseWitnesses, setCaseWitnesses] = useState<Record<string, string>>({
+    "CASE-101": "إحداثيات GPS مفقودة بمحيط جدة لـ 4 ساعات متتالية",
+    "CASE-102": "تأخر مزامنة ساند الإلكترونية لمطابقة رخص بلدي سارية",
+    "CASE-103": "إشعار مبكر: تجاوز الموظف 10 ساعات عمل متتالية بمستودع الرياض"
+  });
+
+  // Quick electronic evidence states
+  const [evidenceLoadingType, setEvidenceLoadingType] = useState<string | null>(null);
+  const [caseEvidenceDocs, setCaseEvidenceDocs] = useState<Record<string, {
+    id: string;
+    type: "photo" | "contract" | "attendance" | "balady";
+    requestedAt: string;
+    status: "pending" | "received" | "binding";
+    docName: string;
+    docTypeAr: string;
+    docTypeEn: string;
+    ledgerHash: string;
+  }[]>>({
+    "CASE-101": [
+      {
+        id: "DOC-001",
+        type: "attendance",
+        requestedAt: "2026-05-27 10:15",
+        status: "received",
+        docName: "حضور جيو-فينس فرع جدة للمستودعات.xlsx",
+        docTypeAr: "سجلات حضور جغرافية موثقة",
+        docTypeEn: "GPS Attendance Records",
+        ledgerHash: "0xc9e8a712f84be110"
+      }
+    ],
+    "CASE-102": [
+      {
+        id: "DOC-002",
+        type: "balady",
+        requestedAt: "2026-05-26 14:22",
+        status: "received",
+        docName: "رخصة بلدي الموحدة - الرياض للمقاولات الميدانية.pdf",
+        docTypeAr: "شهادات رخص بلدي سارية",
+        docTypeEn: "Municipal Balady Licenses",
+        ledgerHash: "0x7bc2d488fa44119ae"
+      }
+    ],
+    "CASE-103": []
+  });
+
+  // Video generator state inside sheets
+  const [activeBottomSheet, setActiveBottomSheet] = useState<"video_generator" | "self_audit_sheet" | null>(null);
+  const [videoPromptText, setVideoPromptText] = useState("");
+  const [videoPromptContext, setVideoPromptContext] = useState<"document" | "evidence" | "objection" | "general">("general");
+
+  // Pilot Mode state
+  const [pilotPerformance, setPilotPerformance] = useState({
+    preventedViolations: 24,
+    avertedDisputes: 12,
+    complianceBefore: 64,
+    complianceAfter: 97,
+    pilotFacilitiesCount: 8
+  });
+
+  // Adaptive Compliance Settings
+  const [selectedCompanySize, setSelectedCompanySize] = useState<"small" | "medium" | "large">("medium");
+  const [selectedIncidentType, setSelectedIncidentType] = useState<"gps_breach" | "unrecorded_gosi" | "working_hours">("gps_breach");
+
+  // Self-Audit state
+  const [selfAuditAnswers, setSelfAuditAnswers] = useState<Record<string, boolean>>({
+    saudi_contract: true,
+    mada84: false,
+    gosi_sync: true,
+    gps_check: false,
+    baladi_licenses: true,
+    overtime_caps: false
+  });
+  const [selfAuditSubmitted, setSelfAuditSubmitted] = useState(false);
+  const [selfAuditResultScore, setSelfAuditResultScore] = useState<number>(0);
+  const [selfAuditSuggestions, setSelfAuditSuggestions] = useState<string[]>([]);
+
+  // Simple haptic helper
+  const simulateHaptic = (action: string) => {
+    setHapticTrigger(action);
+    setTimeout(() => setHapticTrigger(null), 180);
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(15);
+    }
+  };
+
+  const transitionToTab = (tab: typeof activeCategoryTab) => {
+    simulateHaptic(tab);
+    setIsScreenLoading(true);
+    setTimeout(() => {
+      setActiveCategoryTab(tab);
+      setIsScreenLoading(false);
+    }, 450);
+  };
+
+  const handleQuickEvidenceRequest = (type: "photo" | "contract" | "attendance" | "balady") => {
+    if (!selectedCaseId) return;
+    simulateHaptic(`quick-evidence-req-${type}`);
+    setEvidenceLoadingType(type);
+
+    // Realistic simulation: simulated 850ms network delay with Skeleton Load
+    setTimeout(() => {
+      const docNamesMap = {
+        photo: {
+          ar: "إثبات صورة الموقع للموظف - دقة استدلالية.jpg",
+          en: "Employee Site Photo - Cryptographic Spatial Integrity.jpg",
+          labelAr: "صورة الموقع ومطابقة المظهر الفعلي",
+          labelEn: "Site Photo & Visual Matching Verification"
+        },
+        contract: {
+          ar: "عقد عمل موحد ومسجل عبر قوى.pdf",
+          en: "Unified GOSI-QIWA Verified Labor Contract.pdf",
+          labelAr: "عقد العمل الرسمي المسجل",
+          labelEn: "Official Registered Labor contract"
+        },
+        attendance: {
+          ar: "ملخص حركة الحضور ومطابقة السياج الجغرافي.xlsx",
+          en: "Geofence Attendance Log Summary.xlsx",
+          labelAr: "سجل الحضور الذاتي المزدوج",
+          labelEn: "Double-Verify Geofencing Attendance Log"
+        },
+        balady: {
+          ar: "شهادة الامتثال التجاري وبطاقة الحسبة الطبية.pdf",
+          en: "Balady Commercial Health & Compliance Certificate.pdf",
+          labelAr: "شهادات ورخص بلدي الرسمية",
+          labelEn: "Official Municipal Balady License"
+        }
+      };
+
+      const meta = docNamesMap[type];
+      const newDoc = {
+        id: "DOC-PENDING",
+        type,
+        requestedAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        status: "received" as const,
+        docName: isAr ? meta.ar : meta.en,
+        docTypeAr: meta.labelAr,
+        docTypeEn: meta.labelEn,
+        ledgerHash: "PENDING_GOVERNMENT_SIGN"
+      };
+
+      // Add to state
+      setCaseEvidenceDocs(prev => ({
+        ...prev,
+        [selectedCaseId]: [newDoc, ...(prev[selectedCaseId] || [])]
+      }));
+
+      setEvidenceLoadingType(null);
+      simulateHaptic(`quick-evidence-received-${type}`);
+
+      // Auto binding to C9 Ledger via pushNewC9Event
+      if (pushNewC9Event) {
+        pushNewC9Event(
+          "إثبات إلكتروني سريع وتدقيق مستند",
+          selectedCaseId,
+          {
+            documentId: newDoc.id,
+            documentType: type,
+            docName: newDoc.docName,
+            ledgerHash: newDoc.ledgerHash,
+            action: "AUTO_BIND_TO_C9_LEDGER"
+          }
+        );
+      }
+    }, 850);
+  };
+
+  // Re-calculate pilot performance with a bit of dynamic delta when pilot mode is toggled
+  useEffect(() => {
+    if (pilotModeEnabled) {
+      setPilotPerformance({
+        preventedViolations: 38,
+        avertedDisputes: 19,
+        complianceBefore: 59,
+        complianceAfter: 98,
+        pilotFacilitiesCount: 10
+      });
+    } else {
+      setPilotPerformance({
+        preventedViolations: 21,
+        avertedDisputes: 11,
+        complianceBefore: 68,
+        complianceAfter: 94,
+        pilotFacilitiesCount: 6
+      });
+    }
+  }, [pilotModeEnabled]);
+
+  // Handle Self Audit submit
+  const handleSelfAuditSubmit = () => {
+    simulateHaptic("audit-submit");
+    let yesCount = 0;
+    const items = Object.values(selfAuditAnswers);
+    items.forEach(v => { if (v) yesCount++; });
+    const score = Math.round((yesCount / items.length) * 100);
+    setSelfAuditResultScore(score);
+
+    const suggest: string[] = [];
+    if (!selfAuditAnswers.mada84) {
+      suggest.push(
+        isAr 
+          ? "تنبيه المادة 84: يجب تفعيل بروتوكول التحقيق المكتوب قبل تطبيق الخصومات التي تزيد عن 5 أيام." 
+          : "Article 84 Alert: Written investigation protocol must be launched before deductions exceed 5 days."
+      );
+    }
+    if (!selfAuditAnswers.gps_check) {
+      suggest.push(
+        isAr
+          ? "تنبيه السياج الجغرافي: توجد 3 فروع مستثناة من التتبع الجغرافي، يرجى تقديم طلب إعفاء طارئ لتجنب غرامات أمانة الرياض."
+          : "Geofence Alert: 3 branches missing GPS mapping thresholds, submit emergency waiver to bypass municipal regulatory penalties."
+      );
+    }
+    if (!selfAuditAnswers.overtime_caps) {
+      suggest.push(
+        isAr
+          ? "ساعات العمل الإضافي: تم رصد تجاوز حد الـ 8 ساعات يومياً لبعض فروع المستودعات الميدانية؛ تفعيل نظام الفترات المتناوبة يحمي من المسؤولية المدنية."
+          : "Overtime Caps: Excess hours over 8 detected in field warehouses; activate cyclic shift schedules to lower corporate liability."
+      );
+    }
+    if (suggest.length === 0) {
+      suggest.push(
+        isAr
+          ? "امتياز كامل: تم استيفاء جميع المتطلبات الوقائية ومطابقة البنيان لجميع لوائح العمل والبلدية."
+          : "Absolute Immunity: All regulatory preconditions validated against Saudi Work and Baladi structures."
+      );
+    }
+
+    setSelfAuditSuggestions(suggest);
+    setSelfAuditSubmitted(true);
+
+    if (pushNewC9Event) {
+      pushNewC9Event(
+        "حساب تدقيق امتثال ذاتي منشأة (Corporate Self-Audit Evaluation Result)",
+        "GOV-SELF-AUDIT",
+        { score, suggestionsCount: suggest.length }
+      );
+    }
+  };
+
+  // Region and Risk Data for Government Compliance Radar Hotspots
+  const regionRiskData: Record<string, {
+    name: string;
+    nameEn: string;
+    riskScore: number;
+    riskLevel: string;
+    riskColor: string;
+    activeAlerts: string[];
+    monitoredFacilities: number;
+    trend: string;
+    incidentRatio: string;
+  }> = {
+    Riyadh: {
+      name: "فرع الرياض والوسطى",
+      nameEn: "Riyadh & Central Hub",
+      riskScore: 24,
+      riskLevel: isAr ? "منخفض" : "Low",
+      riskColor: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
+      activeAlerts: [
+        isAr ? "رصد تأخر بسيط في تسجيل GOSI لمنشأة لوجستية متفرعة" : "Minor delay in GOSI onboarding resolved for subsidiary logistics",
+        isAr ? "تم إخماد حظر GPS فرعي بنجاح بتطابق السياج" : "Secondary GPS breach averted via adaptive radius expansion"
+      ],
+      monitoredFacilities: 340,
+      trend: "📉 -4.2%",
+      incidentRatio: "0.02%"
+    },
+    Jeddah: {
+      name: "فرع جدة والغربية",
+      nameEn: "Jeddah & Western Hub",
+      riskScore: 68,
+      riskLevel: isAr ? "متوسط" : "Medium",
+      riskColor: "text-amber-400 border-amber-500/30 bg-amber-500/10",
+      activeAlerts: [
+        isAr ? "تنبيه حرج للتحقيق المكتوب: رصد خصم تعسفي لـ 8 موظفين دون صنف جلسة دفاعية" : "Critical written hearing breach: 8 employees deducted without litigation logs",
+        isAr ? "ثغرة ساعات تشغيل إضافي: تجاوز وقت الميدان 9.5 ساعة بمستودعات جدة" : "Overtime violation notice: field shifts exceeding 9.5 hours at Jeddah docks"
+      ],
+      monitoredFacilities: 210,
+      trend: "📈 +1.8%",
+      incidentRatio: "0.14%"
+    },
+    Dammam: {
+      name: "فرع المنطقة الشرقية",
+      nameEn: "Eastern Province Hub",
+      riskScore: 42,
+      riskLevel: isAr ? "متوسط" : "Medium",
+      riskColor: "text-amber-400 border-amber-500/30 bg-amber-500/10",
+      activeAlerts: [
+        isAr ? "استدعاء إذن طوارئ: تقديم مستند سيادي لنقل مهام عمالية مؤقتة بميناء الدمام" : "Emergency permit pending: temporary field reallocation requests at Dammam Port"
+      ],
+      monitoredFacilities: 178,
+      trend: "📉 -0.5%",
+      incidentRatio: "0.07%"
+    },
+    Mecca: {
+      name: "فرع مكة والمدينة",
+      nameEn: "Mecca & Medina District",
+      riskScore: 12,
+      riskLevel: isAr ? "منخفض جداً" : "Very Low",
+      riskColor: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
+      activeAlerts: [
+        isAr ? "امتثال كامل لجميع اشتراطات أمانة العاصمة المقدسة والبلدية" : "Perfect compliance matched with holy capital municipal laws"
+      ],
+      monitoredFacilities: 95,
+      trend: "📉 -8.9%",
+      incidentRatio: "0.01%"
+    }
+  };
+
+  // Pre-emptive alert lists
+  const preemptiveAlerts = [
+    {
+      id: "PRE-001",
+      title: isAr ? "مؤشر خطر: خصومات مالية بدون تحقيق مبرم" : "Risk Index: Deductions without recorded hearings",
+      description: isAr 
+        ? "رصد النظام 4 منشآت تستعد لاعتماد خصومات تتجاوز 5 أيام عمل دون صياغة محاضر تحقيق إلكترونية مشفرة بـ C9." 
+        : "4 corporations prepares to execute salary deductions over 5 work days without creating signed digital hearing blocks.",
+      remediation: isAr 
+        ? "الحل التلقائي: تجميد الحسم مؤقتاً ودعوة المنشأة لفتح بوابة الدفاع وحسم النزاع ودياً." 
+        : "Automated Fix: Soft-Lock deduction triggers, prompt entity to initiate digital hearing workflow to mitigate litigation risks.",
+      severity: "high",
+      icon: AlertTriangle
+    },
+    {
+      id: "PRE-002",
+      title: isAr ? "تجاوز الساعات الميدانية القانونية (إخطار مبكر)" : "Field Working Hours Spike (Early Warning)",
+      description: isAr 
+        ? "ارتفاع تدريجي متوقع لساعات تشغيل منسوبي المستودعات بالرياض يتجاوز سقف 8 ساعات بسبب تدفق لوجستي مكثف." 
+        : "Subtle uptick in warehouse staff shifts pointing to an overall breach of the 8-hour legal limit in Riyadh terminal.",
+      remediation: isAr 
+        ? "الحل التلقائي: تفعيل نظام الشفتات المرن وتنبيه قسم الموارد البشرية لتنفيذ النوبة التشاركية." 
+        : "Automated Fix: Auto-dispatch shift planning alert to HR managers to implement cyclic shift bypass parameters.",
+      severity: "medium",
+      icon: Clock
+    },
+    {
+      id: "PRE-003",
+      title: isAr ? "انتهاء تراخيص أمانة بلدية معززة" : "Nearing Special Baladi License Expiries",
+      description: isAr 
+        ? "رصيد الامتثال يسجل دنو موعد تجديد تراخيص السلامة المهنية لـ 3 منشآت مشاركة قبل موعدها بـ 15 يوماً." 
+        : "System identifies 3 pilot facilities with professional hazards licenses expiring in 15 days, posing potential municipal fines.",
+      remediation: isAr 
+        ? "الحل التلقائي: توجيه برقية آلية فازعة معبأة جزئياً لمنصة بلدي لأتمتة التجديد والتحقق." 
+        : "Automated Fix: Pre-fill municipal renewal documents and dispatch automated ping to Baladi API gateway.",
+      severity: "low",
+      icon: ShieldCheck
+    }
+  ];
+
+  // Adaptive rules details
+  const getAdaptiveRuleStructure = () => {
+    const sizeMultiplier = selectedCompanySize === "small" ? 1.0 : selectedCompanySize === "medium" ? 1.5 : 2.5;
+    
+    if (selectedIncidentType === "gps_breach") {
+      return {
+        law: isAr ? "نظام العمل السعودي + الاشتراطات الجغرافية لوزارة الشؤون البلدية" : "Saudi Labor Law + Municipal Geospace Guidelines",
+        sizeScope: isAr 
+          ? `المنشآت ${selectedCompanySize === "small" ? "الصغيرة (1-49 موظف)" : selectedCompanySize === "medium" ? "المتوسطة (50-249 موظف)" : "الكبيرة (+250 موظف)"}`
+          : `Scope: ${selectedCompanySize === "small" ? "Small (1-49)" : selectedCompanySize === "medium" ? "Medium (50-249)" : "Large (250+ employees)"}`,
+        gracePeriod: selectedCompanySize === "small" ? (isAr ? "7 أيام عمل تصحيحية" : "7 work days") : selectedCompanySize === "medium" ? (isAr ? "3 أيام عمل تصحيحية" : "3 work days") : (isAr ? "24 ساعة فورية للتصحيح" : "24 hours maximum"),
+        proceduralTiers: [
+          {
+            step: "1) Soft Alert (إنذار ناعم)",
+            desc: isAr ? "خصم صفر ريال - يرسل إشعار تحذيري بخلل الـ GPS لدعم الموظف بموازنة الإحداثيات." : "Zero deduction - sends automated map matching guide to help staff sync GPS signal.",
+            color: "text-emerald-400"
+          },
+          {
+            step: "2) Hard Alert (إنذار رسمي بموعد)",
+            desc: isAr ? `مراجعة بشرية وإقرار غرامة بانتظار انتهاء مهلة الـ (${selectedCompanySize === "small" ? "7 أيام" : selectedCompanySize === "medium" ? "3 أيام" : "يوم واحد"}) المقررة.` : `Enforces grace period countdown of (${selectedCompanySize === "small" ? "7 days" : selectedCompanySize === "medium" ? "3 days" : "1 day"}). Human verification locked.`,
+            color: "text-amber-400"
+          },
+          {
+            step: "3) Hard Violation (غرامة وإجراء تظلم)",
+            desc: isAr 
+              ? `احتساب غرامة مالية مخففة للمنشآت الصغرى (${150 * sizeMultiplier} ر.س) وللكبرى (${500 * sizeMultiplier} ر.س) مع فتح ملقم الاعتراض الفوري بالـ الذكاء الاصطناعي.`
+              : `Applies proportional penalty based on size. Under small: (${150 * sizeMultiplier} SAR) or large: (${500 * sizeMultiplier} SAR) and auto-generates legal objection template.`,
+            color: "text-red-400"
+          }
+        ]
+      };
+    } else if (selectedIncidentType === "unrecorded_gosi") {
+      return {
+        law: isAr ? "أنظمة المؤسسة العامة للتأمينات الاجتماعية (GOSI)" : "General Organization for Social Insurance (GOSI) directives",
+        sizeScope: isAr 
+          ? `المنشآت ${selectedCompanySize === "small" ? "الصغيرة" : selectedCompanySize === "medium" ? "المتوسطة" : "الكبيرة"}`
+          : `Scope: ${selectedCompanySize === "small" ? "Small" : selectedCompanySize === "medium" ? "Medium" : "Large"}`,
+        gracePeriod: selectedCompanySize === "small" ? (isAr ? "15 يوم عمل للتسوية" : "15 work days") : selectedCompanySize === "medium" ? (isAr ? "5 أيام عمل للتسوية" : "5 work days") : (isAr ? "48 ساعة لتسجيل المنسوب" : "48 hours strict"),
+        proceduralTiers: [
+          {
+            step: "1) Soft Alert (توجيه تصحيحي)",
+            desc: isAr ? "إشعار فوري وتذكير بالإقرار والموازنة ساند مع توفير دمج المنصات." : "Soft flag notifying HR manager of discrepancy with Sand/GOSI registries.",
+            color: "text-emerald-400"
+          },
+          {
+            step: "2) Hard Alert (إنذار معلق)",
+            desc: isAr ? "تنبيه المنشأة بقرب انقضاء المهلة وجدولة التدقيق العيني للمفتش الحكومي." : "Generates warning ticker and auto-schedules virtual inspector check-in.",
+            color: "text-amber-400"
+          },
+          {
+            step: "3) Legal Infraction (مخالفة تأمينية رسمية)",
+            desc: isAr 
+              ? `فرض غرامة GOSI سيادية تتدرج تصاعدياً حسب عدد الأفراد المطورين والمهندسين.` 
+              : `Official insurance penalty enforced. Proportional to company size metrics to preserve small business immunity.`,
+            color: "text-red-400"
+          }
+        ]
+      };
+    } else {
+      return {
+        law: isAr ? "المادة 101/107 من نظام العمل السعودي" : "Articles 101/107 Saudi Overtime Regulations",
+        sizeScope: isAr 
+          ? `المنشآت ${selectedCompanySize === "small" ? "الصغيرة" : selectedCompanySize === "medium" ? "المتوسطة" : "الكبيرة"}`
+          : `Scope: ${selectedCompanySize === "small" ? "Small" : selectedCompanySize === "medium" ? "Medium" : "Large"}`,
+        gracePeriod: isAr ? "تنبيه لحظي مع منع تجاوز المهلة عيناً" : "Real-time block parameters enforced",
+        proceduralTiers: [
+          {
+            step: "1) Soft Alert (التحذير الإجرائي)",
+            desc: isAr ? "تنبيه تفاعلي في تطبيق الموظف لإراحة الكادر الميداني." : "Sends automated notification to employee stating threshold limit reached.",
+            color: "text-emerald-400"
+          },
+          {
+            step: "2) Hard Alert (توقيف الموازنة)",
+            desc: isAr ? "حظر الموظف جزئياً من تسجيل الحضور الإضافي في نفس الموقع الميداني." : "Restricts further check-ins of the particular staff in the designated yard.",
+            color: "text-amber-400"
+          },
+          {
+            step: "3) Legal Citation (مخالفة تكليف جائر)",
+            desc: isAr 
+              ? `غرامة مبرمجة لرب السجل لمطابقته العمل الجبري أو الإرهاق العمالي دون موافقة.` 
+              : `Workplace hazard penalty calculated. Exceeds standard index weight to protect human welfare values.`,
+            color: "text-red-400"
+          }
+        ]
+      };
+    }
+  };
+
+  const adaptiveDetail = getAdaptiveRuleStructure();
+
+  return (
+    <div className="space-y-6 text-right select-none animate-fade-in" style={{ direction: "rtl" }}>
+      
+      {/* ─── GOVERNMENT INSPECTOR PROFILE & SOVEREIGN PERMISSIONS BADGE ─── */}
+      <div className="bg-gradient-to-l from-red-950/40 to-black border-2 border-red-500/40 p-5 rounded-2xl relative overflow-hidden shadow-[0_4px_30px_rgba(239,68,68,0.15)]">
+        {/* Decorative corner accent */}
+        <div className="absolute top-0 left-0 w-32 h-32 bg-red-500/5 rounded-full filter blur-2xl" />
+        <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#D4AF37]/5 rounded-full filter blur-2xl" />
+
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 relative z-10">
+          <div className="flex items-start gap-4">
+            <div className="w-14 h-14 bg-red-500/10 border-2 border-red-500 flex items-center justify-center rounded-2xl text-2xl shrink-0 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+              🇸🇦
+            </div>
+            <div className="space-y-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] bg-red-500/20 text-red-400 font-extrabold px-2.5 py-0.5 rounded-full border border-red-500/30 uppercase tracking-widest font-mono">
+                  GOVERNMENT_INSPECTOR
+                </span>
+                <span className="text-[10px] bg-emerald-500/10 text-emerald-400 font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                  ● ACTIVE (نشط)
+                </span>
+              </div>
+              <h3 className="text-base font-black text-white">
+                {isAr ? "المفتش المالي والميداني السيادي — بوابات الضبط اللامركزي" : "Sovereign Financial & Feld Inspector Hub"}
+              </h3>
+              <p className="text-[11.5px] text-gray-400 flex items-center gap-1.5 font-mono">
+                <span>{isAr ? "البريد الإلكتروني الموثق:" : "Verified Inspector ID:"}</span>
+                <strong className="text-red-400">inspector@hr.gov.sa</strong>
+                <span className="text-gray-600">|</span>
+                <span>{isAr ? "وزارة الموارد البشرية والتنمية الاجتماعية" : "HRSD Ministry / MoMRA"}</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-[#1c2541] p-3.5 border border-white/5 rounded-xl space-y-2 md:max-w-md shrink-0">
+            <span className="text-[9px] text-[#D4AF37] block font-black uppercase tracking-wider font-mono">
+              ★ Active Sovereign Permissions Security Ledger (كامل الصلاحيات السيادية):
+            </span>
+            <div className="flex flex-wrap gap-1">
+              {[
+                { key: "GOV_LAYER_ACCESS", name: isAr ? "طبقة التمكين الحكومي" : "Gov Layer Access" },
+                { key: "COMPLIANCE_RISK_RADAR", name: isAr ? "رادار مخاطر الامتثال" : "Risk Radar" },
+                { key: "PILOT_MODE_VIEW", name: isAr ? "رصد التشغيل الريادي" : "Pilot Mode View" },
+                { key: "ENTITY_OVERSIGHT", name: isAr ? "مراقبة المنشآت الوطنية" : "Entity Oversight" },
+                { key: "GEO_AUDIT_ACCESS", name: isAr ? "تدقيق الـ GPS الميداني" : "Geo-Audit Access" }
+              ].map(perm => (
+                <span
+                  key={perm.key}
+                  className="text-[8px] font-mono font-bold bg-white/5 text-gray-300 border border-white/10 px-2 py-0.5 rounded cursor-help hover:border-red-500/40 hover:text-white transition"
+                  title={`${perm.key}: Authorized`}
+                >
+                  ✓ {perm.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* ─── LIVE PORTAL HEADER KPIs ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        
+        {/* KPI 1 */}
+        <div className="bg-[#030712] border border-white/5 p-4 rounded-2xl flex items-center justify-between shadow-xl">
+          <div className="space-y-1">
+            <span className="text-[9px] text-gray-400 font-sans block">{isAr ? "مؤشر حماية المكتسبات الوطنية" : "National Compliance Score"}</span>
+            <span className="text-2xl font-black text-[#D4AF37] font-mono">98.4%</span>
+            <span className="text-[7.5px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/15 py-0.5 px-1.5 rounded block font-bold">
+              {isAr ? "مرحلة حصانة كاملة" : "Immunity Level Matched"}
+            </span>
+          </div>
+          <div className="p-2.5 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 rounded-xl">
+            <ShieldCheck className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* KPI 2 */}
+        <div className="bg-[#030712] border border-white/5 p-4 rounded-2xl flex items-center justify-between shadow-xl">
+          <div className="space-y-1">
+            <span className="text-[9px] text-gray-400 block">{isAr ? "المنشآت المراقبة حياً" : "Monitored Entities"}</span>
+            <span className="text-2xl font-black text-indigo-400 font-mono">
+              {pilotModeEnabled ? "10 منشآت تجريبية" : "823 منشأة وطنية"}
+            </span>
+            <span className="text-[7.5px] text-[#D4AF37] block font-mono">
+              {pilotModeEnabled ? "وضع التشغيل التجريبي مفعّل" : "دمج أمانات وسجلات موحد"}
+            </span>
+          </div>
+          <div className="p-2.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl">
+            <Building2 className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* KPI 3 */}
+        <div className="bg-[#030712] border border-white/5 p-4 rounded-2xl flex items-center justify-between shadow-xl">
+          <div className="space-y-1">
+            <span className="text-[9px] text-gray-400 block">{isAr ? "الغرامات المستبعدة استباقياً" : "Pre-empty Fines Saved"}</span>
+            <span className="text-2xl font-black text-emerald-400 font-mono">
+              {pilotModeEnabled ? "149,000 ر.س" : "580,000 ر.س"}
+            </span>
+            <span className="text-[7.5px] bg-emerald-500/10 text-emerald-400 px-1 py-0.5 rounded font-mono">
+              {isAr ? "بدمج تفادي الأخطاء بالذكاء" : "Via preemptive digital bypass"}
+            </span>
+          </div>
+          <div className="p-2.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl">
+            <TrendingUp className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* KPI 4 - PILOT CONTROLLER TOGGLE */}
+        <div className="bg-[#060c1eed] border border-[#D4AF37]/30 p-4 rounded-2xl flex flex-col justify-between shadow-[0_0_15px_rgba(212,175,55,0.06)] relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-24 h-24 bg-[#D4AF37]/5 rounded-full filter blur-xl" />
+          <div className="flex justify-between items-center">
+            <span className="text-[9.5px] text-[#D4AF37] font-black tracking-wider font-sans">{isAr ? "متر التطبيق الريادي ✈️" : "Pilot Mode Controller"}</span>
+            <span className="text-[8px] bg-rose-500/15 text-rose-300 py-0.5 px-1.5 rounded border border-rose-500/25 font-bold font-mono">
+              LEXI Pilot
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center mt-3">
+            <div className="text-right">
+              <span className="text-[8.5px] text-gray-400 block">{isAr ? "حالة بيئة التجربة المحدودة:" : "Pilot Status:"}</span>
+              <span className={`text-[11px] font-black ${pilotModeEnabled ? "text-emerald-400" : "text-gray-400"}`}>
+                {pilotModeEnabled ? (isAr ? "نشط - 5 فروع نموذجية" : "Active - 5 Hubs") : (isAr ? "عام عريض" : "Full OS Mode")}
+              </span>
+            </div>
+            
+            {/* Toggle Switch Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setPilotModeEnabled(!pilotModeEnabled);
+                simulateHaptic("pilot-toggle");
+                if (pushNewC9Event) {
+                  pushNewC9Event(
+                    "تغيير محاكي الطيار الريادي (Pilot Deployment Switch)",
+                    "SYS-PILOT-TOGGLE",
+                    { enabled: !pilotModeEnabled }
+                  );
+                }
+              }}
+              className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-300 cursor-pointer ${
+                pilotModeEnabled ? "bg-[#D4AF37]" : "bg-white/10"
+              } relative flex items-center`}
+            >
+              <div
+                className={`w-5 h-5 rounded-full bg-[#0b132b] shadow-md transform transition-transform duration-300 ${
+                  pilotModeEnabled ? "-translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ─── DYNAMIC TABS FOR SECTIONS ─── */}
+      <div className="bg-[#050a18] p-1 border border-white/5 rounded-2xl grid grid-cols-2 md:grid-cols-7 gap-1 text-center font-sans relative z-10">
+        <button
+          onClick={() => { transitionToTab("radar"); }}
+          className={`py-2 px-2.5 rounded-xl text-[10.5px] font-black transition cursor-pointer flex items-center justify-center gap-1.5 relative overflow-hidden ${
+            activeCategoryTab === "radar"
+              ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/35 font-extrabold"
+              : "text-gray-400 hover:text-white border border-transparent"
+          }`}
+        >
+          {hapticTrigger === "radar" && (
+            <span className="absolute inset-0 bg-[#D4AF37]/10 animate-ping rounded-xl pointer-events-none" />
+          )}
+          <Compass className="w-3.5 h-3.5" />
+          <span>{isAr ? "رادار الامتثال" : "Compliance Radar"}</span>
+        </button>
+ 
+        <button
+          onClick={() => { transitionToTab("preemptive"); }}
+          className={`py-2 px-2.5 rounded-xl text-[10.5px] font-black transition cursor-pointer flex items-center justify-center gap-1.5 relative overflow-hidden ${
+            activeCategoryTab === "preemptive"
+              ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/35 font-extrabold"
+              : "text-gray-400 hover:text-white border border-transparent"
+          }`}
+        >
+          {hapticTrigger === "preemptive" && (
+            <span className="absolute inset-0 bg-[#D4AF37]/10 animate-ping rounded-xl pointer-events-none" />
+          )}
+          <AlertTriangle className="w-3.5 h-3.5 text-rose-300" />
+          <span>{isAr ? "التنبيهات الاستباقية" : "Pre-emptive Alerts"}</span>
+        </button>
+ 
+        <button
+          onClick={() => { transitionToTab("investigations"); }}
+          className={`py-2 px-2.5 rounded-xl text-[10.5px] font-black transition cursor-pointer flex items-center justify-center gap-1.5 relative overflow-hidden ${
+            activeCategoryTab === "investigations"
+              ? "bg-red-500/15 text-rose-300 border border-red-500/35 font-extrabold"
+              : "text-gray-400 hover:text-white border border-transparent"
+          }`}
+        >
+          {hapticTrigger === "investigations" && (
+            <span className="absolute inset-0 bg-red-500/15 animate-ping rounded-xl pointer-events-none" />
+          )}
+          <UserCheck className="w-3.5 h-3.5 text-red-400" />
+          <span>{isAr ? "التحقيقات والإشراف" : "Case Audits & Oversight"}</span>
+        </button>
+ 
+        <button
+          onClick={() => { transitionToTab("adaptive"); }}
+          className={`py-2 px-2.5 rounded-xl text-[10.5px] font-black transition cursor-pointer flex items-center justify-center gap-1.5 relative overflow-hidden ${
+            activeCategoryTab === "adaptive"
+              ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/35 font-extrabold"
+              : "text-gray-400 hover:text-white border border-transparent"
+          }`}
+        >
+          {hapticTrigger === "adaptive" && (
+            <span className="absolute inset-0 bg-[#D4AF37]/10 animate-ping rounded-xl pointer-events-none" />
+          )}
+          <Cpu className="w-3.5 h-3.5 text-blue-300" />
+          <span>{isAr ? "محرك القواعد" : "Adaptive Rules"}</span>
+        </button>
+ 
+        <button
+          onClick={() => { transitionToTab("selfaudit"); }}
+          className={`py-2 px-2.5 rounded-xl text-[10.5px] font-black transition cursor-pointer flex items-center justify-center gap-1.5 relative overflow-hidden ${
+            activeCategoryTab === "selfaudit"
+              ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/35 font-extrabold"
+              : "text-gray-400 hover:text-white border border-transparent"
+          }`}
+        >
+          {hapticTrigger === "selfaudit" && (
+            <span className="absolute inset-0 bg-[#D4AF37]/10 animate-ping rounded-xl pointer-events-none" />
+          )}
+          <FileText className="w-3.5 h-3.5 text-indigo-300" />
+          <span>{isAr ? "التدقيق الذاتي" : "Self-Auditing"}</span>
+        </button>
+ 
+        <button
+          onClick={() => { transitionToTab("pilot"); }}
+          className={`py-2 px-2.5 rounded-xl text-[10.5px] font-black transition cursor-pointer flex items-center justify-center gap-1.5 relative overflow-hidden ${
+            activeCategoryTab === "pilot"
+              ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/35 font-extrabold"
+              : "text-gray-400 hover:text-white border border-transparent"
+          }`}
+        >
+          {hapticTrigger === "pilot" && (
+            <span className="absolute inset-0 bg-[#D4AF37]/10 animate-ping rounded-xl pointer-events-none" />
+          )}
+          <TrendingUp className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <span>{isAr ? "لوحة تتبع Pilot" : "Pilot Analytics"}</span>
+        </button>
+
+        <button
+          onClick={() => { transitionToTab("guide"); }}
+          className={`py-2 px-2.5 rounded-xl text-[10.5px] font-black transition cursor-pointer flex items-center justify-center gap-1.5 relative overflow-hidden ${
+            activeCategoryTab === "guide"
+              ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/35 font-extrabold"
+              : "text-gray-400 hover:text-white border border-transparent"
+          }`}
+        >
+          {hapticTrigger === "guide" && (
+            <span className="absolute inset-0 bg-[#D4AF37]/10 animate-ping rounded-xl pointer-events-none" />
+          )}
+          <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <span>{isAr ? "الدليل التعليمي" : "Learning Guide"}</span>
+        </button>
+      </div>
+
+      {/* ─── MAIN WEB WORKSPACE AREA OR SKELETON LOADER ─── */}
+      {isScreenLoading ? (
+        <div className="space-y-6 animate-pulse pt-2 text-right">
+          {/* Top Banner Skeleton */}
+          <div className="bg-gradient-to-l from-[#02050c] to-black border border-white/5 p-4 rounded-xl h-24 flex items-center justify-between animate-pulse">
+            <div className="space-y-2">
+              <div className="h-3.5 bg-white/5 rounded w-48" />
+              <div className="h-2.5 bg-white/5 rounded w-32" />
+            </div>
+            <div className="w-8 h-8 rounded-full bg-white/5" />
+          </div>
+
+          {/* Three dynamic stats grids */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-[#02050c]/50 p-4 rounded-xl border border-white/5 h-24 space-y-2">
+              <div className="h-3 bg-white/5 rounded w-2/3" />
+              <div className="h-6 bg-white/5 rounded w-1/2" />
+            </div>
+            <div className="bg-[#02050c]/50 p-4 rounded-xl border border-white/5 h-24 space-y-2">
+              <div className="h-3 bg-white/5 rounded w-2/3" />
+              <div className="h-6 bg-white/5 rounded w-1/3" />
+            </div>
+            <div className="bg-[#02050c]/50 p-4 rounded-xl border border-white/5 h-24 space-y-2">
+              <div className="h-3 bg-white/5 rounded w-1/2" />
+              <div className="h-6 bg-white/5 rounded w-3/4" />
+            </div>
+          </div>
+
+          {/* Huge workspace layout split */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <div className="lg:col-span-8 bg-[#02050c]/40 border border-white/5 p-4 rounded-2xl h-96 space-y-3">
+              <div className="h-4 bg-white/5 rounded w-1/4" />
+              <div className="h-px bg-white/5" />
+              <div className="h-12 bg-white/5 rounded" />
+              <div className="h-24 bg-white/5 rounded" />
+              <div className="h-32 bg-white/5 rounded" />
+            </div>
+            <div className="lg:col-span-4 bg-[#02050c]/40 border border-white/5 p-4 rounded-2xl h-96 space-y-3">
+              <div className="h-4 bg-white/5 rounded w-1/2" />
+              <div className="h-px bg-white/5" />
+              <div className="h-24 bg-white/5 rounded" />
+              <div className="h-24 bg-white/5 rounded" />
+              <div className="h-24 bg-white/5 rounded" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* ─── TAB 1: RADAR & INTEGRATED GOOGLE MAP ─── */}
+          {activeCategoryTab === "radar" && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 animate-fade-in">
+          
+          {/* Spatial Vector Compliance Radar (Clickable) */}
+          <div className="lg:col-span-12 bg-[#02050c] p-4.5 rounded-2xl border border-white/5 space-y-4">
+            <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
+              <div className="space-y-1">
+                <span className="text-[11px] text-[#D4AF37] font-black tracking-widest block uppercase font-mono">
+                  Sovereign Radar Scanning Sweep Tool
+                </span>
+                <h4 className="text-xs font-bold text-white">
+                  {isAr ? "رادار الأمان الرقابي وتصوير بؤر المخاطر اللحظية" : "Interactive Regional Risk Scanning Radar"}
+                </h4>
+              </div>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+              {/* Radar visualization sweep (SVG) */}
+              <div className="md:col-span-7 flex justify-center items-center relative py-6 bg-[#1c2541] rounded-2xl border border-white/5 overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(rgba(212,175,55,0.02)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+                
+                {/* SVG Scanning Radar Widget */}
+                <div className="w-72 h-72 relative flex items-center justify-center">
+                  
+                  {/* Glowing Sweep overlay rotate */}
+                  <div className="absolute inset-0 border border-white/5 rounded-full pointer-events-none animate-spin" style={{ animationDuration: "12s" }}>
+                    <div className="absolute top-0 left-1/2 w-1/2 h-40 bg-gradient-to-r from-transparent via-[#D4AF37]/5 to-[#D4AF37]/10 origin-bottom-left rotate-45 skew-x-30" />
+                  </div>
+
+                  <svg className="w-full h-full relative" xmlns="http://www.w3.org/2000/svg">
+                    {/* Concentric circles */}
+                    <circle cx="50%" cy="50%" r="35" fill="none" stroke="rgba(212,175,55,0.15)" strokeWidth="1" />
+                    <circle cx="50%" cy="50%" r="70" fill="none" stroke="rgba(212,175,55,0.08)" strokeWidth="1" />
+                    <circle cx="50%" cy="50%" r="105" fill="none" stroke="rgba(212,175,55,0.04)" strokeWidth="1" />
+                    <circle cx="50%" cy="50%" r="135" fill="none" stroke="rgba(212,175,55,0.02)" strokeWidth="1" />
+                    
+                    {/* Crosshairs */}
+                    <line x1="0" y1="50%" x2="100%" y2="50%" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                    <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+
+                    {/* Draggable clickable region dots */}
+                    {/* Riyadh */}
+                    <g 
+                      transform="translate(144, 100)" 
+                      onClick={() => { setSelectedRegion("Riyadh"); simulateHaptic("region-riyadh"); }}
+                      className="cursor-pointer group"
+                    >
+                      <circle cx="0" cy="0" r={selectedRegion === "Riyadh" ? "12" : "7"} fill="rgba(16, 185, 129, 0.2)" className="animate-pulse" />
+                      <circle cx="0" cy="0" r="4" fill="#10b981" />
+                      <text x="8" y="3" fill="#a7f3d0" fontSize="7.5px" fontWeight="black" className="font-mono bg-[#1c2541]">{isAr ? "الوسطى 🟢" : "Riyadh"}</text>
+                    </g>
+
+                    {/* Jeddah */}
+                    <g 
+                      transform="translate(70, 180)" 
+                      onClick={() => { setSelectedRegion("Jeddah"); simulateHaptic("region-jeddah"); }}
+                      className="cursor-pointer group"
+                    >
+                      <circle cx="0" cy="0" r={selectedRegion === "Jeddah" ? "14" : "9"} fill="rgba(245, 158, 11, 0.2)" className="animate-pulse" />
+                      <circle cx="0" cy="0" r="5" fill="#f59e0b" />
+                      <text x="-32" y="3" fill="#fde047" fontSize="7.5px" fontWeight="black" className="font-mono">{isAr ? "⚠️ الغربية [متوسط]" : "Jeddah"}</text>
+                    </g>
+
+                    {/* Dammam */}
+                    <g 
+                      transform="translate(230, 130)" 
+                      onClick={() => { setSelectedRegion("Dammam"); simulateHaptic("region-dammam"); }}
+                      className="cursor-pointer group"
+                    >
+                      <circle cx="0" cy="0" r={selectedRegion === "Dammam" ? "12" : "7"} fill="rgba(245, 158, 11, 0.15)" />
+                      <circle cx="0" cy="0" r="4" fill="#f59e0b" />
+                      <text x="8" y="3" fill="#fde047" fontSize="7.5px" fontWeight="black" className="font-mono">{isAr ? "الشرقية" : "Eastern"}</text>
+                    </g>
+
+                    {/* Mecca */}
+                    <g 
+                      transform="translate(90, 220)" 
+                      onClick={() => { setSelectedRegion("Mecca"); simulateHaptic("region-mecca"); }}
+                      className="cursor-pointer group"
+                    >
+                      <circle cx="0" cy="0" r={selectedRegion === "Mecca" ? "10" : "6"} fill="rgba(16, 185, 129, 0.12)" />
+                      <circle cx="0" cy="0" r="3.5" fill="#10b981" />
+                      <text x="-25" y="-6" fill="#a7f3d0" fontSize="7.5px" fontWeight="black" className="font-mono">{isAr ? "مكة المكرمة" : "Mecca"}</text>
+                    </g>
+
+                  </svg>
+                  
+                  {/* Center core pulse node representing central gov dashboard */}
+                  <div className="absolute w-5 h-5 bg-[#D4AF37]/20 border border-[#D4AF37] rounded-full flex items-center justify-center animate-pulse">
+                    <div className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Dynamic compliance info panel card for selected hotspot */}
+              <div className="md:col-span-5 space-y-3">
+                <div className="bg-[#1c2541]/70 p-4 rounded-xl border border-white/10 space-y-3 text-right">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                    <span className="text-[8px] bg-indigo-500/10 text-indigo-300 py-0.5 px-2 rounded-md font-mono">SELECTED FOCUS UNIT</span>
+                    <span className="text-[10px] text-gray-400 font-mono font-bold">Risk Weight: {regionRiskData[selectedRegion].riskScore}%</span>
+                  </div>
+
+                  <h5 className="text-xs font-black text-[#D4AF37]">{isAr ? regionRiskData[selectedRegion].name : regionRiskData[selectedRegion].nameEn}</h5>
+                  
+                  <div className="grid grid-cols-2 gap-2.5 pt-1 text-[10px]">
+                    <div className="bg-white/5 p-2 rounded-lg">
+                      <span className="text-gray-500 block text-[8px]">{isAr ? "المنشآت تحت الرصد:" : "Facilities Monitored:"}</span>
+                      <strong className="text-white block mt-0.5">{regionRiskData[selectedRegion].monitoredFacilities} شركة</strong>
+                    </div>
+                    <div className="bg-white/5 p-2 rounded-lg">
+                      <span className="text-gray-500 block text-[8px]">{isAr ? "الانحراف الشهري:" : "Monthly Delta Trend:"}</span>
+                      <strong className="block mt-0.5" style={{ color: regionRiskData[selectedRegion].trend.includes("-") ? "#10b981" : "#f59e0b" }}>
+                        {regionRiskData[selectedRegion].trend}
+                      </strong>
+                    </div>
+                    <div className="bg-white/5 p-2 rounded-lg col-span-2 flex justify-between items-center">
+                      <span className="text-gray-500 text-[8px]">{isAr ? "مؤشر الحوادث الالتزامية:" : "Active Breach Index:"}</span>
+                      <strong className="text-white">{regionRiskData[selectedRegion].incidentRatio}</strong>
+                    </div>
+                  </div>
+
+                  {/* Regional Alerts */}
+                  <div className="space-y-1.5 pt-1">
+                    <span className="text-[9px] text-[#D4AF37] block font-bold">{isAr ? "التنبيهات الإجرائية النشطة بالقطاع:" : "Active Sector Alerts:"}</span>
+                    {regionRiskData[selectedRegion].activeAlerts.map((alt, idx) => (
+                      <div key={idx} className="bg-red-500/5 hover:bg-red-500/10 p-2 border border-red-500/15 rounded-lg text-[9px] text-rose-300 leading-relaxed flex items-start gap-1">
+                        <span className="text-[10px] shrink-0">⚠️</span>
+                        <span>{alt}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Veo 3 Simulation Companion Video trigger */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setVideoPromptText(isAr 
+                        ? `محاكاة سيناريو راداري متحرك يوضح تيسير الامتثال وصفرية المخالفات في ${regionRiskData[selectedRegion].name} بناء على لوائح أمانة المنطقة` 
+                        : `Generate simulation flow diagram tracking and confirming absolute zero-breach parameters in ${regionRiskData[selectedRegion].nameEn}`
+                      );
+                      setVideoPromptContext("general");
+                      setActiveBottomSheet("video_generator");
+                      simulateHaptic("veo-radar");
+                    }}
+                    className="w-full mt-2.5 py-1.5 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 border border-[#D4AF37]/25 hover:border-[#D4AF37]/45 text-[#D4AF37] rounded-xl text-[9px] font-black cursor-pointer transition flex items-center justify-center gap-1"
+                  >
+                    <Video className="w-3.5 h-3.5" />
+                    <span>{isAr ? "محاكاة سيناريو جيو-فيديو (Veo 3) ←" : "Create Geospace Video Simulation (Veo 3)"}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Injected Google Maps Grounding Component */}
+            <div className="space-y-2.5 pt-2">
+              <span className="text-[9.5px] text-[#D4AF37] font-black tracking-widest block font-mono">GOOGLE MAPS SPATIAL GROUNDING INTEGRATION</span>
+              <SovereignMap
+                centerAddress={isAr ? `فرع ${selectedRegion} السيادي المعتمد` : `Verified Sovereign ${selectedRegion} Terminal Node`}
+                geofenceRadiusMeters={selectedRegion === "Jeddah" ? 450 : 300}
+                lang={lang}
+              />
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* ─── TAB 2: PRE-EMPTIVE VIOLATIONS WARNING ALERTS ─── */}
+      {activeCategoryTab === "preemptive" && (
+        <div className="space-y-4 animate-fade-in">
+          <div className="p-4 bg-[#02050c] rounded-2xl border border-white/5 space-y-1">
+            <h4 className="text-xs font-black text-white">{isAr ? "نظام كاشف: التنبيه الطارئ الفازع للمخالفات قبل وقوعها" : "Pre-emptive Early Infraction Detection Engine"}</h4>
+            <p className="text-[9px] text-gray-500 leading-normal">
+              {isAr 
+                ? "يقوم محرك الذكاء الاصطناعي برصد البنى التشغيلية وتحليل السلوك في C9 Ledger لاستباق الغرامات وعلاج السجلات قبل اعتماد أي مخالفة حكومية."
+                : "Continuous diagnostic loops reading GOSI updates and geofences to spot anomalies and offer automatic mitigation pathways."
+              }
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {preemptiveAlerts.map(alt => {
+              const Icon = alt.icon;
+              return (
+                <div key={alt.id} className="bg-[#1c2541] p-4 border border-white/5 rounded-2xl text-right space-y-3 relative overflow-hidden hover:border-[#D4AF37]/20 transition flex flex-col justify-between">
+                  {/* Glowing background indicators based on severity */}
+                  <div className={`absolute top-0 right-0 w-16 h-16 rounded-full filter blur-xl opacity-[0.03] ${
+                    alt.severity === "high" ? "bg-red-500" : alt.severity === "medium" ? "bg-amber-500" : "bg-emerald-500"
+                  }`} />
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center text-[8.5px] font-mono">
+                      <span className="text-gray-500">{alt.id}</span>
+                      <span className={`px-2 py-0.5 rounded font-black uppercase ${
+                        alt.severity === "high" ? "bg-red-500/10 text-red-400" : alt.severity === "medium" ? "bg-amber-500/10 text-amber-300" : "bg-emerald-500/10 text-emerald-300"
+                      }`}>
+                        {alt.severity}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-row-reverse pb-1.5 border-b border-white/5">
+                      <Icon className={`w-4 h-4 shrink-0 ${
+                        alt.severity === "high" ? "text-red-400" : alt.severity === "medium" ? "text-amber-300" : "text-emerald-300"
+                      }`} />
+                      <h5 className="text-[10px] font-extrabold text-white leading-tight">{alt.title}</h5>
+                    </div>
+
+                    <p className="text-[9px] text-gray-400 leading-relaxed">{alt.description}</p>
+                  </div>
+
+                  <div className="bg-[#1c2541] p-2.5 rounded-lg border border-white/5 space-y-2 mt-2">
+                    <span className="text-[8px] text-emerald-400 block font-bold">✨ {isAr ? "مسار العلاج الآلي الموصى به:" : "Automated Remediation Route:"}</span>
+                    <p className="text-[8.5px] text-gray-300 leading-relaxed">{alt.remediation}</p>
+                    
+                    {/* Companion Veo 3 Video check trigger */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVideoPromptText(isAr 
+                          ? `توليد دليل بالفيديو لصالح منشأة يوضح تفعيل التحقق الثنائي وحماية المعيار ${alt.id} لتفادي الاحتساب اليدوي` 
+                          : `Create visual guide documenting full implementation parameters of bypass limits for early warning ${alt.id}`
+                        );
+                        setVideoPromptContext("document");
+                        setActiveBottomSheet("video_generator");
+                        simulateHaptic("veo-preemptive");
+                      }}
+                      className="w-full mt-1.5 py-1 bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/25 border border-indigo-500/25 rounded text-[8.5px] font-black cursor-pointer transition flex items-center justify-center gap-1"
+                    >
+                      <Video className="w-3 h-3 text-[#D4AF37]" />
+                      <span>{isAr ? "محاكاة فيديو إثباتي بـ Veo 3" : "Video Evidence (Veo 3)"}</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ─── TAB 6: INVESTIGATIONS & ACTIVE OVERSIGHT CASEWORK ─── */}
+      {activeCategoryTab === "investigations" && (
+        <div className="space-y-6 animate-fade-in text-right">
+          
+          {/* Top Info Banner describing complete sovereign oversight role */}
+          <div className="bg-gradient-to-l from-red-950/20 via-black to-black border border-red-500/20 p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h4 className="text-xs font-black text-rose-300 flex items-center gap-1.5 flex-row-reverse justify-end">
+                <span>بوابة التحقيق الرقمي والضبط البياني الفعلي</span>
+                <UserCheck className="w-4 h-4 text-red-400" />
+              </h4>
+              <p className="text-[9.5px] text-gray-400 leading-normal">
+                {isAr
+                  ? "قسم الضبط والتحقيق اللامركزي التابع للبلديات ووزارة الموارد البشرية والتلائم الذاتي. يتيح فحص الموازنة المادية والإرجاع الجغرافي للموظفين والتأكد من موثوقية السجلات في C9."
+                  : "Decentralized state sovereign console linked to Baladi & HRSD ministries. Inspect Live C9 Ledger hashes and audit logs."}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            {/* LEFT COLUMN/SIDEBAR (Col-span-4): LEXI Smart Advisor & Entity Explorer */}
+            <div className="lg:col-span-4 space-y-4">
+              
+              {/* LEXI Smart Advisor Panel */}
+              <div className="bg-[#030712] border-2 border-red-500/30 p-4 rounded-2xl space-y-3 shadow-[0_0_15px_rgba(239,68,68,0.08)]">
+                <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                  <span className="text-[10px] font-black text-[#D4AF37] flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>LEXI SMART ADVISER (المرشد الذكي)</span>
+                  </span>
+                  <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+                </div>
+
+                <div className="space-y-2 text-[10px] text-gray-300 leading-relaxed">
+                  <div className="bg-red-500/5 p-2.5 rounded-xl border border-red-500/10 space-y-1">
+                    <strong className="text-rose-300 block">⚠️ رصد انحراف زمني ثنائي الاستقطاب:</strong>
+                    <p className="text-[9px] text-gray-400 font-sans">
+                      تم رصد أنماط تسجيل حضور مبكرة بـ 45 دقيقة تسبق جداول العمل الرسمية بمستودع الرياض لـ 3 منسوبين. قد يشير ذلك لساعات عمل مستتر خارج رادارات احتساب الأجر القانوني.
+                    </p>
+                  </div>
+
+                  <div className="bg-amber-500/5 p-2.5 rounded-xl border border-amber-500/10 space-y-1">
+                    <strong className="text-amber-300 block">🗺️ موثوقية السياج الجغرافي (Geo-Variance):</strong>
+                    <p className="text-[9px] text-gray-400 font-sans">
+                      معدل تباين الإرجاع المكاني بفرع جدة يسجل 180 متراً. نقترح تفعيل مهلة التسوية وضخ مرشد الموازنة التفاعلية للموظف مباشرة وعرض الانحرافات.
+                    </p>
+                  </div>
+
+                  <div className="bg-emerald-500/5 p-2.5 rounded-xl border border-emerald-500/10 space-y-1">
+                    <strong className="text-emerald-300 block">💡 الإجراء التنظيمي المقترح:</strong>
+                    <p className="text-[9px] text-gray-400 font-sans">
+                      اضغط على "طلب موازنة إضافية" لإجبار المنشأة على صياغة محضر التحقيق الرقمي بـ C9 تجنباً لاعتماد الغرامة السيادية والبلدية.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* National Entity Lifecycle Oversight list */}
+              <div className="bg-[#030712] border border-white/5 p-4 rounded-2xl space-y-3">
+                <span className="text-[9.5px] text-[#D4AF37] block font-black border-b border-white/5 pb-2">
+                  🇸🇦 السجل الوطني للمؤسسات المراقبة:
+                </span>
+
+                <div className="space-y-2">
+                  {[
+                    { id: "CASE-101", company: "شركة جدة اللوجستية للمستودعات", size: "كبيرة", emp: 142, complianceRate: "96%", status: "نشط" },
+                    { id: "CASE-102", company: "مجموعة الرياض للمقاولات الميدانية", size: "كبيرة", emp: 388, complianceRate: "98%", status: "مراجعة" },
+                    { id: "CASE-103", company: "مكتب المطور البرمجي للتطوير السيادي", size: "صغيرة", emp: 12, complianceRate: "100%", status: "مستقر" }
+                  ].map(item => (
+                    <div 
+                      key={item.id}
+                      onClick={() => { setSelectedCaseId(item.id); simulateHaptic("case-select"); }}
+                      className={`p-2.5 border rounded-xl cursor-pointer text-right transition flex flex-col justify-between ${
+                        selectedCaseId === item.id 
+                          ? "bg-red-500/15 border-red-500/40 text-white shadow-[0_0_12px_rgba(239,68,68,0.1)]" 
+                          : "bg-[#1c2541] border-white/5 hover:border-white/10 text-gray-400"
+                      }`}
+                    >
+                      <div className="flex justify-between items-center text-[8.5px] font-mono mb-1">
+                        <span className="text-gray-500">{item.id}</span>
+                        <span className={`px-1 rounded ${
+                          item.status === "نشط" ? "bg-red-500/10 text-rose-300" : item.status === "مراجعة" ? "bg-amber-500/10 text-amber-300" : "bg-emerald-500/10 text-emerald-300"
+                        }`}>
+                          {item.status}
+                        </span>
+                      </div>
+                      <h5 className="text-[10px] font-extrabold text-[#D4AF37] truncate">{item.company}</h5>
+                      <div className="flex justify-between items-center text-[8px] text-gray-400 mt-1 font-mono">
+                        <span>{item.size} | {item.emp} موظف</span>
+                        <span className="text-emerald-400 font-bold">{isAr ? "النقاط:" : "Pts:"} {item.complianceRate}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+            {/* RIGHT MAIN TERMINAL BLOCK (Col-span-8): Active Case Worker, Geofence details, Ledger verification */}
+            <div className="lg:col-span-8 space-y-4">
+              
+              {/* Main Core Investigations Hub */}
+              {selectedCaseId ? (() => {
+                const caseData = {
+                  "CASE-101": {
+                    id: "CASE-101",
+                    company: "شركة جدة اللوجستية للمستودعات",
+                    type: "تجاوز السياج الجغرافي (GPS Geofence Deviation)",
+                    employee: "محمد العسيري",
+                    coordinates: "21.4858, 39.1925",
+                    deviation: "180 متر خارج نطاق المستودع المعتمد",
+                    timestamp: "2026-05-27 14:32:11",
+                    ledgerHash: "0x8fae3155799bc1ee",
+                    payroll: "مدفوع (مطابق للتأمينات)",
+                    attendance: "94% حضور للشهر الحالي",
+                    leaves: "0 مؤقت معلق",
+                    activeInfractions: "1 مسودة مخالفة جغرافية"
+                  },
+                  "CASE-102": {
+                    id: "CASE-102",
+                    company: "مجموعة الرياض للمقاولات الميدانية",
+                    type: "تأخر أو نقص تسجيل GOSI (Nonsynchronized Social Insurance)",
+                    employee: "خالد الشهري",
+                    coordinates: "24.7136, 46.6753",
+                    deviation: "تأخر الإقرار والتسجيل الرسمي بنظام التأمينات الاجتماعية بالوسطى",
+                    timestamp: "2026-05-26 09:15:04",
+                    ledgerHash: "0x7bc2d488fa44119ae",
+                    payroll: "معلّق جزئياً (مراجعة المطابقة السريعة)",
+                    attendance: "91% حضور مستمر",
+                    leaves: "2 إجازة معلقة",
+                    activeInfractions: "0 مخالفات معتمدة"
+                  },
+                  "CASE-103": {
+                    id: "CASE-103",
+                    company: "مكتب المطور البرمجي للتطوير السيادي",
+                    type: "تجاوز الساعات القانونية (Excessive Overtime Hour)",
+                    employee: "أحمد بن سلمان",
+                    coordinates: "26.4207, 50.0888",
+                    deviation: "تكليف إضافي 2.2 ساعة خارج النطاق دون صنف تظلم مكتبي",
+                    timestamp: "2026-05-25 18:40:59",
+                    ledgerHash: "0xcf928e00114a8831",
+                    payroll: "مدفوع بالكامل (مع علاوة ساند)",
+                    attendance: "98% حضور ممتاز",
+                    leaves: "1 إجازة سنوية مصدقة",
+                    activeInfractions: "صفر غرامات بلدية"
+                  }
+                }[selectedCaseId] || {
+                  id: "CASE-UNKNOWN",
+                  company: "منشأة غير محددة",
+                  type: "مخالفة عامة",
+                  employee: "غير محدد",
+                  coordinates: "0, 0",
+                  deviation: "لا يوجد انحراف",
+                  timestamp: "-",
+                  ledgerHash: "-",
+                  payroll: "-",
+                  attendance: "-",
+                  leaves: "-",
+                  activeInfractions: "-"
+                };
+
+                return (
+                  <div className="bg-[#02050c] p-5 rounded-2xl border-2 border-red-500/20 text-right space-y-4">
+                    
+                    {/* Upper case and status badges */}
+                    <div className="flex justify-between items-center border-b border-white/5 pb-2.5 flex-row-reverse">
+                      <div className="flex gap-2 items-center">
+                        <span className="text-xs font-black text-rose-300 font-mono">{caseData.id}</span>
+                        <span className="text-[10px] bg-red-500/10 text-rose-300 border border-red-500/20 px-2 py-0.5 rounded font-mono font-bold">
+                          {isAr ? "سجل تحقيق سيادي نشط" : "CRITICAL LAW IN-PROGRESS"}
+                        </span>
+                      </div>
+                      
+                      {/* Active Dynamic Case status select */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-[8.5px] text-gray-500 font-bold">{isAr ? "حالة التحقيق الحالية:" : "Case Status:"}</span>
+                        <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg border ${
+                          caseStatuses[selectedCaseId]?.includes("Closed")
+                            ? "bg-emerald-500/15 border-emerald-500/35 text-emerald-400"
+                            : caseStatuses[selectedCaseId]?.includes("Reviewing")
+                            ? "bg-amber-500/15 border-amber-500/35 text-amber-300"
+                            : "bg-red-500/15 border-red-500/35 text-rose-300 animate-pulse"
+                        }`}>
+                          {caseStatuses[selectedCaseId] || "نشط (Active)"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Metadata summary */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#1c2541] p-3.5 border border-white/5 rounded-xl text-[10px] font-sans">
+                      <div className="space-y-1 text-right">
+                        <span className="text-gray-500 block">{isAr ? "المنشأة المعنية بالمساءلة:" : "Target Enterprise:"}</span>
+                        <strong className="text-white block text-xs">{caseData.company}</strong>
+                      </div>
+                      <div className="space-y-1 text-right">
+                        <span className="text-gray-500 block">{isAr ? "نوع البلاغ أو قرينة المخالفة المالي والبلدي:" : "Infraction Context Type:"}</span>
+                        <strong className="text-rose-300 block text-xs">{caseData.type}</strong>
+                      </div>
+                      <div className="space-y-1 text-right border-t border-white/5 pt-2">
+                        <span className="text-gray-500 block">{isAr ? "اسم الموظف الميداني والتابع:" : "Field Worker Staff:"}</span>
+                        <strong className="text-white block">{caseData.employee}</strong>
+                      </div>
+                      <div className="space-y-1 text-right border-t border-white/5 pt-2">
+                        <span className="text-gray-500 block">{isAr ? "الموقع ووقت الإرجاع الجغرافي:" : "Geofence Check In-Range:"}</span>
+                        <strong className="text-white block font-mono">{caseData.coordinates} | {caseData.timestamp}</strong>
+                      </div>
+                    </div>
+
+                    {/* Entity HR Lifecycle Explorer section (Staff lifecycle audit stats) */}
+                    <div className="space-y-2">
+                      <span className="text-[9.5px] text-[#D4AF37] block font-black border-b border-white/5 pb-1">
+                        🔒 تفاصيل خط الحياة الوظيفية والمالية للمنشأة (Oversight Life-Cycle Explorer):
+                      </span>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[9.5px] font-sans">
+                        <div className="bg-white/5 p-2 rounded-lg text-right">
+                          <span className="text-gray-500 block text-[8px]">{isAr ? "حالة مسار الرواتب:" : "Payroll Status:"}</span>
+                          <span className="text-white font-extrabold">{caseData.payroll}</span>
+                        </div>
+                        <div className="bg-white/5 p-2 rounded-lg text-right">
+                          <span className="text-gray-500 block text-[8px]">{isAr ? "معدل الحضور والانضباط:" : "Avg Attendance:"}</span>
+                          <span className="text-[#D4AF37] font-extrabold font-mono">{caseData.attendance}</span>
+                        </div>
+                        <div className="bg-white/5 p-2 rounded-lg text-right">
+                          <span className="text-gray-500 block text-[8px]">{isAr ? "معالجة الإجازات المستقرة:" : "Pending Leaves:"}</span>
+                          <span className="text-white font-extrabold">{caseData.leaves}</span>
+                        </div>
+                        <div className="bg-white/5 p-2 rounded-lg text-right">
+                          <span className="text-gray-500 block text-[8px]">{isAr ? "تجاوزات أو غرامات معمدة:" : "Active Infractions:"}</span>
+                          <span className="text-rose-300 font-extrabold">{caseData.activeInfractions}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Geographical Geofence Track analysis (Geo-Audit) graph snippet */}
+                    <div className="bg-[#1c2541] border border-white/10 p-3.5 rounded-xl space-y-2.5">
+                      <span className="text-[9px] text-[#D4AF37] block font-bold">
+                        🗺️ تحليل الأدلة الجغرافية والتحقق الميداني (Sovereign GPS Geo-Audit Analyser):
+                      </span>
+                      <p className="text-[9px] text-gray-400 leading-relaxed">
+                        {isAr
+                          ? `كاشف النطاق يسجل: تم تتبع إحداثيات الموظف بوجود تباين مكاني قدره ${caseData.deviation}. تم مطابقة الإثبات ببرج الاتصال لضمان سلامة الإشارة ضد الاختراق أو التحايل الرقمي (MOCK_GPS_PREVENTED).`
+                          : `Geo-Audit scanning logs: Verified staff coordinates pointing to: ${caseData.deviation}. Verification engine matched telecommunication nodes.`}
+                      </p>
+
+                      {/* Micro visual radar map representation */}
+                      <div className="h-20 bg-[#0b132b] rounded-lg border border-red-500/10 relative overflow-hidden flex items-center justify-center">
+                        <div className="absolute inset-x-0 top-1/2 h-0.5 bg-red-500/10 pointer-events-none" />
+                        <div className="absolute inset-y-0 left-1/2 w-0.5 bg-red-500/10 pointer-events-none" />
+                        
+                        {/* Radar ping circles */}
+                        <div className="absolute w-12 h-12 rounded-full border border-[#D4AF37]/25 animate-ping" />
+                        
+                        {/* Company Geofence radius circle */}
+                        <div className="absolute w-14 h-14 rounded-full border-2 border-dashed border-emerald-500/40 bg-emerald-500/5 flex items-center justify-center">
+                          <span className="text-[7.5px] text-emerald-400 font-mono">GEOFENCE</span>
+                        </div>
+
+                        {/* Employee dot flashing slightly outside */}
+                        <div className="absolute top-[40%] right-[30%] text-center">
+                          <span className="relative flex h-2 w-2 mx-auto">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                          </span>
+                          <span className="text-[7.5px] text-rose-300 block font-mono mt-0.5 whitespace-nowrap">{caseData.employee} (180m)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 📸 QUICK ELECTRONIC EVIDENCE REQUEST HUB (طلب إثبات إلكتروني سريع) */}
+                    <div className="bg-[#030712] border border-[#D4AF37]/25 p-4 rounded-xl space-y-3">
+                      <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                        <span className="text-[10px] text-[#D4AF37] font-black tracking-widest block font-mono uppercase">
+                          ⚡ QUICK STATE EVIDENCE REQUEST CONSOLE
+                        </span>
+                        <span className="text-[10px] bg-[#D4AF37]/10 text-[#D4AF37] px-2 py-0.5 rounded font-bold font-sans">
+                          {isAr ? "طلب إثبات إلكتروني سريع" : "Quick Evidence Hub"}
+                        </span>
+                      </div>
+                      
+                      <p className="text-[9px] text-gray-400 leading-relaxed font-sans">
+                        {isAr 
+                          ? "قم باستدعاء مستندات موجهة للمنشأة بنقرة واحدة. عند الحصول عليها، سيتم ربطها وفهرستها مع C9 Ledger تلقائياً لضمان النزاهة الإثباتية."
+                          : "Extract specific digital credentials directly from the partner enterprise with absolute cryptographic binding."}
+                      </p>
+
+                      {/* Request triggers */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 font-sans pt-1">
+                        <button
+                          type="button"
+                          disabled={!!evidenceLoadingType}
+                          onClick={() => handleQuickEvidenceRequest("photo")}
+                          className="p-2 bg-purple-500/10 hover:bg-purple-500/15 text-purple-300 border border-purple-500/20 hover:border-purple-500/40 rounded-lg text-[9px] font-bold transition flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        >
+                          <Image className="w-3.5 h-3.5" />
+                          <span>{isAr ? "صورة الموقع" : "Site Photo"}</span>
+                        </button>
+                        
+                        <button
+                          type="button"
+                          disabled={!!evidenceLoadingType}
+                          onClick={() => handleQuickEvidenceRequest("contract")}
+                          className="p-2 bg-blue-500/10 hover:bg-blue-500/15 text-blue-300 border border-blue-500/20 hover:border-blue-500/40 rounded-lg text-[9px] font-bold transition flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                          <span>{isAr ? "عقد العمل" : "QIWA Contract"}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={!!evidenceLoadingType}
+                          onClick={() => handleQuickEvidenceRequest("attendance")}
+                          className="p-2 bg-emerald-500/10 hover:bg-emerald-500/15 text-emerald-300 border border-emerald-500/20 hover:border-emerald-500/40 rounded-lg text-[9px] font-bold transition flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        >
+                          <FileSpreadsheet className="w-3.5 h-3.5" />
+                          <span>{isAr ? "سجل الحضور" : "Attendance Excel"}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={!!evidenceLoadingType}
+                          onClick={() => handleQuickEvidenceRequest("balady")}
+                          className="p-2 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/20 hover:border-[#D4AF37]/40 rounded-lg text-[9px] font-bold transition flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        >
+                          <Paperclip className="w-3.5 h-3.5" />
+                          <span>{isAr ? "رخص بلدي" : "Balady License"}</span>
+                        </button>
+                      </div>
+
+                      {/* Skeleton loader / Spinner for evidence retrieval */}
+                      {evidenceLoadingType && (
+                        <div className="bg-[#1c2541] border border-dashed border-[#D4AF37]/30 p-4 rounded-xl flex flex-col items-center justify-center gap-2 py-4.5 animate-pulse">
+                          <div className="w-5 h-5 rounded-full border-2 border-[#D4AF37] border-t-transparent animate-spin" />
+                          <div className="space-y-1 text-center font-sans">
+                            <span className="text-[9.5px] text-[#D4AF37] font-black block">
+                              {isAr ? "جاري المطابقة الرقمية واستخراج السجل الآمن..." : "Securing Direct Extraction Link & Fetching..."}
+                            </span>
+                            <span className="text-[8px] text-gray-500 font-mono block">CONNECTING GOSI & QIWA API GATEWAY</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Documents display list */}
+                      <div className="space-y-2 pt-2">
+                        <span className="text-[8.5px] text-[#D4AF37] block font-mono font-black tracking-wider border-t border-white/5 pt-2">
+                          📋 PROVED DIGITAL INTEGRATIONS ({caseEvidenceDocs[selectedCaseId]?.length || 0}):
+                        </span>
+                        
+                        {(!caseEvidenceDocs[selectedCaseId] || caseEvidenceDocs[selectedCaseId].length === 0) ? (
+                          <div className="text-center py-2 text-[8px] text-gray-500 italic">
+                            {isAr ? "لا توجد مستندات مستخرجة نشطة؛ انقر أعلاه للتحقق." : "No live requested items recorded yet for this investigation context."}
+                          </div>
+                        ) : (
+                          <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                            {caseEvidenceDocs[selectedCaseId].map((doc) => (
+                              <div key={doc.id} className="bg-[#1c2541] p-2.5 border border-white/5 hover:border-white/10 rounded-lg flex items-center justify-between text-right text-[9px] transition">
+                                <div className="flex items-center gap-2 flex-row-reverse">
+                                  {doc.type === "photo" && <Image className="w-4 h-4 text-purple-400 shrink-0" />}
+                                  {doc.type === "contract" && <FileText className="w-4 h-4 text-blue-400 shrink-0" />}
+                                  {doc.type === "attendance" && <FileSpreadsheet className="w-4 h-4 text-emerald-400 shrink-0" />}
+                                  {doc.type === "balady" && <Paperclip className="w-4 h-4 text-[#D4AF37] shrink-0" />}
+                                  
+                                  <div>
+                                    <strong className="text-gray-200 block text-[9px] leading-snug">{doc.docName}</strong>
+                                    <span className="text-gray-500 text-[7.5px] font-mono block leading-none">{isAr ? doc.docTypeAr : doc.docTypeEn} • {doc.requestedAt}</span>
+                                  </div>
+                                </div>
+
+                                <div className="text-left font-mono space-y-0.5">
+                                  <span className="px-1.5 py-0.5 rounded text-[7px] font-extrabold bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/30 block text-center uppercase">
+                                    {isAr ? "مقيد بالكامل بـ C9" : "C9 SEALED"}
+                                  </span>
+                                  <span className="text-gray-500 block text-[7.5px] font-mono">{doc.ledgerHash.substring(0, 10)}...</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* C9 Ledger cryptographic trust token check */}
+                    <div className="bg-[#030712] p-3 border border-white/5 rounded-xl flex items-center justify-between text-[9px] font-mono flex-row-reverse">
+                      <div className="text-right">
+                        <span className="text-[#D4AF37] block font-black">C9 LEDGER CRYPTOGRAPHIC VERIFICATION LOG:</span>
+                        <span className="text-gray-400 block mt-0.5">{isAr ? "مفاتيح التحقق الرقمي الموقعة للملف السيادي عبر اللامركزية:" : "Sealed Digital Handshake Token ID:"}</span>
+                        <strong className="text-[#10b981]">{caseData.ledgerHash}</strong>
+                      </div>
+                      <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded border border-emerald-500/20">
+                        {isAr ? "موثّق بالكامل ✓" : "Ledger Safe ✓"}
+                      </div>
+                    </div>
+
+                    {/* User Decision Toggles and Interactive buttons */}
+                    <div className="border-t border-white/5 pt-3.5 space-y-3">
+                      <span className="text-[9.5px] text-[#D4AF37] block font-black">{isAr ? "⚙️ إجراءات المفتش السيادية المتاحة والتحكم الآلي:" : "Sovereign Inspector Tools & Control Options:"}</span>
+                      
+                      <div className="flex flex-wrap gap-2 justify-start items-center">
+                        
+                        {/* Toggle Status Controls */}
+                        <div className="flex gap-1 bg-[#1c2541] p-1 border border-white/5 rounded-xl">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCaseStatuses({ ...caseStatuses, [selectedCaseId]: "نشط (Active)" });
+                              simulateHaptic("status-active");
+                              if (pushNewC9Event) {
+                                pushNewC9Event("تحديث حالة تظلم لمفتش حكومي", selectedCaseId, { status: "نشط (Active)" });
+                              }
+                            }}
+                            className={`px-2 py-1 text-[9px] font-bold rounded-lg transition ${
+                              caseStatuses[selectedCaseId] === "نشط (Active)"
+                                ? "bg-red-500/25 text-rose-300 font-extrabold border border-red-500/30 font-sans"
+                                : "text-gray-400 hover:text-white font-sans"
+                            }`}
+                          >
+                            {isAr ? "نشط" : "Active"}
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCaseStatuses({ ...caseStatuses, [selectedCaseId]: "تحت المراجعة (Reviewing)" });
+                              simulateHaptic("status-review");
+                              if (pushNewC9Event) {
+                                pushNewC9Event("تحديث حالة تظلم لمفتش حكومي", selectedCaseId, { status: "تحت المراجعة" });
+                              }
+                            }}
+                            className={`px-2 py-1 text-[9px] font-bold rounded-lg transition ${
+                              caseStatuses[selectedCaseId] === "تحت المراجعة (Reviewing)"
+                                ? "bg-amber-500/25 text-amber-300 font-extrabold border border-amber-500/30 font-sans"
+                                : "text-gray-400 hover:text-white font-sans"
+                            }`}
+                          >
+                            {isAr ? "مراجعة" : "Review"}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCaseStatuses({ ...caseStatuses, [selectedCaseId]: "مغلَق بنجاح (Closed)" });
+                              simulateHaptic("status-close");
+                              if (pushNewC9Event) {
+                                pushNewC9Event("تحديث حالة تظلم لمفتش حكومي", selectedCaseId, { status: "مغلَق بنجاح" });
+                              }
+                              alert(`🟢 تم إغلاق وحفظ ملف التحقيق ${selectedCaseId} بنجاح في السجل التاريخي!`);
+                            }}
+                            className={`px-2 py-1 text-[9px] font-bold rounded-lg transition ${
+                              caseStatuses[selectedCaseId] === "مغلَق بنجاح (Closed)"
+                                ? "bg-emerald-500/25 text-emerald-400 font-extrabold border border-emerald-500/30 font-sans"
+                                : "text-gray-400 hover:text-white font-sans"
+                            }`}
+                          >
+                            {isAr ? "إغلاق التسوية" : "Close Case"}
+                          </button>
+                        </div>
+
+                        {/* Request Additional Evidence button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEvidenceRequested({ ...evidenceRequested, [selectedCaseId]: true });
+                            simulateHaptic("req-evidence");
+                            alert(`📬 تم إرسال طلب تزويد وثائق الموازنة إلى المنشأة ${caseData.company}! سيظهر للمسؤول فوراً إشعار تقديم إثبات إلكتروني للتحقيق رقم ${selectedCaseId}`);
+                            if (pushNewC9Event) {
+                              pushNewC9Event("طلب إثبات إضافي لمفتش سيادي", selectedCaseId, { company: caseData.company });
+                            }
+                          }}
+                          className={`px-3 py-2 rounded-xl text-[9px] font-black cursor-pointer transition flex items-center gap-1 shrink-0 font-sans ${
+                            evidenceRequested[selectedCaseId]
+                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                              : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_4px_10px_rgba(79,70,229,0.25)]"
+                          }`}
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                          <span>
+                            {evidenceRequested[selectedCaseId]
+                              ? (isAr ? "تنبيه إضافي معلق ✓" : "Evidence Requested ✓")
+                              : (isAr ? "طلب أدلة إضافية من المنشأة" : "Request Official Evidence")}
+                          </span>
+                        </button>
+
+                        {/* Veo 3 Video Generator trigger inside investigations context */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVideoPromptText(isAr 
+                              ? `محاكاة فيديو تفتيشية رسمية لتوليد لقطة إثباتية تابعة لوزارة الموارد البشرية توثق مطابقة السياج الجغرافي والأدلة الرقمية وتثبت لقطات الموقع للموظف ${caseData.employee} بالتحقيق ${caseData.id}` 
+                              : `Generate synthetic physical site verification video reconstructing GPS signal matching thresholds for employee ${caseData.employee} on case ${caseData.id}`
+                            );
+                            setVideoPromptContext("evidence");
+                            setActiveBottomSheet("video_generator");
+                            simulateHaptic("veo-inspections");
+                          }}
+                          className="px-3 py-2 bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-[#D4AF37] rounded-xl text-[9px] font-black cursor-pointer transition flex items-center gap-1 shrink-0 font-sans"
+                        >
+                          <Video className="w-3.5 h-3.5" />
+                          <span>{isAr ? "دليل فيديو Veo 3 لإثبات الحالة" : "Run Scene Reconstruct (Veo 3)"}</span>
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+                );
+              })() : (
+                <div className="bg-[#1c2541]/20 p-8 rounded-2xl border border-white/5 border-dashed text-center flex flex-col items-center justify-center min-h-[300px] font-sans">
+                  <Compass className="w-10 h-10 text-gray-600 mb-2 animate-pulse" />
+                  <p className="text-[11px] text-gray-500 font-bold">{isAr ? "يرجى تحديد قضية أو مؤسسة لبدء تدقيق وطلب الإثبات" : "Select an enterprise case from the national registry to start auditing"}</p>
+                </div>
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
+      {/* ─── TAB 3: ADAPTIVE COMPLIANCE RULES ENGINE ─── */}
+      {activeCategoryTab === "adaptive" && (
+        <div className="bg-[#02050c] p-4.5 rounded-2xl border border-white/5 space-y-4 animate-fade-in text-right">
+          <div className="border-b border-white/5 pb-2.5">
+            <h4 className="text-xs font-black text-white">{isAr ? "محاكاة لوائح الامتثال المرن وبنيان القواعد" : "Sovereign Adaptive Compliance Simulator"}</h4>
+            <p className="text-[9px] text-gray-400 leading-relaxed mt-1">
+              {isAr 
+                ? "قوانين الحوكمة مصممة باستيعاب حجم وثقل الشركات. يتم تصنيف الإجراءات تدريجياً لضمان الحماية لمتناهي الصغر ومنع تسرب الغرامات العمالية."
+                : "Ensures proportional penalty standards and grace windows adjusted dynamically by employee sizes."
+              }
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+            
+            {/* Controller block */}
+            <div className="md:col-span-4 space-y-3.5 bg-[#1c2541] p-3.5 border border-white/5 rounded-2xl">
+              {/* Category selector */}
+              <div className="space-y-1.5">
+                <span className="text-[8.5px] text-gray-400 block font-bold">{isAr ? "1) حدد طبيعة المخالفة أو النزاع:" : "1) Select Incident Profile:"}</span>
+                <div className="space-y-1">
+                  {[
+                    { id: "gps_breach", label: isAr ? "خلل / تجاوز سياج GPS" : "GPS Geofence Breach" },
+                    { id: "unrecorded_gosi", label: isAr ? "تأخر أو نقص تسجيل GOSI" : "Nonsynchronized GOSI" },
+                    { id: "working_hours", label: isAr ? "تجاوز الساعات (عمل جائر)" : "Excess Overtime hours" }
+                  ].map(item => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => { setSelectedIncidentType(item.id as any); simulateHaptic("incident-select"); }}
+                      className={`w-full text-right p-2 rounded-lg text-[9.5px] font-black border transition ${
+                        selectedIncidentType === item.id
+                          ? "bg-[#D4AF37]/15 border-[#D4AF37] text-white"
+                          : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Company Size selector */}
+              <div className="space-y-1.5 pt-1 border-t border-white/5">
+                <span className="text-[8.5px] text-gray-400 block font-bold">{isAr ? "2) تصنيف منشأة السجل بالاتساق:" : "2) Corporate Scale Context:"}</span>
+                <div className="grid grid-cols-3 gap-1">
+                  {[
+                    { id: "small", label: isAr ? "صغيرة" : "Small" },
+                    { id: "medium", label: isAr ? "متوسطة" : "Medium" },
+                    { id: "large", label: isAr ? "كبيرة" : "Large" }
+                  ].map(sz => (
+                    <button
+                      key={sz.id}
+                      type="button"
+                      onClick={() => { setSelectedCompanySize(sz.id as any); simulateHaptic("size-select"); }}
+                      className={`py-1.5 px-1 rounded-lg text-[9px] font-black text-center border transition ${
+                        selectedCompanySize === sz.id
+                          ? "bg-[#D4AF37]/15 border-[#D4AF37] text-white"
+                          : "bg-white/5 border-white/15 text-gray-400"
+                      }`}
+                    >
+                      {sz.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Dynamic Result Viewer block */}
+            <div className="md:col-span-8 space-y-3">
+              <div className="bg-[#1c2541] p-4 rounded-2xl border border-[#D4AF37]/25 space-y-3 relative overflow-hidden">
+                <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
+                  <span className="text-[8px] bg-[#D4AF37]/10 text-[#D4AF37] py-0.5 px-2 rounded-md font-mono">ADAPTIVE RULES ENGINE DISPATCHER</span>
+                  <span className="text-[9.5px] text-emerald-300 font-mono font-bold">● {isAr ? "المرونة نشطة" : "Engine Online"}</span>
+                </div>
+
+                <div className="space-y-1.5 text-right">
+                  <span className="text-[8.5px] text-gray-500 block">{isAr ? "اللوائح والمستندات السندية:" : "Regulatory Grounds Referenced:"}</span>
+                  <p className="text-[10px] text-white font-extrabold">{adaptiveDetail.law}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 bg-white/5 p-2.5 rounded-xl text-[9px]">
+                  <div>
+                    <span className="text-gray-500 block">{isAr ? "نطاق وحجم المنشأة:" : "Enforcement Scope / Size:"}</span>
+                    <strong className="text-white mt-0.5 block">{adaptiveDetail.sizeScope}</strong>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">{isAr ? "المهلة الممنوحة للتسوية:" : "Grace Window Granted:"}</span>
+                    <strong className="text-[#D4AF37] mt-0.5 block">{adaptiveDetail.gracePeriod}</strong>
+                  </div>
+                </div>
+
+                {/* Progressive tiers */}
+                <div className="space-y-2.5 pt-1.5">
+                  <span className="text-[9px] text-[#D4AF37] font-black block">{isAr ? "سلاسل التدرج في الإجراءات والضبط:" : "Progressive procedural tiers:"}</span>
+                  
+                  <div className="space-y-2 relative before:absolute before:top-1.5 before:bottom-1.5 before:right-2 before:w-0.5 before:bg-white/5">
+                    {adaptiveDetail.proceduralTiers.map((tier, trIdx) => (
+                      <div key={trIdx} className="relative pr-5 py-1 text-right">
+                        {/* Dot */}
+                        <div className={`absolute right-[5px] top-2.5 w-1.5 h-1.5 rounded-full ${
+                          trIdx === 0 ? "bg-emerald-400" : trIdx === 1 ? "bg-amber-400" : "bg-red-400"
+                        }`} />
+
+                        <div className="bg-[#1c2541] p-2 border border-white/5 rounded-lg">
+                          <h6 className={`text-[9.5px] font-bold ${tier.color}`}>{tier.step}</h6>
+                          <p className="text-[9px] text-gray-400 mt-0.5 leading-relaxed">{tier.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Create Veo 3 simulation description */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVideoPromptText(isAr 
+                      ? `محاكاة سيناريو كسر التظلم لـ ${adaptiveDetail.sizeScope} بوجود المهلة الممنوحة للتسوية ${adaptiveDetail.gracePeriod}` 
+                      : `Video simulating grace period countdown resolving unrecorded parameters before infraction issuance`
+                    );
+                    setVideoPromptContext("general");
+                    setActiveBottomSheet("video_generator");
+                    simulateHaptic("veo-adaptive");
+                  }}
+                  className="w-full mt-2.5 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-[#D4AF37] rounded-xl text-[9.5px] font-black cursor-pointer transition flex items-center justify-center gap-1"
+                >
+                  <Video className="w-3.5 h-3.5" />
+                  <span>{isAr ? "توليد محاكاة لخط التدريج بالفيديو (Veo 3) ←" : "Create Proportional Penalty Video (Veo 3)"}</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ─── TAB 4: SELF-AUDIT REPORT SCREEN ─── */}
+      {activeCategoryTab === "selfaudit" && (
+        <div className="bg-[#02050c] p-4.5 rounded-2xl border border-white/5 space-y-4 animate-fade-in text-right">
+          <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
+            <div className="space-y-1">
+              <span className="text-[9.5px] text-[#D4AF37] font-black tracking-widest block font-mono">SELF-AUDIT SYSTEM CHECKLIST</span>
+              <h4 className="text-xs font-black text-white">{isAr ? "بوابة إرسال تقارير الامتثال والتدقيق الذاتي للمنشآت" : "Sovereign Self-Audit Compliance Checklist"}</h4>
+            </div>
+            
+            <button
+              type="button"
+              onClick={() => {
+                setSelfAuditAnswers({
+                  saudi_contract: true,
+                  mada84: true,
+                  gosi_sync: true,
+                  gps_check: true,
+                  baladi_licenses: true,
+                  overtime_caps: true
+                });
+                setSelfAuditSubmitted(false);
+                simulateHaptic("audit-fill-perfect");
+              }}
+              className="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/35 text-emerald-300 rounded text-[9px] font-bold cursor-pointer transition"
+            >
+              🚀 {isAr ? "نقرة فازعة لامتثال مثالي (100%)" : "Fill with 100% compliant answers"}
+            </button>
+          </div>
+
+          <p className="text-[9px] text-gray-500 leading-normal">
+            {isAr
+              ? "يُتيح هذا المحاكي للمنشآت ومسؤولي العمليات التحقق الوقائي من جميع المتطلبات ورفعها لهيئات الرقابة الحكومية فورا لتعرية وتقليص بؤر الخطر."
+              : "Validate your corporate records against the legal standards to auto-dispatch clean status templates to inspectors."
+            }
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+            
+            {/* Checklist forms */}
+            <div className="md:col-span-7 bg-[#1c2541] p-4 border border-white/5 rounded-2xl space-y-3">
+              <span className="text-[9px] text-[#D4AF37] block font-black border-b border-white/5 pb-1.5">{isAr ? "قائمة معايير أمانات الحوكمة (6 بنود تفتيش):" : "Compliance Checklist Questions:"}</span>
+              
+              <div className="space-y-2.5">
+                {[
+                  { id: "saudi_contract", label: isAr ? "1) توفر وتوثيق عقد عمل موثق وفعّال على منصة قوى لتشغيل المنسوبين" : "1) Unified registered contract active on Qawy platform" },
+                  { id: "mada84", label: isAr ? "2) تفعيل المادة 84: إقرار مجلس تحقيق مكتوب قبل تنفيذ أي خصومات تتجاوز 5 أيام" : "2) Launch written hearing before imposing deductions > 5 days (Article 84)" },
+                  { id: "gosi_sync", label: isAr ? "3) المطابقة الكاملة لسجل التأمينات الاجتماعية GOSI لجميع منسوبي الفروع" : "3) Full synchronization of GOSI registries for regional workforce" },
+                  { id: "gps_check", label: isAr ? "4) ربط إحداثيات GPS المعززة للفروع وتحديد نطاق السياج الجغرافي (على الأقل 300م)" : "4) Verify GPS matching thresholds for corporate yards" },
+                  { id: "baladi_licenses", label: isAr ? "5) تراخيص مهنية وبلدية سارية وتصديق المطابقة الموحدة في منصة بلدي" : "5) Active professional hazard licenses registered on Baladi" },
+                  { id: "overtime_caps", label: isAr ? "6) الالتزام بسقف الـ 8 ساعات وتجنب التكليف اللوجستي الجائر خارج النوبة" : "6) Compliant shift scheduling inside the 8-hour overtime threshold" }
+                ].map(item => (
+                  <div key={item.id} className="flex items-center justify-between text-right gap-3 bg-[#1c2541] p-2 rounded-lg border border-white/5">
+                    <span className="text-[9.5px] text-gray-300 leading-relaxed font-sans">{item.label}</span>
+                    
+                    {/* Toggle button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelfAuditAnswers({ ...selfAuditAnswers, [item.id]: !selfAuditAnswers[item.id] });
+                        setSelfAuditSubmitted(false);
+                        simulateHaptic("audit-item");
+                      }}
+                      className={`px-3 py-1 rounded text-[9.5px] font-mono font-black border transition cursor-pointer select-none ${
+                        selfAuditAnswers[item.id]
+                          ? "bg-emerald-500/15 border-emerald-500/35 text-emerald-400"
+                          : "bg-red-500/15 border-red-500/35 text-rose-300"
+                      }`}
+                    >
+                      {selfAuditAnswers[item.id] ? (isAr ? "مستوفى ✓" : "Yes") : (isAr ? "قاصر ⚠️" : "No")}
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSelfAuditSubmit}
+                className="w-full mt-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-[10.5px] rounded-xl cursor-pointer transition flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(79,70,229,0.3)]"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span>{isAr ? "إرسال تقرير التدقيق الذاتي وحساب المناعة" : "Dispatch Self-Audit Report & Compute Integrity"}</span>
+              </button>
+            </div>
+
+            {/* Score calculations */}
+            <div className="md:col-span-5 space-y-3.5">
+              {selfAuditSubmitted ? (
+                <div className="bg-[#1c2541] p-4 rounded-2xl border border-[#D4AF37]/30 text-right space-y-3.5 relative overflow-hidden animate-fade-in">
+                  <span className="absolute top-0 right-0 w-full h-[1.5px] bg-[#D4AF37]" />
+                  
+                  <div className="text-center space-y-1">
+                    <span className="text-[9px] text-[#D4AF37] block font-black">{isAr ? "تصنيف نقاط الحصانة المقررة:" : "Corporate Immunity Rating:"}</span>
+                    <p className={`text-4xl font-mono font-black ${
+                      selfAuditResultScore >= 80 ? "text-emerald-400" : selfAuditResultScore >= 50 ? "text-amber-400" : "text-rose-400"
+                    }`}>{selfAuditResultScore}%</p>
+                    <span className="text-[8.5px] text-gray-500 font-mono block">Checked against Sand, Sand/GOSI and Qawy standards</span>
+                  </div>
+
+                  <div className="space-y-2 pt-1.5 border-t border-white/5">
+                    <span className="text-[9.5px] text-[#D4AF37] block font-bold">🛠️ {isAr ? "التوصيات التصحيحية المقترحة:" : "Remediation recommendations:"}</span>
+                    <div className="space-y-1.5">
+                      {selfAuditSuggestions.map((sol, index) => (
+                        <div key={index} className="bg-white/5 p-2 rounded-lg text-[9px] text-gray-300 leading-relaxed text-right border border-white/5">
+                          {sol}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Submit to C9 ledger block */}
+                  <div className="bg-indigo-500/10 p-2 border border-indigo-500/20 rounded-xl space-y-1">
+                    <span className="text-[8.5px] text-indigo-300 block font-bold leading-normal">
+                      💡 {isAr ? "يرجى الإقرار ومطابقة البند لحفظ المناعة في C9 Ledger وتجنب الفحص العشوائي الميداني." : "Approved files are archived in C9 Sovereign trust to exempt corporate yards."}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-[#1c2541]/20 p-6 rounded-2xl border border-white/5 border-dashed text-center flex flex-col items-center justify-center min-h-[220px]">
+                  <Sliders className="w-8 h-8 text-gray-600 mb-2 animate-pulse" />
+                  <p className="text-[10px] text-gray-500 font-bold">{isAr ? "النتيجة والتوصيات تظهر بعد الإرسال" : "Submit response to preview score index"}</p>
+                </div>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ─── TAB 5: PILOT DEPLOYMENT MODE REPORTS ─── */}
+      {activeCategoryTab === "pilot" && (
+        <div className="bg-[#02050c] p-4.5 rounded-2xl border border-white/5 space-y-4 animate-fade-in text-right">
+          <div className="border-b border-white/5 pb-2.5 flex justify-between items-center">
+            <div>
+              <span className="text-[9.5px] text-[#D4AF37] font-black tracking-widest block font-mono">PILOT ENVIRONMENT TELEMETRY</span>
+              <h4 className="text-xs font-black text-white">{isAr ? "مخرجات وضوابط مشروع بيئة التجربة المحدودة (Pilot Mode)" : "Pilot Implementation Scope Reports"}</h4>
+            </div>
+
+            <span className={`px-2 py-0.5 rounded text-[8.5px] font-bold border ${
+              pilotModeEnabled 
+                ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/35" 
+                : "bg-gray-500/15 text-gray-400 border-white/5"
+            }`}>
+              {pilotModeEnabled ? (isAr ? "مفعّل" : "Active") : (isAr ? "معطل" : "Disabled")}
+            </span>
+          </div>
+
+          <p className="text-[9.5px] text-gray-400 leading-normal">
+            {isAr
+              ? "يُظهر هذا التقرير الفجوات التي تم ردمها والامتنان المنجز بدعم LexOps OS داخل المنشآت التجريبية الـ (5-10) المعتمدة قبل التعميم والتشغيل الوطني الكامل."
+              : "Live stats capturing the total lawsuits avoided, preemptive fines handled, and delta of baseline vs optimized ratings."
+            }
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-sans">
+            
+            {/* KPI 1 prevented */}
+            <div className="bg-[#1c2541] p-4 rounded-xl border border-white/5 flex flex-col justify-between items-end gap-1.5 hover:border-[#D4AF37]/25 transition">
+              <span className="text-[9px] text-[#D4AF37] font-mono leading-none">{isAr ? "المخالفات التي تم منعها" : "Prevented Violations"}</span>
+              <strong className="text-2xl font-mono text-emerald-400 font-extrabold mt-1">{pilotPerformance.preventedViolations} مخالفة</strong>
+              <span className="text-[8px] text-gray-500 mt-1 block font-mono">{isAr ? "رصد آلي قبل القيد بـ C9" : "Preemptively caught by LCI"}</span>
+            </div>
+
+            {/* KPI 2 lawsuits averted */}
+            <div className="bg-[#1c2541] p-4 rounded-xl border border-white/5 flex flex-col justify-between items-end gap-1.5 hover:border-[#D4AF37]/25 transition">
+              <span className="text-[9px] text-indigo-400 font-mono leading-none">{isAr ? "القضايا العمالية التي تم تجنبها" : "Averted Labor Disputes"}</span>
+              <strong className="text-2xl font-mono text-indigo-300 font-extrabold mt-1">{pilotPerformance.avertedDisputes} قضية محققة</strong>
+              <span className="text-[8px] text-gray-400 mt-1 block">{isAr ? "تسوية فورية قبل المحاكم العمالية" : "Resolved within digital workspace"}</span>
+            </div>
+
+            {/* KPI 3 delta */}
+            <div className="bg-[#1c2541] p-4 rounded-xl border border-white/5 flex flex-col justify-between items-end gap-1.5 hover:border-[#D4AF37]/25 transition">
+              <span className="text-[9px] text-rose-300 font-mono leading-none">{isAr ? "الارتقاء بمستوى الامتثال" : "Compliance Level Delta"}</span>
+              <div className="flex items-center gap-1.5 mt-1">
+                <span className="text-sm font-bold text-gray-500 line-through font-mono">{pilotPerformance.complianceBefore}%</span>
+                <span className="text-sm text-gray-400 font-bold">←</span>
+                <span className="text-xl font-black text-emerald-400 font-mono">{pilotPerformance.complianceAfter}%</span>
+              </div>
+              <span className="text-[8px] text-emerald-300 font-bold mt-1 block">{isAr ? "تحسن كلي بنسبة +36% عالي الأمان" : "Optimized overall immune security"}</span>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-l from-indigo-950/20 via-black to-black p-4 rounded-2xl border border-white/5 space-y-3.5 mt-2 text-right">
+            <span className="text-[9.5px] text-[#D4AF37] block font-black border-b border-white/5 pb-1">{isAr ? "قائمة منشآت مشروع بيئة التجربة المحدودة (Pilot Class Hubs):" : "Monitored Pilot Facilities:"}</span>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1 text-[10px]">
+              {[
+                { name: "شركة جدة اللوجستية للمستودعات", size: "كبيرة", score: "96%", date: "2026-01-20" },
+                { name: "مجموعة الرياض للمقاولات الميدانية", size: "كبيرة", score: "98%", date: "2026-02-15" },
+                { name: "مكتب المطور البرمجي للتطوير السيادي", size: "صغيرة", score: "100%", date: "2026-03-01" },
+                { name: "الشركة الشرقية للتعبئة والخدمات اللوجستية", size: "متوسطة", score: "95%", date: "2026-03-10" }
+              ].map((comp, cIdx) => (
+                <div key={cIdx} className="bg-white/5 hover:bg-white/10 p-2 border border-white/5 rounded-xl flex items-center justify-between gap-3 text-right">
+                  <div className="space-y-0.5">
+                    <h5 className="font-extrabold text-white">{comp.name}</h5>
+                    <span className="text-[8px] text-gray-500 font-mono">{isAr ? "الحجم:" : "Size:"} {comp.size} | {comp.date}</span>
+                  </div>
+                  <span className="text-xs font-black text-emerald-400 font-mono bg-emerald-500/15 py-1 px-2.5 rounded border border-emerald-500/25">
+                    {comp.score}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── TAB 6: SOVEREIGN LEARNING GUIDE ─── */}
+      {activeCategoryTab === "guide" && (
+        <div className="space-y-4 animate-fade-in text-right">
+          <SovereignUserGuide
+            lang={lang}
+            activeTab="gov-guide"
+            setActiveTab={() => {}}
+            currentUser={{ id: "gov-inspector", role: "government" }}
+            isInline={true}
+          />
+        </div>
+      )}
+        </>
+      )}
+
+      {/* ─── BOTTOM SHEETS FOR COMPANION APPS ─── */}
+      <AnimatePresence>
+        {activeBottomSheet && (
+          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+            {/* Backdrop fading overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              onClick={() => { setActiveBottomSheet(null); simulateHaptic("sheet-close"); }}
+              className="absolute inset-0 bg-[#1c2541]"
+            />
+
+            {/* Sheet contents slide */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              className="w-full max-w-xl bg-[#1c2541]/95 border-2 border-[#D4AF37] rounded-2xl overflow-hidden relative z-50 p-4 sm:p-5 text-right space-y-4 shadow-[0_10px_40px_rgba(212,175,55,0.2)]"
+            >
+              <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                <span className="text-gray-400 text-[10px] font-mono">LEXI Veo 3 Video Companion Engine</span>
+                <button
+                  type="button"
+                  onClick={() => { setActiveBottomSheet(null); simulateHaptic("sheet-close"); }}
+                  className="p-1 hover:bg-white/10 rounded cursor-pointer transition text-gray-400"
+                >
+                  <X className="w-5 h-5 text-white" />
+                </button>
+              </div>
+
+              {activeBottomSheet === "video_generator" && (
+                <div className="space-y-4 text-right">
+                  <h3 className="text-xs font-black text-[#D4AF37]">
+                    {isAr ? "توليف وإعادة محاكاة فيديو سيادي مرئي بـ (Veo 3)" : "Synthetic Video Scene Reconstruction by Veo 3 Engine"}
+                  </h3>
+                  <LexiVideoGenerator
+                    initialPrompt={videoPromptText}
+                    contextType={videoPromptContext}
+                    lang={lang}
+                  />
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+    </div>
+  );
+}

@@ -1,0 +1,1645 @@
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import SovereignMap from "./SovereignMap";
+import LexiVideoGenerator from "./LexiVideoGenerator";
+import {
+  UserCheck,
+  ShieldCheck,
+  FileText,
+  Lock,
+  ArrowUpRight,
+  Upload,
+  BookmarkCheck,
+  CheckSquare,
+  AlertTriangle,
+  FilePen,
+  Database,
+  Calendar,
+  DollarSign,
+  Clock,
+  ShieldAlert,
+  Bell,
+  HelpCircle,
+  Eye,
+  CheckCircle,
+  TrendingUp,
+  Cpu,
+  Trash2,
+  BookOpen,
+  Info,
+  Layers,
+  Sparkles,
+  Award,
+  ChevronLeft,
+  ChevronRight,
+  Wifi,
+  Signal,
+  Battery,
+  X,
+  User,
+  Activity,
+  Award as AwardIcon,
+  Play,
+  Volume2,
+  PenTool,
+  Download,
+  Check,
+  RotateCcw,
+  Video,
+  Film
+} from "lucide-react";
+
+interface SovereignFreelancerProps {
+  c9Events: any[];
+  pushNewC9Event: (type: string, refId: string, payload: any) => void;
+  lang: "ar" | "en";
+  setLang: (lang: "ar" | "en") => void;
+}
+
+export default function SovereignFreelancer({
+  c9Events,
+  pushNewC9Event,
+  lang,
+  setLang
+}: SovereignFreelancerProps) {
+  
+  // 🎮 Simulator Stepper Controls state
+  const [demoStep, setDemoStep] = useState<number>(3);
+  const [activeTab, setActiveTab] = useState<"home" | "documents" | "evidence" | "violations" | "profile">("home");
+  const [isScreenLoading, setIsScreenLoading] = useState<boolean>(false);
+  const [hapticTrigger, setHapticTrigger] = useState<string | null>(null);
+
+  // Bottom Sheet Modal Control
+  const [activeBottomSheet, setActiveBottomSheet] = useState<
+    | null
+    | "doc_details"
+    | "evidence_details"
+    | "violation_details"
+    | "add_evidence_wizard"
+    | "add_doc_wizard"
+    | "appeal_ai_wizard"
+    | "video_generator"
+  >(null);
+
+  const [videoPromptText, setVideoPromptText] = useState<string>("");
+  const [videoPromptContext, setVideoPromptContext] = useState<"document" | "evidence" | "objection" | "general">("general");
+  const [activeEvidenceIndexes, setActiveEvidenceIndexes] = useState<Record<string, number>>({});
+  const [expandedTimelineItem, setExpandedTimelineItem] = useState<string | null>(null);
+
+  // Focus Details State
+  const [selectedDoc, setSelectedDoc] = useState<any | null>(null);
+  const [selectedEvidence, setSelectedEvidence] = useState<any | null>(null);
+  const [selectedViolation, setSelectedViolation] = useState<any | null>(null);
+
+  // Signaturer Ref & State
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [signatureData, setSignatureData] = useState<string>("");
+
+  // Sound evidence playing simulation state
+  const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+
+  // Notification lists & actions
+  const [notifications, setNotifications] = useState<any[]>([
+    { id: "NT-001", title: "مزامنة العقد المشترك", body: "تم تأصيل وتوثيق تمديد عقد شركة رائد التقنية على سجل الالتزام بنجاح.", date: "الآن", unread: true, type: "contract" },
+    { id: "NT-002", title: "لائحة اعتراض قنصلية", body: "اللجنة الرقمية قبلت الاعتراض المرفوع بوجود عطل عام في خطوط الفايبر.", date: "منذ ساعة", unread: true, type: "appeal" },
+    { id: "NT-003", title: "إشعار مخالفة نشطة", body: "تأخر تزويد الأكواد لخدمة المستندات المجمعة لمدة 48 ساعة بالمستودع.", date: "منذ يومين", unread: false, type: "violation" },
+    { id: "NT-004", title: "أرشفة راتب ZATCA", body: "تم مطابقة وتخمير كشف مستحقات أبريل ومطابقتها سيادياً بالهيئة.", date: "منذ 4 أيام", unread: false, type: "payroll" }
+  ]);
+
+  // Freelancer Personal Profile State
+  const [profile] = useState({
+    name: "م. خالد العتيبي",
+    nationalId: "1102938475",
+    profession: "مستشار حوكمة ومطور خوارزميات ذكاء اصطناعي قانوني",
+    city: "الرياض، المملكة العربية السعودية",
+    email: "khaled@freelance.sa",
+    mobile: "0543322110",
+    workType: "مستشار مستقل سيادي (Sovereign Freelance)",
+    avatar: "👨‍💻",
+    rating: "4.95",
+    immunityScore: 99, // 99% immunity behavioral score
+    contractsCount: 3,
+    activeClient: "شركة رائد التقنية للاستشارات اللوجستية",
+    branch: "افتراضي - سحابي لامنتهي",
+    insuranceLink: "GOSI-901-ACTIVE",
+    joinDate: "2024-03-12"
+  });
+
+  // 1) Documents Log
+  const [documents, setDocuments] = useState<any[]>([
+    { id: "DOC-301", type: "عقد عمل استشاري", title: "اتفاقية تطوير البوابة السيادية - رائد اللوجستي", date: "2026-05-01", size: "1.4 MB", verified: true, creator: "م. خالد العتيبي", hash: "sha256-sig-99AE83827CDE", note: "هذا العقد معتمد لدى هيئة الزكاة والضريبة لحوكمة الرواتب." },
+    { id: "DOC-302", type: "شهادة التزام ضريبي", title: "شهادة براءة الذمة الضريبية للعام المالي المنصرم", date: "2026-04-15", size: "850 KB", verified: true, creator: "البوابة الرقمية المشتركة", hash: "sha256-sig-882200FFAEE7", note: "مستخرج آلياً وخاضع للمسودة الموحدة." },
+    { id: "DOC-303", type: "اتفاقية صون السرية", title: "اتفاقية NDA لحفظ قواعد بيانات حماية الأجور", date: "2026-03-30", size: "620 KB", verified: true, creator: "شركة سيسكو للتطوير", hash: "sha256-sig-2211AA99BBCC", note: "يمنع تداول البيانات الفنية خارج النفق المشفر." }
+  ]);
+  const [newDocType, setNewDocType] = useState<string>("عقد عمل استشاري");
+  const [newDocTitle, setNewDocTitle] = useState<string>("");
+  const [newDocNote, setNewDocNote] = useState<string>("");
+
+  // 2) Evidence Vault (Section 3)
+  const [evidenceItems, setEvidenceItems] = useState<any[]>([
+    { id: "EVI-301", type: "تسجيل صوتي", text: "تسجيل الاستدعاء الفوري لدوران الأكواد ليلة عطل النظام المالي", date: "2026-05-18", file: "meeting_audit_recond_voice.mp3", size: "3.2 MB", hash: "sha256-sig-EVI9901" },
+    { id: "EVI-302", type: "لقطة شاشة", text: "رسائل إرسال النسخة التجريبية للموقع قبل بدء موعد التعطيل", date: "2026-05-20", file: "slack_screenshot_sla.png", size: "900 KB", hash: "sha256-sig-EVI8822" }
+  ]);
+  const [newEvidenceType, setNewEvidenceType] = useState<string>("لقطة شاشة");
+  const [newEvidenceText, setNewEvidenceText] = useState<string>("");
+  const [newEvidenceFile, setNewEvidenceFile] = useState<string>("");
+
+  // 3) Violations List
+  const [violations, setViolations] = useState<any[]>([
+    { id: "VIO-301", title: "تأخر رفع كود الربط المشترك للبوابة (مشروع FC-901)", amount: "3,500 ر.س", date: "2026-05-20", status: "مفتوحة - بانتظار الاعتراض", trackingId: "TRK-VI-992", desc: "رصد تأخير في توريد الكتيب التوجيهي لـ 48 ساعة دون إخطار سيادي مسبق بموجب سجل C9 الحركي." },
+    { id: "VIO-302", title: "انقطاع مفاجئ بنفق الحماية VPN للعمل المستمر", amount: "إنذار كتابي رسمي", date: "2026-05-22", status: "تم التسوية والإغلاق ✓", trackingId: "TRK-VI-881", desc: "انخفاض نطاق الاستقرار في خط الأمان الخاص بالخوادم المجهزة للتأصيل المهني بنسبة 35%." }
+  ]);
+
+  // 4) Objections / Appeals
+  const [objections, setObjections] = useState<any[]>([
+    { id: "OBJ-401", violationId: "VIO-302", grounds: "انقطاع شامل لكيبل هاتف رئيسي في حي المروج بالرياض بموجب تأكيد موفر الاتصالات STC.", date: "2026-05-22", status: "مقبول وحُفظ السجل ⚖️", lexiAiCreated: true, result: "تم رد الخصم وحفظ السلوك المهني بالكامل." }
+  ]);
+  const [selectedVioObjId, setSelectedVioObjId] = useState<string>("VIO-301");
+  const [appealReasonText, setAppealReasonText] = useState<string>(
+    "تأخر التسليم كان ناتجاً عن امتناع شريك العمل عن تفويض خط الأساس لنظام السوابق وصيانة بيئة الـ QA."
+  );
+  const [isGeneratingLexi, setIsGeneratingLexi] = useState<boolean>(false);
+  const [lexiDraftCode, setLexiDraftCode] = useState<string>("");
+
+  // 5) Historical Earnings (ZATCA Timestamp Certified)
+  const [salariesHistory] = useState<any[]>([
+    { id: "PAY-301", month: "مايو 2026", amount: "45,000 ر.س", client: "شركة رائد التقنية للأعمال", status: "تم التسليم والمطابقة ✓", zatcaSeal: "ZATCA-C9-MAY982", date: "2026-05-01" },
+    { id: "PAY-302", month: "أبريل 2026", amount: "45,000  ر.س", client: "شركة رائد التقنية للأعمال", status: "تم التسليم والمطابقة ✓", zatcaSeal: "ZATCA-C9-APR991", date: "2026-04-01" },
+    { id: "PAY-303", month: "مارس 2026", amount: "18,000 ر.س", client: "مجموعة سيسكو للتطوير", status: "تم التسليم والمطابقة ✓", zatcaSeal: "ZATCA-C9-MAR114", date: "2026-03-01" }
+  ]);
+
+  // 6) Sovereign Leaves and Executive Decrees
+  const [sovereignLeaves] = useState<any[]>([
+    { id: "SLV-201", period: "2026-05-10 - 2026-05-12", duration: "3 أيام", type: "إجازة مرضية مدققة", status: "معتمدة سيادياً", decree: "قرار وزاري لـ 1029 بمطابقة العجز الميداني" },
+    { id: "SLV-202", period: "2026-04-01 - 2026-04-10", duration: "10 أيام", type: "أيام صيانة الذات والراحة", status: "محسوبة مسبقاً", decree: "التفويض الاختياري للمدقق المهني الفردي" }
+  ]);
+
+  // 7) Lifeline timeline filter state
+  const [timelineFilter, setTimelineFilter] = useState<"all" | "contracts" | "payroll" | "violations">("all");
+
+  // Dynamic Clock Riyadh/KSA Time
+  const [statusBarTime, setStatusBarTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setStatusBarTime(now.toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit", hour12: false }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Simulator helper: simulate haptic and loading skeleton
+  const handleTabTransition = (tabName: typeof activeTab) => {
+    triggerHapticFeedback(tabName);
+    setIsScreenLoading(true);
+    setActiveTab(tabName);
+    setTimeout(() => {
+      setIsScreenLoading(false);
+    }, 380);
+  };
+
+  const triggerHapticFeedback = (actionType: string) => {
+    setHapticTrigger(actionType);
+    setTimeout(() => setHapticTrigger(null), 180);
+    if (navigator.vibrate) {
+      navigator.vibrate(12); // Simulated subtle vibration
+    }
+  };
+
+  // Drawing signature pad controls
+  const obtainEventCoordinates = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
+    canvas: HTMLCanvasElement
+  ) => {
+    const rect = canvas.getBoundingClientRect();
+    if ("touches" in e) {
+      if (e.touches.length === 0) return { x: 0, y: 0 };
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top,
+      };
+    } else {
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+    }
+  };
+
+  const initDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.strokeStyle = "#4d90fe";
+    ctx.lineWidth = 3.2;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    const coords = obtainEventCoordinates(e, canvas);
+    ctx.beginPath();
+    ctx.moveTo(coords.x, coords.y);
+    setIsDrawing(true);
+  };
+
+  const performDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const coords = obtainEventCoordinates(e, canvas);
+    ctx.lineTo(coords.x, coords.y);
+    ctx.stroke();
+    e.preventDefault();
+  };
+
+  const endDrawing = () => {
+    if (!isDrawing) return;
+    setIsDrawing(false);
+    extractSignatureImage();
+  };
+
+  const resetSignature = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setSignatureData("");
+  };
+
+  const extractSignatureImage = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const touched = imgData.data.some((ch, idx) => idx % 4 === 3 && ch > 0);
+    if (touched) {
+      setSignatureData(canvas.toDataURL());
+    } else {
+      setSignatureData("");
+    }
+  };
+
+  // Handle document uploaded
+  const handleAddNewDocumentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDocTitle.trim()) {
+      alert("⚠️ الرجاء تزويد عنوان للمستند");
+      return;
+    }
+    const docId = `DOC-${Date.now().toString().slice(-3)}`;
+    const freshDoc = {
+      id: docId,
+      type: newDocType,
+      title: newDocTitle,
+      date: new Date().toISOString().split("T")[0],
+      size: "1.0 MB",
+      verified: true,
+      creator: profile.name,
+      hash: "sha256-sig-PENDING",
+      note: newDocNote || "مستند مدخل ومثبت ذاتياً بالطرف المستقل."
+    };
+
+    setDocuments([freshDoc, ...documents]);
+    setNewDocTitle("");
+    setNewDocNote("");
+
+    pushNewC9Event("تأصيل مستند سيادي جديد للمحفظة الفردية", docId, {
+      title: freshDoc.title,
+      type: freshDoc.type,
+      size: freshDoc.size
+    });
+
+    setNotifications([
+      { id: `NT-${Date.now().toString().slice(-3)}`, title: "أرشفة وثيقة جديدة", body: `تم تأمين ومطابقة المستند: ${freshDoc.title}`, date: "الآن", unread: true, type: "contract" },
+      ...notifications
+    ]);
+
+    setActiveBottomSheet(null);
+    alert("🟢 تم رفع وتأصيل وثيقتك بنجاح على C9 Ledger!");
+  };
+
+  // Handle evidence added
+  const handleAddNewEvidenceSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEvidenceText.trim()) {
+      alert("⚠️ يرجى تعبئة نص الدليل أو سياقه");
+      return;
+    }
+    const eviId = `EVI-${Date.now().toString().slice(-3)}`;
+    const fName = newEvidenceFile || `proof_captured_${Date.now().toString().slice(-3)}.png`;
+    const freshEvi = {
+      id: eviId,
+      type: newEvidenceType,
+      text: newEvidenceText,
+      date: new Date().toISOString().split("T")[0],
+      file: fName,
+      size: "1.2 MB",
+      hash: "sha256-sig-PENDING"
+    };
+
+    setEvidenceItems([freshEvi, ...evidenceItems]);
+    setNewEvidenceText("");
+    setNewEvidenceFile("");
+
+    pushNewC9Event("إثبات قرائن دفاع تشغيلية", eviId, {
+      text: freshEvi.text,
+      type: freshEvi.type,
+      file: freshEvi.file
+    });
+
+    setActiveBottomSheet(null);
+    alert("🛡️ تم قيد الدليل مشفراً وحفظه كقرينة صالحة للمخاصمة!");
+  };
+
+  // Live LEXI AI Objection Generator
+  const generateLexiObjectionDoc = async () => {
+    setIsGeneratingLexi(true);
+    setLexiDraftCode("");
+    const matchedVio = violations.find(v => v.id === selectedVioObjId);
+    
+    try {
+      const res = await fetch("/api/agent/generate-objection", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          violationText: matchedVio ? matchedVio.title : "تأخر عام في تسليم مخرجات البوابة",
+          grounds: appealReasonText,
+          userRole: "freelancer"
+        })
+      });
+      const data = await res.json();
+      setLexiDraftCode(data.text);
+    } catch {
+      // High fidelity legal Arabic template fallback
+      const fallback = `### لائحة اعتراض سيادية سيال - LEXI AI OS
+**الرمز الكودي القضائي:** OBJ-${selectedVioObjId}
+**صاحب الالتماس:** الممارس المستقل ${profile.name}
+**الجهة المشكو ضدها:** منشأة العمل اللوجستي المشتركة
+
+**العناصر الدافعة ومحور النزاع:**
+- تأجيل تسليم المرحلة كان ناتجاً عن امتناع منشأة الفحص عن تفويض مفاتيح خط الأساس وإقرار الـ API المعتمدة.
+- رصيد السلوك ماسي بنسبة 99% حصانة، ولا يوجد أي سوابق إخلال فني مسجلة خلال مئتي يوم.
+- تفضيل لقطات السداد ZATCA لإثبات مواظبة الاستجابة والتفاعل التقني.
+
+**الطلبات الختامية:**
+نلتمس إلغاء القرار المالي والخصم البالغ قدره **3,500 ر.س** وتصفير سجل المخالفات للحالة "مغلقة ومصداق عليها".`;
+      setLexiDraftCode(fallback);
+    } finally {
+      setIsGeneratingLexi(false);
+    }
+  };
+
+  const publishObjectionFinal = () => {
+    if (!lexiDraftCode) return;
+    const objId = `OBJ-${Date.now().toString().slice(-3)}`;
+    const newestObjection = {
+      id: objId,
+      violationId: selectedVioObjId,
+      grounds: appealReasonText,
+      date: new Date().toISOString().split("T")[0],
+      status: "تحت المراجعة والتدقيق 🧪",
+      lexiAiCreated: true,
+      signature: signatureData || null,
+      customAppealText: lexiDraftCode
+    };
+
+    setObjections([newestObjection, ...objections]);
+    setViolations(prev =>
+      prev.map(v => v.id === selectedVioObjId ? { ...v, status: "اعتراض نشط معلق ⏳" } : v)
+    );
+
+    pushNewC9Event("تسجيل اعتراض قانوني مصدق بالتوقيع الثنائي", objId, {
+      violationId: selectedVioObjId,
+      draftText: lexiDraftCode,
+      signatureBlock: signatureData
+    });
+
+    setActiveBottomSheet(null);
+    setLexiDraftCode("");
+    setSignatureData("");
+    alert("⚖️ تم ختم لائحة الاعتراض بتوقيعك المشفر وتوريدها لسجل ديوان المظالم المشترك!");
+  };
+
+  // Jump Step directly in Demo steppers
+  const handleQuickStepperNav = (stepId: number) => {
+    setDemoStep(stepId);
+    if (stepId === 1) {
+      handleTabTransition("home");
+    } else if (stepId === 2) {
+      handleTabTransition("documents");
+      setActiveBottomSheet("add_doc_wizard");
+    } else if (stepId === 3) {
+      handleTabTransition("home");
+    } else if (stepId === 4) {
+      handleTabTransition("documents");
+    } else if (stepId === 5) {
+      handleTabTransition("evidence");
+    } else if (stepId === 6) {
+      handleTabTransition("violations");
+    } else if (stepId === 7) {
+      handleTabTransition("violations");
+      setActiveBottomSheet("appeal_ai_wizard");
+    } else if (stepId === 8) {
+      handleTabTransition("profile");
+    }
+  };
+
+  return (
+    <div id="sovereign-freelancer-portal-root" className="space-y-6 w-full text-right" style={{ direction: "rtl" }}>
+      
+      {/* 🚀 QUICK SIMULATOR NAVIGATION RAIL */}
+      <section id="freelancer-simulator-rail" className="bg-[#050813] border border-[#D4AF37]/50 rounded-2xl p-4 shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-white/10 pb-3 mb-3 gap-2">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#D4AF37] animate-pulse" />
+            <h4 className="text-xs font-black text-[#D4AF37] tracking-wider font-mono">
+              {lang === "ar" ? "حقيبة تحول واجهة الممارس المستقل السيادي" : "Sovereign Freelancer Workspace Simulator"}
+            </h4>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setDemoStep(3);
+              handleTabTransition("home");
+            }}
+            className="px-2.5 py-1 text-[10px] bg-white/5 hover:bg-white/10 text-[#D4AF37] rounded border border-[#D4AF37]/20 flex items-center gap-1 cursor-pointer transition"
+          >
+            <RotateCcw className="w-3" />
+            <span>{lang === "ar" ? "تصفير المحاكي الافتراضي" : "Reset Simulator State"}</span>
+          </button>
+        </div>
+
+        <p className="text-[11px] text-gray-400 mb-2">
+          {lang === "ar" 
+            ? "تتيح هذه الاختصارات الانتقال السريع بين شاشات الهاتف ومحاكاة دورات عمل الـ Freelancer واستخدام محامي الحوكمة المساعد LEXI AI والتوقيع الرقمي الموثق:"
+            : "Use the direct buttons to jump to specific mock scenarios in the custom mobile chassis view:"}
+        </p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-1.5">
+          {[
+            { id: 1, label: lang === "ar" ? "1. واجهة البداية" : "1. Landing Dashboard" },
+            { id: 2, label: lang === "ar" ? "2. معالج رفع الوثائق" : "2. Raise Doc Sheet" },
+            { id: 3, label: lang === "ar" ? "3. رصيد السلوك" : "3. GOSI & Behavioral" },
+            { id: 4, label: lang === "ar" ? "4. كشوف المستندات" : "4. Contracts Cabinet" },
+            { id: 5, label: lang === "ar" ? "5. إيداع أدلة وصوت" : "5. Media Proof Box" },
+            { id: 6, label: lang === "ar" ? "6. تدقيق المخالفات" : "6. Alert Violations" },
+            { id: 7, label: lang === "ar" ? "7. تظلمات المساعد الذكي" : "7. Draft Objection AI" },
+            { id: 8, label: lang === "ar" ? "8. ملف كاشف العمر المهني" : "8. Career LifeLine" }
+          ].map(st => (
+            <button
+              key={st.id}
+              onClick={() => handleQuickStepperNav(st.id)}
+              className={`p-1.5 text-[10.5px] rounded-lg border text-center transition-all cursor-pointer block ${
+                demoStep === st.id
+                  ? "bg-gradient-to-r from-blue-700 to-indigo-900 border-[#D4AF37] text-white font-black"
+                  : "bg-black/40 border-white/5 text-gray-300 hover:text-white"
+              }`}
+            >
+              <span className="block text-[8px] text-[#D4AF37]">خطوة {st.id}</span>
+              <span className="truncate block font-bold mt-0.5">{st.label}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* 📱 MODERN MOBILE COMPACT VIEWPORT CONTAINER */}
+      <div id="freelancer-viewport-aligner" className="flex justify-center items-center py-2 px-1">
+        
+        {/* Dynamic Smartphone Shell with status bar & navigation */}
+        <div className="relative w-full max-w-[395px] min-h-[770px] bg-[#02050c] rounded-[48px] border-[11px] border-[#131722] shadow-[0_24px_55px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col font-sans text-white ring-1 ring-white/10">
+          
+          {/* Top Notch Camera */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-5 bg-[#131722] rounded-b-xl z-50 flex items-center justify-center pointer-events-none">
+            <div className="w-1.5 h-1.5 bg-[#070b13] rounded-full mr-1" />
+            <div className="w-8 h-0.5 bg-[#090d16] rounded-full" />
+          </div>
+
+          {/* Smartphone Telephony Top Status Indicator bar */}
+          <div className="h-9 px-5 pt-1.5 select-none flex justify-between items-center text-[10px] font-black tracking-wide font-mono z-40 bg-[#02050c] border-b border-white/5">
+            <span className="text-gray-300 font-bold">{statusBarTime || "08:44"}</span>
+            <div className="flex items-center gap-1.5 text-gray-300">
+              <Signal className="w-3 h-3 text-white" />
+              <span className="text-[8px] text-white">5G</span>
+              <Wifi className="w-3 h-3 text-[#D4AF37]" />
+              <div className="flex items-center gap-0.5">
+                <span className="text-[8px] text-gray-300">99%</span>
+                <Battery className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400/20" />
+              </div>
+            </div>
+          </div>
+
+          {/* 🏆 MOBILE APPLICATION STICKY HEADER PART */}
+          <div className="px-3.5 py-3 bg-[#030713] border-b border-[#D4AF37]/10 space-y-2 z-10 shadow-lg relative">
+            
+            <div className="flex justify-between items-center text-right">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#D4AF37] to-amber-900 border border-white/10 flex items-center justify-center text-sm shadow">
+                  {profile.avatar}
+                </div>
+                <div>
+                  <h3 className="text-xs font-black text-white leading-none">{profile.name}</h3>
+                  <div className="flex items-center gap-1 text-[8.5px] text-gray-400 mt-1">
+                    <Database className="w-2.5 h-2.5 text-[#D4AF37]" />
+                    <span className="truncate max-w-[125px] font-bold">{lang === "ar" ? "رصيد حصانة السلوك 99%" : "99% Immunity Slot"}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Behavioral Score Micro Card Indicator */}
+              <div className="flex items-center gap-1.5 bg-black/45 py-1 px-2 rounded-full border border-[#D4AF37]/25">
+                <div className="relative w-4.5 h-4.5 flex items-center justify-center">
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle cx="9" cy="9" r="7" stroke="rgba(255,255,255,0.06)" strokeWidth="1.8" fill="transparent" />
+                    <circle 
+                      cx="9" 
+                      cy="9" 
+                      r="7" 
+                      stroke="#10b981" 
+                      strokeWidth="1.8" 
+                      fill="transparent" 
+                      strokeDasharray={44} 
+                      strokeDashoffset={44 * (1 - 0.99)} 
+                    />
+                  </svg>
+                  <span className="absolute text-[6px] font-black font-mono text-emerald-400">99</span>
+                </div>
+                <span className="text-[8px] text-gray-300 font-black">{lang === "ar" ? "حصانة عمالية" : "Immunity"}</span>
+              </div>
+            </div>
+
+            {/* Contract State & Branch indicators as micro-tabs */}
+            <div className="grid grid-cols-2 gap-1.5 pt-1">
+              <div className="bg-white/5 border border-white/5 rounded-lg py-1 px-1.5 flex justify-between items-center text-[8px]">
+                <span className="text-gray-400">{lang === "ar" ? "رخصة التأمينات" : "GOSI"}:</span>
+                <span className="text-emerald-400 font-extrabold font-mono text-[7px]">{profile.insuranceLink}</span>
+              </div>
+              <div className="bg-white/5 border border-white/5 rounded-lg py-1 px-1.5 flex justify-between items-center text-[8px]">
+                <span className="text-gray-400">{lang === "ar" ? "عقود جارية" : "Contracts"}:</span>
+                <span className="text-[#D4AF37] font-extrabold">{profile.contractsCount} معتمدة</span>
+              </div>
+            </div>
+          </div>
+
+          {/* SCREEN BODY WITH SKELETON LOADERS AND ANIMATIONS */}
+          <div className="flex-1 overflow-y-auto p-3.5 space-y-4 bg-gradient-to-b from-[#030612] via-[#01030b] to-[#010105] pb-24 relative">
+            
+            {/* Skeletal pulse state for screen routing */}
+            {isScreenLoading ? (
+              <div className="space-y-3.5 animate-pulse pt-2 text-right">
+                <div className="h-20 bg-white/5 rounded-xl border border-white/5" />
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="h-16 bg-white/5 rounded-lg" />
+                  <div className="h-16 bg-white/5 rounded-lg" />
+                </div>
+                <div className="h-32 bg-white/5 rounded-xl" />
+                <div className="h-16 bg-white/5 rounded-xl animate-bounce" />
+              </div>
+            ) : (
+              <AnimatePresence mode="wait">
+
+                {/* --- TAB 1: HOME STARTING POINT --- */}
+                {activeTab === "home" && (
+                  <motion.div
+                    key="sh-home"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-4"
+                  >
+                    {/* Active GOSI Insurance Card Banner */}
+                    <div className="p-3.5 bg-gradient-to-br from-[#060c20] to-[#030713] border border-[#D4AF37]/20 rounded-2xl text-right space-y-3 shadow shadow-yellow-900/10">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-xs font-black text-[#D4AF37] leading-none mb-1">{lang === "ar" ? "تصديق التأمينات الاجتماعية GOSI" : "GOSI Sovereign Trust"}</h4>
+                          <p className="text-[8.5px] text-gray-400 leading-normal">
+                            {lang === "ar" ? "الملف المهني مؤصل بشبكة قوى والمؤسسة العامة للتأمينات." : "Verified on-demand blockchain layer."}
+                          </p>
+                        </div>
+                        <span className="p-1 px-1.5 text-[8.5px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">
+                          {lang === "ar" ? "أمان مطلق" : "Safe"}
+                        </span>
+                      </div>
+
+                      {/* Personal Behavioral Progress Bar */}
+                      <div className="space-y-1">
+                        <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                          <div className="bg-gradient-to-l from-[#D4AF37] to-emerald-500 h-1.5 rounded-full" style={{ width: "99%" }} />
+                        </div>
+                        <div className="flex justify-between items-center text-[7.5px]">
+                          <span className="text-gray-500">{lang === "ar" ? "الرصيد المهني التراكمي: 99%" : "Rating: 99%"}</span>
+                          <span className="text-emerald-400 font-extrabold">{lang === "ar" ? "حصانة مفعّلة ✓" : "Active Shield"}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* UPGRADED: FREELANCE CONTRACT GEOSPACE RANGES MAP */}
+                    <div className="p-3.5 bg-[#050917] border border-white/5 rounded-2xl text-right space-y-2.5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-black text-white">{lang === "ar" ? "حدود العقود والانتشار المقيد (Geofences)" : "Contract Ranges & Geospace Borders"}</span>
+                        <span className="text-[8px] bg-[#D4AF37]/10 text-[#D4AF37] py-0.5 px-1 rounded border border-[#D4AF37]/25 font-bold">Riyadh & Jeddah Hubs</span>
+                      </div>
+                      <p className="text-[8.5px] text-gray-500 leading-normal">
+                        {lang === "ar" ? "يعرض الخرائط السيادية لإحداثيات التسليم ونطاقات الحظر الجغرافي المعمول بها في العقود الحالية." : "Shows map boundaries of your on-demand contracts geofences."}
+                      </p>
+                      <SovereignMap
+                        centerAddress="فرع الرياض الرئيسي"
+                        geofenceRadiusMeters={500}
+                        lang={lang}
+                      />
+                    </div>
+
+                    {/* Pending Urgent Violation Notification Box */}
+                    {violations.filter(v => v.status.includes("مفتوحة")).map(vio => (
+                      <div key={vio.id} className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-between text-right gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="p-1.5 bg-red-500/10 text-red-400 rounded-lg">
+                            <AlertTriangle className="w-4 h-4" />
+                          </span>
+                          <div>
+                            <span className="text-[9.5px] text-red-300 block font-black">{lang === "ar" ? "مخالفة معلقة تحتاج اعتراضك" : "Pending Actionable Fine"}</span>
+                            <span className="text-[8.5px] text-gray-400 block max-w-[140px] truncate">{vio.title}</span>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedViolation(vio);
+                            setActiveBottomSheet("appeal_ai_wizard");
+                          }}
+                          className="bg-red-500/20 text-red-200 border border-red-500/30 font-black px-2 py-1 text-[8.5px] rounded-lg cursor-pointer hover:bg-red-500/35 transition"
+                        >
+                          {lang === "ar" ? "قدم اعتراض بالذكاء الاصطناعي" : "Objection AI"}
+                        </button>
+                      </div>
+                    ))}
+
+                    {/* Dynamic Bento Box Cards under Home tab */}
+                    <div className="grid grid-cols-2 gap-2">
+                      
+                      <div
+                        onClick={() => handleTabTransition("documents")}
+                        className="p-3 bg-gradient-to-tr from-[#050b1a] to-[#040813] border border-white/5 hover:border-blue-500/20 rounded-xl text-right flex flex-col justify-between h-24 cursor-pointer transition shadow"
+                      >
+                        <span className="p-1 px-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg self-start">
+                          <FileText className="w-3.5 h-3.5" />
+                        </span>
+                        <div>
+                          <span className="text-xs font-black block text-white">{lang === "ar" ? "المستندات المحمية" : "Cabinet"}</span>
+                          <span className="text-[8.5px] text-gray-500 font-mono">{documents.length} {lang === "ar" ? "وثائق مصدقة" : "Docs verified"}</span>
+                        </div>
+                      </div>
+
+                      <div
+                        onClick={() => handleTabTransition("evidence")}
+                        className="p-3 bg-gradient-to-tr from-[#050b1a] to-[#040813] border border-white/5 hover:border-emerald-500/20 rounded-xl text-right flex flex-col justify-between h-24 cursor-pointer transition shadow"
+                      >
+                        <span className="p-1 px-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg self-start">
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                        </span>
+                        <div>
+                          <span className="text-xs font-black block text-white">{lang === "ar" ? "مخزن القرائن" : "Evidence Box"}</span>
+                          <span className="text-[8.5px] text-gray-500 font-mono">{evidenceItems.length} {lang === "ar" ? "رواسب دفاعية" : "Solid proof"}</span>
+                        </div>
+                      </div>
+
+                      <div
+                        onClick={() => handleTabTransition("violations")}
+                        className="p-3 bg-gradient-to-tr from-[#050b1a] to-[#040813] border border-white/5 hover:border-red-500/20 rounded-xl text-right flex flex-col justify-between h-24 cursor-pointer transition shadow"
+                      >
+                        <span className="p-1 px-1.5 bg-red-500/10 text-red-500 border border-red-500/20 rounded-lg self-start">
+                          <AlertTriangle className="w-3.5 h-3.5" />
+                        </span>
+                        <div>
+                          <span className="text-xs font-black block text-white">{lang === "ar" ? "المخالفات النشطة" : "Infractions"}</span>
+                          <span className="text-[8.5px] text-red-400 font-bold">{violations.filter(v => v.amount !== "").length} {lang === "ar" ? "مسجلة" : "logged"}</span>
+                        </div>
+                      </div>
+
+                      <div
+                        onClick={() => handleTabTransition("profile")}
+                        className="p-3 bg-gradient-to-tr from-[#050b1a] to-[#040813] border border-white/5 hover:border-[#D4AF37]/20 rounded-xl text-right flex flex-col justify-between h-24 cursor-pointer transition shadow"
+                      >
+                        <span className="p-1 px-1.5 bg-amber-500/10 text-[#D4AF37] border border-[#D4AF37]/20 rounded-lg self-start">
+                          <Clock className="w-3.5 h-3.5" />
+                        </span>
+                        <div>
+                          <span className="text-xs font-black block text-white">{lang === "ar" ? "أثر العمر المهني" : "Career Line"}</span>
+                          <span className="text-[8.5px] text-gray-500">{lang === "ar" ? "مخطط زمني تفاعلي" : "Interactive Line"}</span>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    {/* Quick Access Floating Action Button trigger in Home */}
+                    <div className="bg-[#050917] rounded-xl border border-white/5 p-3 space-y-2 text-right">
+                      <div className="flex justify-between items-center border-b border-white/5 pb-1.5">
+                        <h4 className="text-[9px] font-black text-gray-300">
+                          {lang === "ar" ? "الإشعارات الأخيرة والمخاطبات" : "Recent Mailbox & Pings"}
+                        </h4>
+                        <span className="text-[7.5px] text-[#D4AF37] hover:underline cursor-pointer" onClick={() => {
+                          setNotifications(notifications.map(n => ({ ...n, unread: false })));
+                          triggerHapticFeedback("mark-all");
+                        }}>
+                          {lang === "ar" ? "تحديد كروي مقروء ✓" : "Clear all"}
+                        </span>
+                      </div>
+
+                      <div className="space-y-1.5 max-h-[140px] overflow-y-auto custom-scrollbar">
+                        {notifications.map(n => (
+                          <div key={n.id} className="p-2 bg-black/45 border border-white/5 rounded-lg text-[9px] space-y-0.5 relative">
+                            {n.unread && (
+                              <span className="absolute left-1/2 -translate-x-1/2 top-1.5 w-1.5 h-1.5 rounded-full bg-blue-400" />
+                            )}
+                            <div className="flex justify-between items-center text-[7.5px] text-gray-500">
+                              <span>{n.title}</span>
+                              <span>{n.date}</span>
+                            </div>
+                            <p className="text-gray-300 leading-normal font-bold">{n.body}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Educational Sovereignty Statement Card (Guarantor of client independence) */}
+                    <div className="p-3.5 bg-yellow-500/5 border border-yellow-500/20 rounded-xl text-right">
+                      <div className="flex gap-2.5 items-start">
+                        <Info className="w-3.5 h-3.5 text-[#D4AF37] flex-shrink-0 mt-0.5" />
+                        <p className="text-[9.5px] text-yellow-300/90 leading-relaxed font-bold">
+                          {lang === "ar" 
+                            ? "تنبيه سيادي: بموجب الباقة الخامسة لمقاولي الأعمال الحرة (Freelance Sovereign Accord)، فإن حسابك معفي بالكامل من رقابة الـ GPS. لا تتطلب أعمالك التسليم بموجب الإحداثيات الجغرافية اليومية."
+                            : "Sovereign Exemption Notice: You are exempted from routine check-ins. Operations are exclusively output-bound."}
+                        </p>
+                      </div>
+                    </div>
+
+                  </motion.div>
+                )}
+
+                {/* --- TAB 2: SOVEREIGN DOCUMENTS CABINET --- */}
+                {activeTab === "documents" && (
+                  <motion.div
+                    key="sh-docs"
+                    initial={{ opacity: 0, x: -15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-4 text-right"
+                  >
+                    <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                      <div>
+                        <h3 className="text-xs font-black text-white">{lang === "ar" ? "الحقيبة المستندات المؤمنة" : "Sovereign Cabinet"}</h3>
+                        <p className="text-[8px] text-gray-500 mt-0.5">{lang === "ar" ? "عقود وشهادات مسجلة ومعتمدة رقمياً" : "Legally integrated PDF/Image files"}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          triggerHapticFeedback("add_doc_wizard");
+                          setActiveBottomSheet("add_doc_wizard");
+                        }}
+                        className="px-2.5 py-1 text-[9px] bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-lg flex items-center gap-1 cursor-pointer transition shadow"
+                      >
+                        <span>[+] {lang === "ar" ? "رفع مستند" : "New Doc"}</span>
+                      </button>
+                    </div>
+
+                    {/* Document Cards list */}
+                    <div className="space-y-2.5">
+                      {documents.map(doc => (
+                        <div
+                          key={doc.id}
+                          className="p-3 bg-black/45 hover:bg-black/70 border border-white/5 hover:border-blue-500/30 rounded-xl transition cursor-pointer relative"
+                          onClick={() => {
+                            setSelectedDoc(doc);
+                            setActiveBottomSheet("doc_details");
+                          }}
+                        >
+                          <div className="flex justify-between items-start">
+                            <span className="text-[7.5px] bg-blue-500/10 text-blue-300 border border-blue-500/20 px-1.5 py-0.5 rounded-md font-mono font-bold">
+                              {doc.type}
+                            </span>
+                            <span className="text-gray-500 text-[8px] font-mono">{doc.date}</span>
+                          </div>
+                          
+                          <h4 className="text-xs font-black text-white mt-1.5 mb-1">{doc.title}</h4>
+                          <p className="text-[8.5px] text-gray-400 truncate">{doc.note}</p>
+
+                          <div className="flex justify-between items-center text-[7.5px] text-gray-400 mt-2 border-t border-white/5 pt-1.5 font-mono">
+                            <span>{doc.size}</span>
+                            <span className="text-emerald-400 flex items-center gap-0.5">
+                              <Check className="w-2.5 h-2.5" />
+                              {lang === "ar" ? "مصدق ومثبت رقمياً" : "SHA Ledger'd"}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* --- TAB 3: EVIDENCE & CAPTURES VIRTUAL VAULT --- */}
+                {activeTab === "evidence" && (
+                  <motion.div
+                    key="sh-evidence"
+                    initial={{ opacity: 0, x: 15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="space-y-4 text-right"
+                  >
+                    <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                      <div>
+                        <h3 className="text-xs font-black text-white">{lang === "ar" ? "خزنة الأدلة والقرائن المهنية" : "Sovereign Context Evidence"}</h3>
+                        <p className="text-[8px] text-gray-500 mt-0.5">{lang === "ar" ? "أرشفة مكالمات ورسائل لإبطال تهم الإخلال" : "Bypass corporate disputes with proof"}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          triggerHapticFeedback("add_evi");
+                          setActiveBottomSheet("add_evidence_wizard");
+                        }}
+                        className="px-2.5 py-1 text-[9px] bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-lg flex items-center gap-1 cursor-pointer transition shadow"
+                      >
+                        <span>[+] {lang === "ar" ? "أضف قرينة" : "Record Proof"}</span>
+                      </button>
+                    </div>
+
+                    {/* UPGRADED: FREELANCE EVIDENCE CAROUSEL ROW */}
+                    <div className="bg-[#02050c] p-3 rounded-2xl border border-white/5 space-y-3">
+                      <div className="flex justify-between items-center border-b border-white/5 pb-1.5 select-none">
+                        <span className="text-[10px] font-black text-[#D4AF37]">{lang === "ar" ? "معرض معاينة الأدلة الجنائية" : "Forensics Proof Carousel"}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[8px] text-gray-400 font-mono">{(activeEvidenceIndexes["freelance_evidence"] || 0) + 1} / 3</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping" />
+                        </div>
+                      </div>
+
+                      <div className="min-h-[90px] flex flex-col justify-center items-center text-center py-2 px-1 bg-black/40 rounded-xl relative overflow-hidden">
+                        {(activeEvidenceIndexes["freelance_evidence"] || 0) === 0 && (
+                          <div className="space-y-2 w-full px-2">
+                            <span className="text-[7.5px] bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/25 py-0.5 px-1.5 rounded inline-block font-mono">SLIDE 1 - MAP OVERLAY</span>
+                            <p className="text-[10.5px] text-white font-bold">{lang === "ar" ? "رصد تداخلات الموقع الجيومكاني لقناة الاتصال" : "Communication Channel Location Trace"}</p>
+                            <p className="text-[8.5px] text-gray-400 leading-normal">{lang === "ar" ? "إحداثيات إرسال الكتل الأمنية للعميل في نطاق الترخيص ورسم الخريطة." : "Coordinates within verified workplace threshold."}</p>
+                          </div>
+                        )}
+
+                        {(activeEvidenceIndexes["freelance_evidence"] || 0) === 1 && (
+                          <div className="space-y-2.5 w-full px-2">
+                            <span className="text-[7.5px] bg-indigo-500/10 text-indigo-300 border border-indigo-500/25 py-0.5 px-1.5 rounded inline-block font-mono">SLIDE 2 - VEO 3 VIDEO</span>
+                            <p className="text-[10.5px] text-emerald-400 font-bold">{lang === "ar" ? "فيلم المحاكاة السيادية للحدث" : "Veo 3 Visual Event Simulation"}</p>
+                            <p className="text-[8.5px] text-gray-400 leading-normal">{lang === "ar" ? "سيناريو مُنتج بالذكاء الاصطناعي يطابق تسجيل الشاشة والصيانة." : "AI reconstruction showing terminal inputs validation."}</p>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setVideoPromptText(lang === "ar" 
+                                  ? "محاكاة سيناريو صيانة السيرفرات وإرسال الأكواد من المكتب في الرياض وتفنيد الإخلال بالعقد" 
+                                  : "Simulation showing freelancer performing coding commits and code delivery from Riyadh HQ"
+                                );
+                                setVideoPromptContext("evidence");
+                                setActiveBottomSheet("video_generator");
+                                triggerHapticFeedback("veo-trigger");
+                              }}
+                              className="px-2.5 py-1 bg-indigo-500/25 text-indigo-300 hover:bg-indigo-500/35 border border-indigo-500/30 rounded-lg text-[9px] font-black cursor-pointer transition mx-auto flex items-center justify-center gap-1"
+                            >
+                              <Video className="w-3 h-3 text-[#D4AF37]" />
+                              <span>{lang === "ar" ? "حكّ ومطابقة الفيديو بـ Veo 3" : "Synthesize Video Proof"}</span>
+                            </button>
+                          </div>
+                        )}
+
+                        {(activeEvidenceIndexes["freelance_evidence"] || 0) === 2 && (
+                          <div className="space-y-2 w-full px-2">
+                            <span className="text-[7.5px] bg-rose-500/10 text-rose-300 border border-rose-500/25 py-0.5 px-1.5 rounded inline-block font-mono">SLIDE 3 - AUDIO DIALOG</span>
+                            <p className="text-[10.5px] text-white font-bold">{lang === "ar" ? "كشف المكالمة الهاتفية مع تتبع الطيف" : "Traced Client Audio Call Clip"}</p>
+                            <p className="text-[8.5px] text-gray-400 leading-normal">{lang === "ar" ? "تسجيل مأذون به يثبت طلب العميل مهلة إرجاء صيانة الأكواد." : "Voice instructions stating explicit delay permissions."}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Controls bar */}
+                      <div className="flex justify-between items-center bg-black/60 p-1 rounded-xl border border-white/5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const curr = activeEvidenceIndexes["freelance_evidence"] || 0;
+                            const next = curr === 0 ? 2 : curr - 1;
+                            setActiveEvidenceIndexes({ ...activeEvidenceIndexes, freelance_evidence: next });
+                            triggerHapticFeedback("carousel-prev");
+                          }}
+                          className="px-2 py-0.5 text-[8.5px] bg-white/5 hover:bg-white/10 text-white rounded cursor-pointer font-bold animate-none"
+                        >
+                          {lang === "ar" ? "◀ السابق" : "◀ Prev"}
+                        </button>
+                        <div className="flex gap-1.5">
+                          {[0, 1, 2].map(i => (
+                            <span
+                              key={i}
+                              className={`w-1 h-1 rounded-full transition ${
+                                (activeEvidenceIndexes["freelance_evidence"] || 0) === i ? "bg-[#D4AF37]" : "bg-white/15"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const curr = activeEvidenceIndexes["freelance_evidence"] || 0;
+                            const next = curr === 2 ? 0 : curr + 1;
+                            setActiveEvidenceIndexes({ ...activeEvidenceIndexes, freelance_evidence: next });
+                            triggerHapticFeedback("carousel-next");
+                          }}
+                          className="px-2 py-0.5 text-[8.5px] bg-white/5 hover:bg-white/10 text-white rounded cursor-pointer font-bold animate-none"
+                        >
+                          {lang === "ar" ? "التالي ▶" : "Next ▶"}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Audio Evidence simulated Player & Image captures list */}
+                    <div className="space-y-3">
+                      {evidenceItems.map(evi => (
+                        <div
+                          key={evi.id}
+                          className="p-3 bg-[#03110d]/55 hover:bg-[#03110d]/80 border border-emerald-500/10 hover:border-emerald-500/30 rounded-xl space-y-2 relative"
+                        >
+                          <div className="flex justify-between items-center border-b border-white/5 pb-1">
+                            <span className="text-[7.5px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 px-1.5 rounded font-mono font-bold">
+                              {evi.type}
+                            </span>
+                            <span className="text-gray-500 text-[8px] font-mono">{evi.date}</span>
+                          </div>
+
+                          <p className="text-xs text-slate-100 font-bold leading-normal">{evi.text}</p>
+                          
+                          {/* Simulated Interactive Sound Player if type is audio */}
+                          {evi.type.includes("تسجيل") && (
+                            <div className="bg-black/40 rounded-lg p-2 flex items-center justify-between text-[10px]">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  triggerHapticFeedback("music-play");
+                                  setPlayingAudioId(playingAudioId === evi.id ? null : evi.id);
+                                }}
+                                className="p-1 bg-emerald-500/20 text-emerald-300 rounded hover:bg-emerald-500/30 transition flex items-center justify-center cursor-pointer"
+                              >
+                                {playingAudioId === evi.id ? (
+                                  <span className="text-[7.5px] font-black tracking-widest px-1 animate-pulse">STOP ■</span>
+                                ) : (
+                                  <Play className="w-2.5 h-2.5 fill-emerald-300" />
+                                )}
+                              </button>
+                              <div className="flex-1 mx-2.5">
+                                <div className="h-1 bg-white/10 rounded-full w-full relative overflow-hidden">
+                                  {playingAudioId === evi.id ? (
+                                    <div className="bg-emerald-400 h-1 rounded-full animate-marquee w-3/4 duration-[5000ms]" />
+                                  ) : (
+                                    <div className="bg-emerald-600 h-1 rounded-full w-[2%" />
+                                  )}
+                                </div>
+                              </div>
+                              <span className="text-[8.5px] text-gray-500 font-mono">02:15</span>
+                            </div>
+                          )}
+
+                          <div className="flex justify-between items-center text-[7.5px] text-gray-400 font-mono pt-1">
+                            <span>{evi.file}</span>
+                            <span className="text-emerald-400 font-bold text-[7px]" onClick={() => {
+                              setSelectedEvidence(evi);
+                              setActiveBottomSheet("evidence_details");
+                            }}>
+                              {lang === "ar" ? "شاهد التوقيع الفني ←" : "Trace block"}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* --- TAB 4: VIOLATIONS & AI OBJECTIONS --- */}
+                {activeTab === "violations" && (
+                  <motion.div
+                    key="sh-violations"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="space-y-4 text-right"
+                  >
+                    <div className="border-b border-white/5 pb-2">
+                      <h3 className="text-xs font-black text-white">{lang === "ar" ? "لوائح المحاكمة وتسوية التظلمات" : "Fine Ledger & AI Objections"}</h3>
+                      <p className="text-[8px] text-gray-500 mt-0.5">{lang === "ar" ? "اعتراض آلي ذكي مدعوم بمكتب الحوكمة المستقلة" : "Generate counter-objections signed on-screen"}</p>
+                    </div>
+
+                    {/* Violations Cards */}
+                    <div className="space-y-3">
+                      {violations.map(v => (
+                        <div
+                          key={v.id}
+                          className={`p-3.5 rounded-xl border transition cursor-pointer relative ${
+                            v.status.includes("مفتوحة")
+                              ? "bg-[#1c0c0e]/35 border-red-500/25 hover:border-red-500/40"
+                              : "bg-[#0b1511]/45 border-emerald-500/20 hover:border-emerald-500/35"
+                          }`}
+                          onClick={() => {
+                            setSelectedViolation(v);
+                            setActiveBottomSheet("violation_details");
+                          }}
+                        >
+                          <div className="flex justify-between items-center mb-1.5">
+                            <span className="text-[8.5px] text-gray-400 font-mono">ID: {v.id}</span>
+                            <span className={`text-[8.5px] px-1.5 py-0.5 rounded font-black ${
+                              v.status.includes("مفتوحة") ? "bg-red-500/15 text-red-300" : "bg-emerald-500/10 text-emerald-400"
+                            }`}>
+                              {v.status}
+                            </span>
+                          </div>
+
+                          <h4 className="text-xs font-black text-white leading-relaxed mb-1">{v.title}</h4>
+                          <p className="text-[9.5px] text-gray-400 leading-normal mb-2">{v.desc}</p>
+
+                          <div className="flex justify-between items-center text-[9px] border-t border-white/5 pt-2 text-[#D4AF37] font-bold">
+                            <span>{lang === "ar" ? "الأثر المالي" : "Fee impact"}: {v.amount}</span>
+                            {v.status.includes("مفتوحة") && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  triggerHapticFeedback("objection-button");
+                                  setSelectedVioObjId(v.id);
+                                  setActiveBottomSheet("appeal_ai_wizard");
+                                }}
+                                className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white font-extrabold text-[9px] rounded-lg cursor-pointer transition flex items-center gap-1 shadow-lg"
+                              >
+                                <FilePen className="w-2.5 h-2.5" />
+                                <span>{lang === "ar" ? "اعتراض بالذات" : "Appeal AI"}</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Objections history log list */}
+                    {objections.length > 0 && (
+                      <div className="p-3 bg-black/45 rounded-xl border border-[#D4AF37]/10 space-y-2">
+                        <h4 className="text-[9.5px] font-black text-[#D4AF37]">{lang === "ar" ? "سوابق الطعون والقرارات الصادرة" : "Past Appeals & Verdicts"}</h4>
+                        <div className="space-y-1.5">
+                          {objections.map(obj => (
+                            <div key={obj.id} className="p-2 bg-white/5 rounded-lg text-[9px] space-y-1">
+                              <div className="flex justify-between items-center text-[7.5px] font-mono">
+                                <span className="text-[#D4AF37]">OBJ_C9: {obj.id}</span>
+                                <span className="text-gray-500">{obj.date}</span>
+                              </div>
+                              <p className="font-bold text-gray-300">{obj.grounds}</p>
+                              <div className="text-[8px] text-emerald-400 font-black">{obj.status}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                  </motion.div>
+                )}
+
+                {/* --- TAB 5: LIFELINE AND FULL PROFILE DOSSIER --- */}
+                {activeTab === "profile" && (
+                  <motion.div
+                    key="sh-profile"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="space-y-4 text-right"
+                  >
+                    {/* Practitioner credentials list */}
+                    <div className="p-3 bg-black/45 border border-white/5 rounded-xl text-xs space-y-2">
+                      <div className="text-center pb-2 border-b border-white/5 space-y-1">
+                        <span className="text-[17px]">{profile.avatar}</span>
+                        <h4 className="text-xs font-black text-white">{profile.name}</h4>
+                        <p className="text-[8.5px] text-[#D4AF37] font-bold font-mono">{profile.email}</p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-[9px] pt-1">
+                        <div>
+                          <span className="text-gray-500 block">{lang === "ar" ? "رقم الهاتف" : "Mobile"}</span>
+                          <span className="text-white font-bold block">{profile.mobile}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 block">{lang === "ar" ? "مقر الترخيص" : "Jurisdiction"}</span>
+                          <span className="text-white font-bold block">{profile.city.split("،")[0]}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 block">{lang === "ar" ? "رصيد السلوك" : "Rating"}</span>
+                          <span className="text-emerald-400 font-extrabold block">{profile.rating} / 5.0</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 block">{lang === "ar" ? "نوع الترخيص" : "Contracting License"}</span>
+                          <span className="text-[#D4AF37] font-bold block">Sovereign C9 V5</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Interactive Career LifeLine (خط الحياة الوظيفية) */}
+                    <div className="p-3 bg-black/45 border-2 border-[#D4AF37] rounded-xl space-y-3">
+                      <div className="flex justify-between items-center border-b border-white/5 pb-1.5">
+                        <span className="text-[10px] font-black text-[#D4AF37]">{lang === "ar" ? "خط الحياة المهني التراكمي" : "Career LifeLine Chronology"}</span>
+                        
+                        {/* Selector filter buttons for lifeline */}
+                        <div className="flex gap-1">
+                          {["all", "payroll", "violations"].map(fil => (
+                            <button
+                              key={fil}
+                              onClick={() => {
+                                triggerHapticFeedback(`filter-${fil}`);
+                                setTimelineFilter(fil as any);
+                              }}
+                              className={`px-1 rounded text-[7px] font-black ${
+                                timelineFilter === fil
+                                  ? "bg-[#D4AF37] text-black"
+                                  : "bg-white/5 text-gray-400"
+                              }`}
+                            >
+                              {fil === "all" ? "الكل" : fil === "payroll" ? "الأجور" : "الجزاءات"}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Timeline flow chart */}
+                      <div className="relative border-r border-[#D4AF37]/45 mr-1 pr-3.5 space-y-3 py-1">
+                        
+                        {(timelineFilter === "all" || timelineFilter === "payroll") && (
+                          <div className="relative">
+                            <span className="absolute -right-[17.5px] top-1 w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />
+                            <div className="bg-black/65 border border-white/5 p-2 rounded-lg text-[9px] space-y-1">
+                              <span className="text-orange-400 font-bold block">{lang === "ar" ? "توثيق مستحقات مايو ZATCA" : "May Remittance Registered"}</span>
+                              <div className="flex justify-between font-mono text-[8px] text-gray-500">
+                                <span>{profile.activeClient}</span>
+                                <span>45,000 ر.س</span>
+                              </div>
+                              <span className="text-emerald-400 font-bold block text-[7.5px]">ZATCA ID: ZATCA-C9-MAY982</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {(timelineFilter === "all" || timelineFilter === "payroll") && (
+                          <div className="relative">
+                            <span className="absolute -right-[17.5px] top-1 w-2.5 h-2.5 rounded-full bg-[#D4AF37]" />
+                            <div className="bg-black/65 border border-white/5 p-2 rounded-lg text-[9px] space-y-1">
+                              <span className="text-orange-400 font-bold block">{lang === "ar" ? "توثيق مستحقات أبريل ZATCA" : "April Remittance Registered"}</span>
+                              <div className="flex justify-between font-mono text-[8px] text-gray-500">
+                                <span>{profile.activeClient}</span>
+                                <span>45,000 ر.س</span>
+                              </div>
+                              <span className="text-emerald-400 font-bold block text-[7.5px]">ZATCA ID: ZATCA-C9-APR991</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {(timelineFilter === "all" || timelineFilter === "violations") && (
+                          <div className="relative">
+                            <span className="absolute -right-[17.5px] top-1 w-2.5 h-2.5 rounded-full bg-red-500" />
+                            <div className="bg-black/65 border border-red-500/20 p-2 rounded-lg text-[9px] space-y-1">
+                              <span className="text-red-400 font-bold block">{lang === "ar" ? "مخالفة تأخر الأكواد النشطة" : "Active Infraction Logged"}</span>
+                              <p className="text-gray-300 leading-normal">{violations[0].title}</p>
+                              <span className="text-red-300 font-black text-[7.5px] block">{lang === "ar" ? "الأثر" : "Impact"}: {violations[0].amount}</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {(timelineFilter === "all" || timelineFilter === "violations") && (
+                          <div className="relative">
+                            <span className="absolute -right-[17.5px] top-1 w-2.5 h-2.5 rounded-full bg-purple-500" />
+                            <div className="bg-black/65 border border-purple-500/10 p-2 rounded-lg text-[9px] space-y-1">
+                              <span className="text-purple-400 font-bold block">{lang === "ar" ? "قبول اعتراض انقطاع VPN المروج" : "Appealed VPN Interruption Approved"}</span>
+                              <p className="text-gray-300 leading-normal">انقطاع موثق بخطوات الجذع الرقمية STC.</p>
+                              <span className="text-emerald-400 font-black text-[7.5px] block">حُفظ وتم حذف الجزاء الـ 3,500</span>
+                            </div>
+                          </div>
+                        )}
+
+                      </div>
+                    </div>
+
+                    {/* Historical sovereign resting periods and decrees */}
+                    <div className="p-3 bg-black/45 border border-white/5 rounded-xl space-y-2">
+                      <h4 className="text-[9.5px] font-black text-gray-300">{lang === "ar" ? "فترات التعويض والقرارات المصدقة" : "Sovereign Leaves & Official Decrees"}</h4>
+                      <div className="space-y-1.5 text-[8.5px]">
+                        {sovereignLeaves.map(sl => (
+                          <div key={sl.id} className="p-2 bg-white/5 rounded-lg flex justify-between items-center">
+                            <div>
+                              <span className="font-bold block text-white">{sl.type} ({sl.duration})</span>
+                              <span className="text-gray-500 text-[7px] block font-mono">{sl.period}</span>
+                            </div>
+                            <span className="text-blue-400 font-black text-[7.5px]">{sl.decree}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                  </motion.div>
+                )}
+
+              </AnimatePresence>
+            )}
+
+          </div>
+
+          {/* 📱 THUMB-FRIENDLY BOTTOM NAVIGATION BAR (WITH HAPTIC FEEDBACK) */}
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#030713]/95 border-t border-white/5 px-2 flex justify-around items-center z-40 select-none pb-1.5 backdrop-blur-md">
+            
+            {[
+              { id: "home", label: lang === "ar" ? "الرئيسية" : "Home", icon: AwardIcon },
+              { id: "documents", label: lang === "ar" ? "المستندات" : "Cabinet", icon: FileText },
+              { id: "evidence", label: lang === "ar" ? "الأدلة والقرائن" : "Proofs", icon: ShieldCheck },
+              { id: "violations", label: lang === "ar" ? "الاعتراضات" : "Appeals", icon: AlertTriangle },
+              { id: "profile", label: lang === "ar" ? "الملف الوظيفي" : "Lifeline", icon: Clock }
+            ].map(tab => {
+              const isSelected = activeTab === tab.id;
+              const IconComp = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => handleTabTransition(tab.id as any)}
+                  className="flex-1 py-1 flex flex-col items-center justify-center transition-all bg-transparent border-none cursor-pointer group relative"
+                >
+                  {/* Subtle tap ring anim */}
+                  {hapticTrigger === tab.id && (
+                    <span className="absolute w-8 h-8 rounded-full bg-[#D4AF37]/25 animate-ping" />
+                  )}
+
+                  <div className={`p-1.5 rounded-xl transition-all duration-300 ${
+                    isSelected 
+                      ? "text-[#D4AF37] scale-110" 
+                      : "text-gray-500 group-hover:text-white"
+                  }`}>
+                    <IconComp className="w-5 h-5 stroke-[2]" />
+                  </div>
+                  
+                  <span className={`text-[8.5px] font-black transition-all ${
+                    isSelected ? "text-[#D4AF37] opacity-100" : "text-gray-400 opacity-80"
+                  }`}>
+                    {tab.label}
+                  </span>
+                </button>
+              );
+            })}
+
+          </div>
+
+          {/* BOTTOM SHEETS DRAWERS OVERLAYS CONTROL */}
+          <AnimatePresence>
+            {activeBottomSheet && (
+              <div id="bottom-sheet-overlay" className="absolute inset-0 bg-black/65 z-50 flex items-end justify-center">
+                
+                {/* Close backdrop click */}
+                <div className="absolute inset-0 cursor-pointer" onClick={() => setActiveBottomSheet(null)} />
+
+                {/* Sliding Card Sheet Body */}
+                <motion.div
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "100%" }}
+                  transition={{ type: "spring", damping: 25, stiffness: 220 }}
+                  className="relative w-full bg-[#070b18] border-t-2 border-[#D4AF37] rounded-t-[32px] p-4 text-right z-50 overflow-y-auto max-h-[85%] space-y-4 shadow-[0_-15px_30px_rgba(0,0,0,0.6)]"
+                >
+                  
+                  {/* Pull indicators indicator */}
+                  <div className="w-12 h-1 bg-white/20 rounded-full mx-auto" />
+
+                  <div className="flex justify-between items-center text-right border-b border-white/5 pb-2">
+                    <button
+                      type="button"
+                      onClick={() => setActiveBottomSheet(null)}
+                      className="p-1.5 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 text-white cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                    <h3 className="text-xs font-black text-[#D4AF37] uppercase tracking-wider font-mono">
+                      {activeBottomSheet === "add_doc_wizard" && (lang === "ar" ? "رفع مستند سيادي جديد" : "ARCHIVE DOCUMENT")}
+                      {activeBottomSheet === "add_evidence_wizard" && (lang === "ar" ? "تسجيل قرينة دفاعية جديدة" : "RECORD LITIGATION PROOF")}
+                      {activeBottomSheet === "doc_details" && (lang === "ar" ? "بيانات الوثيقة المدققة" : "DOCUMENT SUMMARY")}
+                      {activeBottomSheet === "evidence_details" && (lang === "ar" ? "تصديق الدليل في سجل C9" : "C9 EVIDENCE ANCHOR")}
+                      {activeBottomSheet === "violation_details" && (lang === "ar" ? "بيانات قرار المخالفة" : "INFRACTION RECORD")}
+                      {activeBottomSheet === "appeal_ai_wizard" && (lang === "ar" ? "اللجنة المشتركة لتظلمات المساعد الذكي LEXI AI" : "AI LEGAL MEMORANDUM")}
+                      {activeBottomSheet === "video_generator" && (lang === "ar" ? "محرك توليد إثباتات الفيديو LEXI Video (Veo 3)" : "LEXI Video Generation (Veo 3)")}
+                    </h3>
+                  </div>
+
+                  {/* BOTTOM SHEET ACTIONS RENDERERS */}
+
+                  {/* SHEET VEO: Video Generator Block */}
+                  {activeBottomSheet === "video_generator" && (
+                    <div className="space-y-4">
+                      <LexiVideoGenerator
+                        initialPrompt={videoPromptText}
+                        contextType={videoPromptContext}
+                        lang={lang === "ar" ? "ar" : "en"}
+                      />
+                    </div>
+                  )}
+
+                  {/* 1. Add Document Wizard Sheet */}
+                  {activeBottomSheet === "add_doc_wizard" && (
+                    <form onSubmit={handleAddNewDocumentSubmit} className="space-y-3.5 pt-1 text-right">
+                      <div>
+                        <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "تصنيف الوثيقة المهنية:" : "Type"}</label>
+                        <select
+                          value={newDocType}
+                          onChange={e => setNewDocType(e.target.value)}
+                          className="w-full bg-[#0a0f21] border border-white/10 rounded-xl p-2 text-xs text-white cursor-pointer"
+                        >
+                          <option value="عقد عمل استشاري">عقد عمل استشاري</option>
+                          <option value="شهادة التزام ضريبي">شهادة التزام ضريبي</option>
+                          <option value="اتفاقية صون السرية">اتفاقية صون السرية</option>
+                          <option value="كشف رواتب تاريخي">كشف رواتب تاريخي</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "عنوان وموضوع المستند:" : "Subject Name"}</label>
+                        <input
+                          type="text"
+                          required
+                          value={newDocTitle}
+                          onChange={e => setNewDocTitle(e.target.value)}
+                          placeholder="مثال: مخارجة المرحلة الخامسة المصدقة"
+                          className="w-full bg-black border border-white/10 rounded-xl p-2 text-xs text-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "مذكرة توضيحية اختيارية:" : "Description"}</label>
+                        <textarea
+                          rows={2}
+                          value={newDocNote}
+                          onChange={e => setNewDocNote(e.target.value)}
+                          placeholder="مثال: يثبت اكتمال دفع الرصيف من الطرف الأول"
+                          className="w-full bg-black border border-white/10 rounded-xl p-2 text-xs text-white resize-none"
+                        />
+                      </div>
+
+                      <div className="p-3.5 bg-black rounded-xl border border-dashed border-white/10 text-center space-y-1">
+                        <Upload className="w-5 h-5 text-gray-500 mx-auto" />
+                        <span className="text-[9px] text-gray-400 block">{lang === "ar" ? "انقر لاختيار ملف PDF / صور" : "Drop single PDF/Image file"}</span>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl cursor-pointer"
+                      >
+                        {lang === "ar" ? "خزن وثبت الوثيقة برقم مشفر" : "Deploy Sovereign File"}
+                      </button>
+                    </form>
+                  )}
+
+                  {/* 2. Add Evidence Proof details */}
+                  {activeBottomSheet === "add_evidence_wizard" && (
+                    <form onSubmit={handleAddNewEvidenceSubmit} className="space-y-3.5 pt-1 text-right">
+                      <div>
+                        <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "نوع القرينة الدفاعية:" : "Evidence Type"}</label>
+                        <select
+                          value={newEvidenceType}
+                          onChange={e => setNewEvidenceType(e.target.value)}
+                          className="w-full bg-[#0a0f21] border border-white/10 rounded-xl p-2 text-xs text-white cursor-pointer"
+                        >
+                          <option value="تسجيل صوتي">تسجيل صوتي للحديث</option>
+                          <option value="لقطة شاشة">لقطة شاشة المحادثة</option>
+                          <option value="ملاحظة مكتوبة">ملاحظة مكتوبة ومؤرخة</option>
+                          <option value="شهادة جهة وسيطة">شهادة فنية لجهة وسيطة</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "الشرح وسياق الدفع القانوني:" : "Verbatim/Text"}</label>
+                        <textarea
+                          rows={3}
+                          required
+                          value={newEvidenceText}
+                          onChange={e => setNewEvidenceText(e.target.value)}
+                          placeholder="اكتب التبرير أو تفصيل ما دار في المكالمة أو النص.."
+                          className="w-full bg-black border border-white/10 rounded-xl p-2 text-xs text-white resize-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "اسم الملف المحاكي للرفع:" : "Mock File Reference"}</label>
+                        <input
+                          type="text"
+                          value={newEvidenceFile}
+                          onChange={e => setNewEvidenceFile(e.target.value)}
+                          placeholder="camera_match_screenshot.png"
+                          className="w-full bg-black border border-white/10 rounded-xl p-2 text-xs text-white"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl cursor-pointer"
+                      >
+                        {lang === "ar" ? "توثيق وبث القرينة بالسجل" : "Confirm Legal Import"}
+                      </button>
+                    </form>
+                  )}
+
+                  {/* 3. Document details sheet view */}
+                  {activeBottomSheet === "doc_details" && selectedDoc && (
+                    <div className="space-y-3 text-right text-xs pt-1">
+                      <div className="bg-black/60 p-3.5 rounded-xl border border-white/10 space-y-2">
+                        <span className="text-[10px] text-[#D4AF37] font-bold block">موضوع الوثيقة: {selectedDoc.title}</span>
+                        <p className="text-gray-300 leading-normal">{selectedDoc.note}</p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 font-mono text-[9px] bg-black/40 p-3 rounded-lg border border-white/5">
+                        <div>
+                          <span className="text-gray-500 block">رقم الكود التسلسلي</span>
+                          <span className="text-white font-bold block">{selectedDoc.id}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 block">الحجم الكروي</span>
+                          <span className="text-white font-bold block">{selectedDoc.size}</span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-gray-500 block">البصمة الرياضية المشفرة (SHA256)</span>
+                          <span className="text-[#D4AF37] uppercase break-all block text-[8px] mt-0.5">{selectedDoc.hash}</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          triggerHapticFeedback("download");
+                          alert("🟢 بدء تنزيل المستند والشهادة الرقمية المشفقة بصيفة PDF على جهازك المحمول!");
+                        }}
+                        className="w-full py-2 bg-[#D4AF37] hover:bg-amber-600 text-black font-extrabold text-xs rounded-xl flex items-center justify-center gap-1 cursor-pointer transition"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>تحميل المستند مع شهادة الالتزام C9</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* 4. Evidence details sheet view */}
+                  {activeBottomSheet === "evidence_details" && selectedEvidence && (
+                    <div className="space-y-3 text-right text-xs pt-1">
+                      <div className="bg-black/80 border border-emerald-500/25 p-3.5 rounded-xl space-y-2">
+                        <span className="text-[10px] text-emerald-400 font-bold block">نص القرينة: {selectedEvidence.type}</span>
+                        <p className="leading-relaxed text-gray-200">{selectedEvidence.text}</p>
+                      </div>
+
+                      <div className="p-3 bg-black/40 rounded-lg text-[9px] space-y-1.5 leading-snug">
+                        <div className="flex justify-between font-mono">
+                          <span className="text-gray-500">مرحلة التأصيل:</span>
+                          <span className="text-emerald-400 font-bold">بث معتمد ومقبول</span>
+                        </div>
+                        <div className="flex justify-between font-mono">
+                          <span className="text-gray-500">الملف الفعلي لقاضي النزاع:</span>
+                          <span className="text-white">{selectedEvidence.file}</span>
+                        </div>
+                        <div className="border-t border-white/5 pt-1.5 font-mono text-[8px] text-gray-400 break-all leading-normal">
+                          SHA256: {selectedEvidence.hash}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 5. Violation decision details */}
+                  {activeBottomSheet === "violation_details" && selectedViolation && (
+                    <div className="space-y-3.5 text-right text-xs pt-1">
+                      <div className="bg-black/60 p-3.5 rounded-xl border border-red-500/20 space-y-2">
+                        <span className="text-[10px] text-red-400 font-black block">عقوبة الفحص: {selectedViolation.id}</span>
+                        <h4 className="text-sm font-black text-white">{selectedViolation.title}</h4>
+                        <p className="leading-relaxed text-gray-300">{selectedViolation.desc}</p>
+                      </div>
+
+                      <div className="bg-black/40 p-3 rounded-xl border border-white/5 space-y-1.5 text-[10px]">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">تاريخ التسجيل الميداني:</span>
+                          <span className="text-white font-bold">{selectedViolation.date}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">القيمة والتعويض:</span>
+                          <span className="text-red-400 font-bold">{selectedViolation.amount}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">رقم تتبع القرار:</span>
+                          <span className="text-[#D4AF37] font-mono">{selectedViolation.trackingId}</span>
+                        </div>
+                      </div>
+
+                      {selectedViolation.status.includes("مفتوحة") && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedVioObjId(selectedViolation.id);
+                            setActiveBottomSheet("appeal_ai_wizard");
+                          }}
+                          className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow"
+                        >
+                          <FilePen className="w-4 h-4" />
+                          <span>صياغة عريضة التماس مسببة الآن</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* 6. LEXI AI Objection Generator Drawer (Step-by-Step wizard with Canvas Signature) */}
+                  {activeBottomSheet === "appeal_ai_wizard" && (
+                    <div className="space-y-3.5 text-right pt-1 pb-4">
+                      <div className="bg-[#0b0c15] border border-blue-500/25 p-3 rounded-xl space-y-1.5">
+                        <span className="text-[9.5px] text-blue-400 font-black uppercase tracking-wider block">LEXI AI MOCK PREVIEW</span>
+                        <p className="text-[10.5px] text-gray-300 leading-relaxed font-bold">
+                          المحامي القانوني الذكي المساعد يقوم بإنشاء عريضة اعتراض لعدم التقيد بـ GPS بناء على رصيدك الماسي الخالي من المخالفات في الـ 180 يوماً الماضية.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-gray-400 mb-1 font-extrabold">المبررات والأسباب المشروعة التوضيحية لعدم الالتزام:</label>
+                        <textarea
+                          rows={2.5}
+                          value={appealReasonText}
+                          onChange={e => setAppealReasonText(e.target.value)}
+                          placeholder="مثال: تعطل خط الألياف البصرية المزود للحي بالكامل مع شهادة تأكيد STC الملحقة بالأدلة."
+                          className="w-full bg-black border border-white/10 rounded-xl p-2.5 text-xs text-white resize-none focus:border-blue-500 focus:outline-none"
+                        />
+                      </div>
+
+                      {/* AI Document draft generator trigger */}
+                      <button
+                        type="button"
+                        onClick={generateLexiObjectionDoc}
+                        disabled={isGeneratingLexi}
+                        className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md disabled:bg-white/10"
+                      >
+                        <Sparkles className="w-4 h-4 text-blue-300" />
+                        <span>{isGeneratingLexi ? "جاري تحرير اللائحة بدقة الحوكمة..." : "توليد الصيغة السيادية بالذكاء الاصطناعي ✨"}</span>
+                      </button>
+
+                      {/* Interactive PDF Draft code output block */}
+                      {lexiDraftCode && (
+                        <div className="space-y-3">
+                          <label className="block text-[10px] text-[#D4AF37] font-black">[مسودة عريضة الدفاع الآلية]:</label>
+                          <div className="bg-black/95 border border-[#D4AF37]/35 rounded-xl p-3 text-[10.5px] text-slate-100 font-mono leading-relaxed max-h-[170px] overflow-y-auto custom-scrollbar text-right leading-relaxed whitespace-pre-wrap">
+                            {lexiDraftCode}
+                          </div>
+
+                          {/* Signature Digital Canvas Block */}
+                          <div className="border border-white/10 rounded-xl p-2.5 bg-black/50 space-y-2">
+                            <span className="text-[9px] text-gray-400 font-bold block">وقع بأصبعك هنا لتأكيد البصمة واعتماد اللائحة رقمياً:</span>
+                            
+                            <canvas
+                              ref={canvasRef}
+                              width={320}
+                              height={100}
+                              onMouseDown={initDrawing}
+                              onMouseMove={performDrawing}
+                              onMouseUp={endDrawing}
+                              onMouseLeave={endDrawing}
+                              onTouchStart={initDrawing}
+                              onTouchMove={performDrawing}
+                              onTouchEnd={endDrawing}
+                              className="w-full h-[100px] bg-white rounded-lg cursor-crosshair border border-[#D4AF37]/30"
+                            />
+
+                            <div className="flex justify-between items-center pt-1">
+                              <span className="text-[8px] text-gray-500 font-mono">C9 DIGI-SIGNATURE BLOCK</span>
+                              <button
+                                type="button"
+                                onClick={resetSignature}
+                                className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-red-400 text-[8.5px] rounded border border-red-500/25 cursor-pointer font-bold"
+                              >
+                                إزالة التوقيع
+                              </button>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={publishObjectionFinal}
+                            disabled={!signatureData}
+                            className={`w-full py-2.5 text-xs font-black rounded-xl transition ${
+                              signatureData
+                                ? "bg-[#D4AF37] hover:bg-amber-600 text-black shadow-lg cursor-pointer"
+                                : "bg-white/10 text-gray-500 cursor-not-allowed"
+                            }`}
+                          >
+                            <span>تصديق الاعتراض ونشره في السجل العالي ⚖️</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+        </div>
+      </div>
+    </div>
+  );
+}

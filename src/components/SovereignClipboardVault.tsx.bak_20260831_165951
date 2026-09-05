@@ -1,0 +1,724 @@
+import React, { useState, useEffect } from "react";
+import {
+  Clipboard,
+  ShieldCheck,
+  ShieldAlert,
+  Check,
+  Lock,
+  RefreshCw,
+  Trash2,
+  Search,
+  Database,
+  Key,
+  FileText,
+  AlertTriangle,
+  Eye,
+  EyeOff
+} from "lucide-react";
+import { db, auth, handleFirestoreError, OperationType } from "../lib/firebase";
+import {
+  collection,
+  doc,
+  setDoc,
+  getDocs,
+  deleteDoc,
+  query,
+  orderBy,
+  limit
+} from "firebase/firestore";
+
+interface ClipboardBlock {
+  id: string;
+  content: string;
+  dataType: string;
+  timestamp: string;
+  riskReport: string;
+  syncedAt: string;
+}
+
+interface SovereignClipboardVaultProps {
+  lang?: "ar" | "en";
+}
+
+export default function SovereignClipboardVault({ lang = "ar" }: SovereignClipboardVaultProps) {
+  const isAr = lang === "ar";
+  
+  const [clipboardText, setClipboardText] = useState<string>("");
+  const [permissionState, setPermissionState] = useState<string>("unknown");
+  const [riskAnalysis, setRiskAnalysis] = useState<{
+    riskLevel: "SAFE" | "MEDIUM" | "HIGH";
+    reasons: string[];
+    detectedTypes: string[];
+  }>({ riskLevel: "SAFE", reasons: [], detectedTypes: [] });
+
+  const [vaultItems, setVaultItems] = useState<ClipboardBlock[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
+  const [manualInput, setManualInput] = useState(false);
+  const [showContentMap, setShowContentMap] = useState<{ [key: string]: boolean }>({});
+
+  // Regular expressions to verify privacy leak safety
+  const SA_NATIONAL_ID_REGEX = /\b[12]\d{9}\b/;      // Saudi National ID or Iqama (10 digits, starts with 1 or 2)
+  const SA_CR_NUMBER_REGEX = /\b10\d{8}\b/;         // Saudi CR Number (10 digits starting with 10)
+  const SA_PHONE_REGEX = /(\+966|00966|0)?5[013456789]\d{7}\b/; // Saudi Phone Number
+  const SA_IBAN_REGEX = /\bSA\d{2}[A-Z0-9]{20}\b/i;   // Saudi IBAN (SA representing Saudi + 22 alphanumeric)
+  const SENSITIVE_KEY_REGEX = /(password|secret|api_key|private_key|token|auth_key|passwd|pwd)\s*[:=]\s*['"[a-zA-Z0-9_\-*]{12,}/i; // API Keys or passwords
+
+  // Checks the Clipboard text content for sensitive data leaks
+  const analyzeContentSafety = (text: string) => {
+    if (!text.trim()) {
+      setRiskAnalysis({ riskLevel: "SAFE", reasons: [], detectedTypes: [] });
+      return;
+    }
+
+    const reasons: string[] = [];
+    const detected: string[] = [];
+
+    if (SA_NATIONAL_ID_REGEX.test(text)) {
+      detected.push(isAr ? "رقم حساب الهوية الوطنية / الإقامة" : "Saudi National / Iqama ID");
+      reasons.push(isAr ? "تحتوي الحافظة على رقم هوية وطنية مكون من 10 أرقام والذي يخضع للحماية الفائقة." : "Clipboard exposes a 10-digit Saudi National identification number requiring strict isolation.");
+    }
+    
+    if (SA_CR_NUMBER_REGEX.test(text)) {
+      detected.push(isAr ? "رقم السجل التجاري للشركات" : "Commercial Registration Number");
+      reasons.push(isAr ? "تم الكشف عن رقم سجل تجاري (CR) للشركات السعودية." : "Detected commercial registration (CR) number representing corporate profiles.");
+    }
+
+    if (SA_PHONE_REGEX.test(text)) {
+      detected.push(isAr ? "رقم جوال سعودي نشط" : "Saudi Mobile Contact Number");
+      reasons.push(isAr ? "تم كشف رقم اتصال خليوي شخصي (+9665xxxxx)." : "Exposed personal mobile coordinates yielding database scraping risks.");
+    }
+
+    if (SA_IBAN_REGEX.test(text)) {
+      detected.push(isAr ? "رقم الحساب البنكي الموحد (IBAN)" : "Saudi Bank IBAN Number");
+      reasons.push(isAr ? "تم كشف آيبان بنكي سعودي مشفر ومكشوف للحافظة." : "Exposed Saudi bank IBAN record risking financial compliance breaches.");
+    }
+
+    if (SENSITIVE_KEY_REGEX.test(text)) {
+      detected.push(isAr ? "كلمة مرور / مفتاح واجهة برمجة مالي وسري" : "Encrypted API Secret Key");
+      reasons.push(isAr ? "المحتوى يحتوي على نمط مفتاح سري أو كلمة مرور للنظام." : "Content bears signatures of authorization token keys, risking security lockouts.");
+    }
+
+    let riskLevel: "SAFE" | "MEDIUM" | "HIGH" = "SAFE";
+    if (detected.length >= 2 || SENSITIVE_KEY_REGEX.test(text) || SA_NATIONAL_ID_REGEX.test(text)) {
+      riskLevel = "HIGH";
+    } else if (detected.length === 1) {
+      riskLevel = "MEDIUM";
+    }
+
+    setRiskAnalysis({ riskLevel, reasons, detectedTypes: detected });
+  };
+
+  useEffect(() => {
+    analyzeContentSafety(clipboardText);
+  }, [clipboardText]);
+
+  // Request actual clipboard system access
+  const requestClipboardAccess = async () => {
+    setFeedbackMsg(null);
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
+        setManualInput(true);
+        setFeedbackMsg({
+          text: isAr 
+            ? "⚠️ نظام حماية متصفح الـ IFrame يمنع الوصول التلقائي المباشر لـ Clipboard. يرجى لصق المحتوى يدوياً في الصندوق تالياً." 
+            : "⚠️ IFrame constraints block direct clipboard access. Please manually paste your content into the form.",
+          type: "info"
+        });
+        return;
+      }
+
+      // Query clipboard permission
+      if (navigator.permissions && navigator.permissions.query) {
+        try {
+          const result = await navigator.permissions.query({ name: "clipboard-read" as any });
+          setPermissionState(result.state);
+        } catch (e) {
+          console.warn("Permissions query omitted:", e);
+        }
+      }
+
+      setIsLoading(true);
+      const text = await navigator.clipboard.readText();
+      setClipboardText(text);
+      setManualInput(false);
+      setFeedbackMsg({
+        text: isAr ? "✅ تم قراءة الحافظة المحلية وفحصها بنجاح للسيادة!" : "✅ Clipboard read and verified under regulatory sovereignty!",
+        type: "success"
+      });
+    } catch (err) {
+      console.error("Failed to read clipboard:", err);
+      setManualInput(true);
+      setFeedbackMsg({
+        text: isAr 
+          ? "💡 يرجى الصق يدوياً في الصندوق أدناه، حيث يمنع المتصفح الحالي أو إطار المنشور الوصول التلقائي لخصوصية البيانات." 
+          : "💡 Direct clipboard access was blocked. Please paste your content manually in the secure zone below.",
+        type: "info"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Synchronize to Firestore or LocalStorage backup fallback
+  const syncClipboardToPlatform = async () => {
+    if (!clipboardText.trim()) {
+      setFeedbackMsg({
+        text: isAr ? "❌ محتوى الحافظة فارغ، يرجى ملء أو قراءة الحافظة أولاً." : "❌ Clipboard content is empty. Please read or paste some data first.",
+        type: "error"
+      });
+      return;
+    }
+
+    setIsSyncing(true);
+    setFeedbackMsg(null);
+
+    const checkIsAdmin = () => {
+      const email = auth.currentUser?.email;
+      return email && (
+        email === "sultan2030famli@gmail.com" || 
+        email === "sultanbooy100@gmail.com" || 
+        email === "founder@lexops.sa" || 
+        email.endsWith("@lexops.sa")
+      );
+    };
+
+    const userIsAdmin = checkIsAdmin();
+    const uid = `VAULT-${Date.now()}`;
+    const ts = new Date().toISOString();
+    
+    let dataType = "Text Node";
+    if (SA_NATIONAL_ID_REGEX.test(clipboardText)) dataType = "National ID Record";
+    else if (SA_CR_NUMBER_REGEX.test(clipboardText)) dataType = "Corporate CR Document";
+    else if (SA_IBAN_REGEX.test(clipboardText)) dataType = "Financial IBAN Node";
+    else if (SENSITIVE_KEY_REGEX.test(clipboardText)) dataType = "Credential Key Block";
+
+    const clipboardDoc: ClipboardBlock = {
+      id: `CLIP-${uid}`,
+      content: clipboardText,
+      dataType,
+      timestamp: ts,
+      riskReport: JSON.stringify({
+        level: riskAnalysis.riskLevel,
+        types: riskAnalysis.detectedTypes,
+        reasons: riskAnalysis.reasons
+      }),
+      syncedAt: ts
+    };
+
+    try {
+      // If we have an authenticated Admin session, commit to Firestore. 
+      // If not, we still save to LocalStorage so the user can test the app locally with full continuity!
+      if (auth.currentUser && userIsAdmin) {
+        const docRef = doc(db, "sovereign_clipboards", clipboardDoc.id);
+        await setDoc(docRef, clipboardDoc);
+        setFeedbackMsg({
+          text: isAr 
+            ? "🔒 تم الرفع بنجاح! تم حفظ البيانات المشفرة وسلسلة الفحص على قاعدة البيانات السحابية السيادية (Firestore)."
+            : "🔒 Secured and saved! Verified block synced to cloud firestore.",
+          type: "success"
+        });
+      } else {
+        setFeedbackMsg({
+          text: isAr 
+            ? "🔒 الحفظ السحابي يتطلب صلاحية إدارية نشطة. لم يتم حفظ البيانات." 
+            : "🔒 Cloud persistence requires active administrator privileges. Data was not saved.",
+          type: "error"
+        });
+      }
+
+      setClipboardText("");
+      fetchVaultItems();
+    } catch (err: any) {
+      console.error("Firestore sync error:", err);
+      setFeedbackMsg({
+        text: isAr 
+          ? "❌ فشل الحفظ السحابي. تحقق من الاتصال أو الصلاحيات." 
+          : "❌ Cloud sync failed. Check connection or permissions.",
+        type: "error"
+      });
+      setClipboardText("");
+      fetchVaultItems();
+      handleFirestoreError(err, OperationType.WRITE, `sovereign_clipboards/${clipboardDoc.id}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  // Fetch items from Firestore & Local persistent memories
+  const fetchVaultItems = async () => {
+    setIsLoading(true);
+    let items: ClipboardBlock[] = [];
+
+    // Fetch from Firestore only (strict cloud source)
+    const checkIsAdmin = () => {
+      const email = auth.currentUser?.email;
+      return email && (
+        email === "sultan2030famli@gmail.com" || 
+        email === "sultanbooy100@gmail.com" || 
+        email === "founder@lexops.sa" || 
+        email.endsWith("@lexops.sa")
+      );
+    };
+
+    if (auth.currentUser && checkIsAdmin()) {
+      try {
+        const q = query(collection(db, "sovereign_clipboards"), orderBy("timestamp", "desc"), limit(50));
+        const snap = await getDocs(q);
+        const cloudItems: ClipboardBlock[] = [];
+        snap.forEach((doc) => {
+          cloudItems.push(doc.data() as ClipboardBlock);
+        });
+        
+        items = [...cloudItems];
+      } catch (err) {
+        console.warn("Failed fetching cloud clipboards - using local only:", err);
+        try {
+          handleFirestoreError(err, OperationType.GET, "sovereign_clipboards");
+        } catch (ignored) {}
+      }
+    }
+
+    setVaultItems(items);
+    setIsLoading(false);
+  };
+
+  const deleteItem = async (id: string, isCloud: boolean) => {
+    try {
+      const checkIsAdmin = () => {
+        const email = auth.currentUser?.email;
+        return email && (
+          email === "sultan2030famli@gmail.com" || 
+          email === "sultanbooy100@gmail.com" || 
+          email === "founder@lexops.sa" || 
+          email.endsWith("@lexops.sa")
+        );
+      };
+
+      if (auth.currentUser && checkIsAdmin()) {
+        try {
+          await deleteDoc(doc(db, "sovereign_clipboards", id));
+        } catch (err) {
+          handleFirestoreError(err, OperationType.DELETE, `sovereign_clipboards/${id}`);
+        }
+      } else {
+        // Also remove from state anyway if simulated
+        const localData = localStorage.getItem("lexops_sovereign_clipboards") || "[]";
+        let list: ClipboardBlock[] = JSON.parse(localData);
+        list = list.filter(item => item.id !== id);
+        localStorage.setItem("lexops_sovereign_clipboards", JSON.stringify(list));
+      }
+
+      setFeedbackMsg({
+        text: isAr ? "🗑️ تم تطهير ومسح السجل وبيانات الحافظة نهائياً من الذاكرة." : "🗑️ Record purged and permanently removed from database.",
+        type: "success"
+      });
+      fetchVaultItems();
+    } catch (err) {
+      console.error("Purge failure:", err);
+    }
+  };
+
+  const clearAllLocal = () => {
+    localStorage.removeItem("lexops_sovereign_clipboards");
+    setFeedbackMsg({
+      text: isAr ? "🧹 تم تصفية الحافظة المحلية بالكامل بنجاح." : "🧹 All local data records cleared successfully.",
+      type: "success"
+    });
+    fetchVaultItems();
+  };
+
+  useEffect(() => {
+    fetchVaultItems();
+  }, [auth.currentUser]);
+
+  const filteredItems = vaultItems.filter(item => {
+    const term = searchQuery.toLowerCase();
+    return (
+      item.id.toLowerCase().includes(term) ||
+      item.content.toLowerCase().includes(term) ||
+      item.dataType.toLowerCase().includes(term)
+    );
+  });
+
+  const toggleContentVisibility = (itemId: string) => {
+    setShowContentMap(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
+  };
+
+  const getRiskReportParsed = (reportStr: string) => {
+    try {
+      return JSON.parse(reportStr);
+    } catch (e) {
+      return { level: "SAFE", reasons: [], types: [] };
+    }
+  };
+
+  return (
+    <div className="bg-black/45 border border-white/10 rounded-2xl p-6 relative overflow-hidden backdrop-blur-md text-right space-y-6" style={{ direction: "rtl" }}>
+      
+      {/* Decorative vector grid pattern */}
+      <div className="absolute top-0 right-0 w-44 h-44 bg-[#D4AF37]/5 rounded-full filter blur-3xl pointer-events-none" />
+
+      {/* Header Panel */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/5 pb-4 gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-[#D4AF37]/10 rounded-lg text-[#D4AF37]">
+              <Clipboard className="w-5 h-5 animate-pulse" />
+            </div>
+            <h2 className="text-base font-extrabold text-white tracking-wide font-sans">
+              {isAr ? "وديعة الحافظة السيادية المؤمنة" : "Sovereign Clipboard Secure Vault"}
+            </h2>
+          </div>
+          <p className="text-[10px] text-gray-400 max-w-xl">
+            {isAr 
+              ? "تفويض تنظيمي للوصول ومسح الحافظة بحثاً عن ملفات وحساسيات تسريب البيانات الوطنية أو التجارية الحساسة ومزامنتها لحمايتها من الاختراق."
+              : "Enterprise gateway to request, inspect and sync copy/paste flows, isolating leakages of Saudi National IDs or CR credentials under sovereign standards."
+            }
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={fetchVaultItems}
+          className="p-2 border border-white/10 bg-white/5 hover:bg-white/10 rounded-xl transition text-gray-300 flex items-center gap-1.5 text-[10px] cursor-pointer"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+          <span>{isAr ? "تحديث التزامن" : "Sync Pulse"}</span>
+        </button>
+      </div>
+
+      {feedbackMsg && (
+        <div className={`p-4 rounded-xl border text-xs text-right leading-relaxed flex items-start gap-2.5 ${
+          feedbackMsg.type === "success" 
+            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300"
+            : feedbackMsg.type === "error"
+            ? "bg-red-500/10 border-red-500/20 text-red-300"
+            : "bg-blue-500/10 border-blue-500/20 text-blue-300"
+        }`}>
+          <div className="w-2 h-2 rounded-full mt-1.5 shrink-0 bg-current" />
+          <p className="flex-1 font-sans">{feedbackMsg.text}</p>
+        </div>
+      )}
+
+      {/* Primary Interaction Interface Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Left Interactive Access Module */}
+        <div className="lg:col-span-5 bg-gradient-to-b from-white/[0.04] to-transparent p-5 rounded-2xl border border-white/5 space-y-4">
+          <div className="text-right">
+            <span className="text-[10px] font-bold text-[#D4AF37] block uppercase tracking-wider font-mono">
+              {isAr ? "بوابة الأمان والتحكم الجاري" : "SECURITY GATEWAY & CAPTURE ENGINE"}
+            </span>
+            <h3 className="text-xs font-extrabold text-white mt-1">
+              {isAr ? "تحليل وتفويض سحب محتويات الحافظة" : "Read and Calibrate Active Clipboard"}
+            </h3>
+          </div>
+
+          <div className="bg-[#020510] border border-white/5 p-4 rounded-xl text-center space-y-3 flex flex-col items-center justify-center relative min-h-[160px]">
+            <div className="w-12 h-12 bg-white/5 border border-[#D4AF37]/30 rounded-full flex items-center justify-center text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.15)]">
+              <Lock className="w-5 h-5" />
+            </div>
+
+            <div className="space-y-1">
+              <h4 className="text-[11px] font-black text-gray-200">
+                {isAr ? "طلب إذن قراءة الحافظة" : "Clipboard Read Validation"}
+              </h4>
+              <p className="text-[9px] text-gray-400 max-w-[240px] leading-relaxed mx-auto">
+                {isAr 
+                  ? "يتطلب المتصفح تفويضاً للوصول التلقائي. إذا لم يظهر، يمكنك التفعيل عبر الضغط تالياً ثم اللصق." 
+                  : "Requires user gesture to evaluate active clipboard contents. Intercepts background processes for validation."
+                }
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={requestClipboardAccess}
+              className="px-4 py-2 bg-[#D4AF37] hover:bg-[#b08f2e] text-black font-extrabold rounded-xl text-[10px] transition duration-200 cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-md"
+            >
+              <Clipboard className="w-3.5 h-3.5" />
+              <span>{isAr ? "سحب وفحص الحافظة الآن" : "Trigger Clipboard Access"}</span>
+            </button>
+          </div>
+
+          {/* Fallback Paste Input in case of Browser sandboxed environment (iFrame constraints) */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-[9.5px]">
+              <span className="text-gray-400">{isAr ? "أو الصق النص يدوياً في الخيار أدناه:" : "Or type/paste manually to process:"}</span>
+              <button
+                type="button"
+                onClick={() => setManualInput(!manualInput)}
+                className="text-[#D4AF37] underline cursor-pointer hover:text-white"
+              >
+                {manualInput ? (isAr ? "تصغير الحقل" : "Hide textfield") : (isAr ? "توسيع حقل اللصق" : "Expand textfield")}
+              </button>
+            </div>
+
+            {manualInput && (
+              <textarea
+                value={clipboardText}
+                onChange={(e) => setClipboardText(e.target.value)}
+                placeholder={isAr ? "ألصق أو اكتب النص المراد تأمينه وفحصه هنا..." : "Paste your secure credentials or data block here..."}
+                className="w-full bg-[#030612] border border-white/10 rounded-xl p-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37]/50 h-24 text-right font-sans"
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Right Leak & Risk Analysis Module */}
+        <div className="lg:col-span-7 bg-[#020309] p-5 rounded-2xl border border-white/5 space-y-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="text-[10px] font-bold text-gray-500 block">
+                {isAr ? "تقرير السلامة السيادي" : "SOVEREIGN LEAK INSPECTION REPORT"}
+              </span>
+              <h3 className="text-xs font-black text-white">
+                {isAr ? "بيان مخاطر تسريب البيانات الجغرافي" : "Real-time Corporate Identity Leak Risks"}
+              </h3>
+            </div>
+
+            {/* Risk Badge */}
+            <span className={`px-2.5 py-1 rounded-full text-[9px] font-black border uppercase tracking-wider flex items-center gap-1 ${
+              riskAnalysis.riskLevel === "HIGH"
+                ? "bg-red-500/10 border-red-500/20 text-red-400"
+                : riskAnalysis.riskLevel === "MEDIUM"
+                ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+            }`}>
+              {riskAnalysis.riskLevel === "HIGH" && <ShieldAlert className="w-3" />}
+              {riskAnalysis.riskLevel === "SAFE" && <ShieldCheck className="w-3" />}
+              <span>
+                {riskAnalysis.riskLevel === "HIGH" 
+                  ? (isAr ? "مخاطر عالية ⚠️" : "HIGH RISK ⚠️")
+                  : riskAnalysis.riskLevel === "MEDIUM"
+                  ? (isAr ? "مخاطر متوسطة ⚡" : "MEDIUM RISK ⚡")
+                  : (isAr ? "خالي من المخاطر ✓" : "SAFE NODE ✓")
+                }
+              </span>
+            </span>
+          </div>
+
+          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3 min-h-[120px] flex flex-col justify-between">
+            {clipboardText.trim() ? (
+              <div className="space-y-2.5">
+                {/* Content preview */}
+                <div className="bg-[#030614] p-2 rounded border border-white/5 text-[10px] font-mono text-gray-400 text-right max-h-16 overflow-y-auto break-all">
+                  <span className="text-gray-600 block text-[8px] font-sans font-bold uppercase mb-1">
+                    {isAr ? "معاينة البيانات المحصورة:" : "Captured Data Preview:"}
+                  </span>
+                  {clipboardText}
+                </div>
+
+                {/* Detected Types tags */}
+                {riskAnalysis.detectedTypes.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 items-center">
+                    <span className="text-[8px] text-gray-500 font-bold ml-1">{isAr ? "العناصر المكتشفة:" : "Identified elements:"}</span>
+                    {riskAnalysis.detectedTypes.map((t, i) => (
+                      <span key={i} className="bg-red-500/10 border border-red-500/20 text-red-300 text-[8px] font-bold px-1.5 py-0.5 rounded">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Reasons logs */}
+                {riskAnalysis.reasons.length > 0 ? (
+                  <ul className="text-[9px] text-gray-400 space-y-1 text-right list-disc pl-4 pr-1">
+                    {riskAnalysis.reasons.map((r, i) => (
+                      <li key={i} className="leading-relaxed">{r}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-[10px] text-gray-400 leading-normal">
+                    {isAr 
+                      ? "✓ لم يتم رصد أي عناصر هوية وطنية أو سجلات تجارية أو آيبان مكشوف بالحافظة الحالية. المحتوى آمن للمزامنة والتشغيل الفوري." 
+                      : "✓ No plaintext Saudi identification coordinates, commercial registries or financial indicators found in the active cache. Safe to proceed."
+                    }
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-6 text-gray-500 text-[10px] my-auto">
+                {isAr ? "يرجى قراءة أو لصق محتوى للبدء بالفحص الفوري." : "Please trigger clipboard cache acquisition to begin analysis."}
+              </div>
+            )}
+
+            <div className="border-t border-white/5 pt-3 flex justify-between items-center">
+              <span className="text-[8.5px] text-gray-500">
+                {isAr ? "درجة أمان الختم الرقمي: C9 Core-V3" : "Platform Integrity Grade: C9 Core-V3"}
+              </span>
+
+              {clipboardText.trim() && (
+                <button
+                  type="button"
+                  onClick={syncClipboardToPlatform}
+                  disabled={isSyncing}
+                  className="px-3.5 py-1.5 bg-[#D4AF37]/20 border border-[#D4AF37] hover:bg-[#D4AF37] text-[#D4AF37] hover:text-black font-extrabold rounded-lg text-[9.5px] cursor-pointer transition flex items-center gap-1 shrink-0"
+                >
+                  <Database className="w-3" />
+                  <span>{isSyncing ? (isAr ? "مزامنة مشفرة..." : "Syncing Block...") : (isAr ? "تخزين ومزامنة سيادية" : "Sync and Store Securely")}</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Vault Historic Ledger Section */}
+      <div className="space-y-3 pt-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div className="space-y-0.5">
+            <h4 className="text-xs font-extrabold text-white">
+              {isAr ? "سجل ودائع الحافظات المؤمنة التاريخي" : "Stored Clipboard Registry Ledger"}
+            </h4>
+            <span className="text-[8px] text-gray-500 block">
+              {isAr ? "سجل معاملات التخزين المؤرشفة بموجب الحماية السيادية" : "Cryptographically secured logs of evaluated clipboard operations"}
+            </span>
+          </div>
+
+          <div className="flex gap-2 w-full sm:w-auto">
+            {/* Search Input */}
+            <div className="relative flex-1 sm:w-56">
+              <span className="absolute right-2.5 top-2 text-gray-500">
+                <Search className="w-3.5 h-3.5" />
+              </span>
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={isAr ? "البحث في الودائع..." : "Search logs..."}
+                className="w-full bg-black/60 border border-white/10 p-1.5 pr-8 rounded-lg text-[10px] text-white focus:outline-none focus:border-[#D4AF37]/50 text-right"
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={clearAllLocal}
+              className="p-1 px-2 border border-red-500/20 bg-red-500/5 hover:bg-red-500/15 rounded-lg text-red-400 text-[8.5px] font-black cursor-pointer transition shrink-0"
+            >
+              <Trash2 className="w-3 h-3 inline ml-1" />
+              {isAr ? "تصفية الذاكرة" : "Purge All"}
+            </button>
+          </div>
+        </div>
+
+        {/* List items */}
+        {isLoading ? (
+          <div className="text-center py-6 text-xs text-gray-500">
+            <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-1 text-[#D4AF37]" />
+            <span>{isAr ? "جاري سحب وتصنيف سجل البيانات..." : "Acquiring registered data streams..."}</span>
+          </div>
+        ) : filteredItems.length > 0 ? (
+          <div className="border border-white/5 rounded-xl overflow-hidden bg-black/30 divide-y divide-white/5">
+            {filteredItems.map((item) => {
+              const rep = getRiskReportParsed(item.riskReport);
+              const isVisible = showContentMap[item.id] || false;
+
+              return (
+                <div key={item.id} className="p-4 hover:bg-white/[0.01] transition space-y-2.5">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1 bg-[#D4AF37]/10 rounded text-[#D4AF37]">
+                        <Key className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-white font-mono font-bold block">{item.id}</span>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="text-[8px] bg-white/5 text-gray-400 px-1.5 rounded border border-white/5">
+                            {item.dataType}
+                          </span>
+                          <span className="text-[8px] text-gray-500 font-mono">
+                            {new Date(item.timestamp).toLocaleString(isAr ? "ar-SA" : "en-US", { hour12: false })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      {/* Risk badge in row */}
+                      <span className={`px-2 py-0.5 rounded text-[8px] font-black border uppercase ${
+                        rep.level === "HIGH"
+                          ? "bg-red-500/15 border-red-500/30 text-red-400 animate-pulse"
+                          : rep.level === "MEDIUM"
+                          ? "bg-amber-500/15 border-amber-500/30 text-amber-400"
+                          : "bg-emerald-500/15 border-emerald-500/30 text-emerald-400"
+                      }`}>
+                        {rep.level === "HIGH" ? (isAr ? "عالي التسريب ⚠️" : "HIGH LEAK ⚠️") : rep.level === "MEDIUM" ? (isAr ? "متوسط" : "MEDIUM") : (isAr ? "آمن ✓" : "SAFE ✓")}
+                      </span>
+
+                      {/* View Action toggle */}
+                      <button
+                        type="button"
+                        onClick={() => toggleContentVisibility(item.id)}
+                        className="p-1.5 hover:bg-white/5 rounded text-gray-400 hover:text-white transition cursor-pointer"
+                        title={isAr ? "إظهار/إخفاء النص" : "Show/Hide copy content"}
+                      >
+                        {isVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+
+                      {/* Purge Action */}
+                      <button
+                        type="button"
+                        onClick={() => deleteItem(item.id, true)}
+                        className="p-1.5 hover:bg-red-500/10 rounded text-red-400/75 hover:text-red-400 transition cursor-pointer"
+                        title={isAr ? "تطهير الوديعة" : "Purge records"}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Obfuscated or plain contents view */}
+                  <div className="bg-[#03050c] p-2.5 rounded-lg border border-white/5 space-y-2">
+                    <p className="text-[10px] font-mono text-gray-300 break-all leading-normal text-right">
+                      {isVisible ? (
+                        item.content
+                      ) : (
+                        <span className="text-gray-600 tracking-widest block text-center py-1 opacity-75">
+                          •••••••••••••••••••••••••••••••••••••••••••••••••••••••
+                        </span>
+                      )}
+                    </p>
+
+                    {/* Show explanation if risk found */}
+                    {rep.reasons.length > 0 && (
+                      <div className="border-t border-white/5 pt-2 flex items-start gap-1.5">
+                        <AlertTriangle className="w-3 h-3 text-red-400 mt-0.5 shrink-0" />
+                        <div className="space-y-0.5">
+                          <span className="text-[8px] font-black text-red-400">{isAr ? "تقييم العزل الفني:" : "Regulatory Assessment Info:"}</span>
+                          <p className="text-[8.5px] text-gray-500 leading-normal">{rep.reasons.join(", ")}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-12 border border-dashed border-white/10 rounded-2xl bg-black/20 text-gray-500 text-xs text-right p-5">
+            <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-gray-600 mx-auto mb-3">
+              <FileText className="w-5 h-5" />
+            </div>
+            <p className="font-extrabold text-gray-400 text-center">
+              {isAr ? "بوابة الودائع فارغة تماماً" : "Sovereign clipboard archive empty"}
+            </p>
+            <p className="text-[10px] text-gray-600 mt-1 text-center">
+              {isAr 
+                ? "ابدأ بقراءة الحافظة وتأمين أول عنصر لتوثيقه في سجل حظر التسريبات الرقمي."
+                : "Active clipboard sync registers are clear. Click 'Trigger Clipboard Access' above to inspect."
+              }
+            </p>
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+}

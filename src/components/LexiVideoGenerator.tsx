@@ -1,0 +1,754 @@
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Sparkles,
+  Download,
+  Video,
+  Film,
+  Maximize2,
+  RotateCcw,
+  Sliders,
+  CheckCircle,
+  AlertTriangle,
+  Cpu,
+  Tv,
+  Eye,
+  Crown
+} from "lucide-react";
+
+interface LexiVideoGeneratorProps {
+  initialPrompt?: string;
+  contextType?: "document" | "evidence" | "objection" | "general";
+  onVideoCreated?: (videoUrl: string, videoTitle: string) => void;
+  lang?: "ar" | "en";
+}
+
+export default function LexiVideoGenerator({
+  initialPrompt = "",
+  contextType = "general",
+  onVideoCreated,
+  lang = "ar"
+}: LexiVideoGeneratorProps) {
+  const isAr = lang === "ar";
+  const [prompt, setPrompt] = useState(initialPrompt);
+  const [aspectRatio, setAspectRatio] = useState<"16:9" | "9:16" | "1:1">("16:9");
+  const [videoStyle, setVideoStyle] = useState<"cinematic" | "holographic" | "surveillance" | "sovereign">("sovereign");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [generatedVideo, setGeneratedVideo] = useState<any | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [videoTime, setVideoTime] = useState(0);
+  const [showConfig, setShowConfig] = useState(false);
+
+  // Simulated haptic trigger
+  const [hapticRipple, setHapticRipple] = useState(false);
+
+  // Video render stages log
+  const [logLines, setLogLines] = useState<string[]>([]);
+
+  // Canvas context for simulated video stream
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const frameRef = useRef(0);
+
+  const triggerHaptic = () => {
+    setHapticRipple(true);
+    setTimeout(() => setHapticRipple(false), 200);
+    if (navigator.vibrate) {
+      navigator.vibrate(15);
+    }
+  };
+
+  // Status updates in Arabic and English based on Veo 3 model pipelines
+  const statusLogsAr = [
+    "بدء تشغيل محرك Veo 3 ذو الأبعاد الفائقة...",
+    "تحليل النص ومقاربة الهوية البصرية السيادية (LexOps OS Code)...",
+    "توليد الشبكة العصبية الهندسي والمشغلات الجيو-فضائية...",
+    "صياغة الإطارات البصرية الأولى وتحميل الرموز المشفرة...",
+    "مزامنة العلامات المائية وخلفيات الذهب والنيون السيادي...",
+    "توليد شريط العرض التفاعلي وإدراج تفاصيل الالتزام...",
+    "إقرار نهائي وتوقيع الفيديو برمز التوثيق المشفر العشري..."
+  ];
+
+  const statusLogsEn = [
+    "Initializing ultra-dimensional Veo 3 AI engine...",
+    "Analyzing textual prompt & mapping Sovereign visual style sheets...",
+    "Generating deep neural vector models & geospace pipelines...",
+    "Synthesizing initial digital raster frames and cryptographic symbols...",
+    "Overlaying gold sovereign emblems and luxury dark scanning lines...",
+    "Compiling interactive digital film strips & verification seals...",
+    "Securing final video frame stream with decentralized SHA-256 validation..."
+  ];
+
+  // Handle generation click
+  const handleGenerate = () => {
+    if (!prompt.trim()) {
+      alert(isAr ? "⚠️ يرجى إدخال وصف النص لتوليد الفيديو!" : "⚠️ Please enter a text prompt first!");
+      return;
+    }
+    triggerHaptic();
+    setIsGenerating(true);
+    setProgress(0);
+    setGeneratedVideo(null);
+    setIsPlaying(false);
+    setLogLines([]);
+
+    const logList = isAr ? statusLogsAr : statusLogsEn;
+    let index = 0;
+    setStatusMessage(logList[0]);
+    setLogLines([`[0.0s] ${logList[0]}`]);
+
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const next = prev + 0;
+        if (next >= 100) {
+          clearInterval(interval);
+          finishGeneration();
+          return 100;
+        }
+
+        // Periodically update the status message
+        const currentStage = Math.floor((next / 100) * logList.length);
+        if (logList[currentStage] && logList[currentStage] !== statusMessage) {
+          setStatusMessage(logList[currentStage]);
+          setLogLines(prevLogs => [
+            `[${(next / 10).toFixed(1)}s] ${logList[currentStage]}`,
+            ...prevLogs.slice(0, 5)
+          ]);
+        }
+        return next;
+      });
+    }, 280);
+  };
+
+  const finishGeneration = () => {
+    setIsGenerating(false);
+    const videoId = `LEX-VEO-${Date.now().toString().slice(-4)}`;
+    const videoData = {
+      id: videoId,
+      title: prompt,
+      style: videoStyle,
+      aspect: aspectRatio,
+      timestamp: new Date().toLocaleTimeString("ar-SA"),
+      date: new Date().toLocaleDateString("ar-SA"),
+      hash: "PENDING_VEO_SYNC"
+    };
+    setGeneratedVideo(videoData);
+    setIsPlaying(true);
+    setVideoTime(0);
+    if (onVideoCreated) {
+      onVideoCreated(`#${videoData.id}`, videoData.title);
+    }
+    triggerHaptic();
+  };
+
+  // Simulated Interactive Video Loop inside HTML5 Canvas
+  useEffect(() => {
+    if (!isPlaying || !generatedVideo || !canvasRef.current) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let localFrame = 0;
+    const drawFrame = () => {
+      localFrame++;
+      frameRef.current = localFrame;
+      setVideoTime(prev => {
+        let next = prev + 0.05;
+        if (next >= 10) {
+          return 0; // seamless loop
+        }
+        return next;
+      });
+
+      const width = canvas.width;
+      const height = canvas.height;
+
+      // 1. Dark majestic background with geometric scanlines
+      ctx.fillStyle = "#01040f";
+      ctx.fillRect(0, 0, width, height);
+
+      // Gradient underlayer
+      const grad = ctx.createLinearGradient(0, 0, width, height);
+      if (videoStyle === "sovereign") {
+        grad.addColorStop(0, "#030c24");
+        grad.addColorStop(0.5, "#0a1128");
+        grad.addColorStop(1, "#181404");
+      } else if (videoStyle === "cinematic") {
+        grad.addColorStop(0, "#01121d");
+        grad.addColorStop(1, "#1c0d02");
+      } else if (videoStyle === "holographic") {
+        grad.addColorStop(0, "#0d0426");
+        grad.addColorStop(1, "#031c26");
+      } else {
+        // surveillance dark gray-green
+        grad.addColorStop(0, "#05110c");
+        grad.addColorStop(1, "#0a0a0c");
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
+
+      // Fine grid layout lines
+      ctx.strokeStyle = "rgba(212, 175, 55, 0.05)";
+      ctx.lineWidth = 1;
+      const gridSize = 40;
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Moving scanning lasers
+      const laserY = (Math.sin(localFrame * 0.02) * 0.5 + 0.5) * height;
+      ctx.strokeStyle = "rgba(212, 175, 55, 0.25)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, laserY);
+      ctx.lineTo(width, laserY);
+      ctx.stroke();
+
+      // Golden particle system
+      ctx.fillStyle = "rgba(214, 175, 87, 0.4)";
+      for (let i = 0; i < 15; i++) {
+        const px = (Math.sin(localFrame * 0.01 + i) * 0.4 + 0.5) * width;
+        const py = ((localFrame * 0.6 + i * 45) % height);
+        const size = (i % 3) + 1.2;
+        ctx.beginPath();
+        ctx.arc(px, py, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Context-specific rendering animations inside simulated canvas!
+      if (contextType === "document") {
+        // Render a floating contract scroll with beautiful seals
+        ctx.save();
+        ctx.translate(width / 2, height / 2 + Math.sin(localFrame * 0.03) * 10);
+        
+        // Scroll body background
+        ctx.fillStyle = "rgba(10, 20, 48, 0.85)";
+        ctx.strokeStyle = "rgba(212, 175, 55, 0.4)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(-70, -90, 140, 180, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        // Little dynamic text lines
+        ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+        for (let j = 0; j < 6; j++) {
+          const wLine = 80 - (j % 3) * 15;
+          ctx.fillRect(-50, -60 + j * 20, wLine, 4);
+        }
+
+        // Round golden wax stamp
+        ctx.fillStyle = "rgba(212, 175, 55, 0.85)";
+        ctx.beginPath();
+        ctx.arc(35, 60, 15, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Legal Ribbon
+        ctx.strokeStyle = "#e53e3e";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(35, 60);
+        ctx.lineTo(42, 90);
+        ctx.moveTo(35, 60);
+        ctx.lineTo(28, 90);
+        ctx.stroke();
+
+        ctx.restore();
+
+        // Visual Watermark Text over map
+        ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.font = "bold 13px 'Fira Code', monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("VEO 3 LEGAL GRAPH-X", width / 2, height - 25);
+
+      } else if (contextType === "evidence") {
+        // Render surveillance-style waveforms or map tracking radar
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        
+        // Radar green circles
+        ctx.strokeStyle = "rgba(16, 185, 129, 0.3)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(0, 0, 80, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(0, 0, 40, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Sweeping arm
+        const angle = (localFrame * 0.03) % (Math.PI * 2);
+        ctx.strokeStyle = "rgba(16, 185, 129, 0.6)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(angle) * 80, Math.sin(angle) * 80);
+        ctx.stroke();
+
+        // Flashing signal pin
+        ctx.fillStyle = "rgba(239, 68, 68, 0.9)";
+        ctx.beginPath();
+        ctx.arc(30, -20, 5 + Math.sin(localFrame * 0.1) * 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sound waveform at bottom
+        ctx.fillStyle = "rgba(16, 185, 129, 0.65)";
+        for (let k = -80; k < 80; k += 6) {
+          const hAmp = Math.abs(Math.sin(localFrame * 0.06 + k * 0.1)) * 25 + 2;
+          ctx.fillRect(k, 60 - hAmp / 2, 3, hAmp);
+        }
+
+        ctx.restore();
+
+        // Scanning overlay stamp
+        ctx.fillStyle = "rgba(16, 185, 129, 0.4)";
+        ctx.font = "bold 9px 'Fira Code', monospace";
+        ctx.fillText(`REC CH: [MUTE.OFF] TIME: SPL-092`, 20, 30);
+
+      } else if (contextType === "objection") {
+        // Render Scale of Justice with shining sovereign sunbeams
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+
+        // Sunrays
+        ctx.strokeStyle = "rgba(212, 175, 55, 0.09)";
+        ctx.lineWidth = 2.5;
+        for (let r = 0; r < 360; r += 30) {
+          const rad = (r * Math.PI) / 180;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(rad) * 120, Math.sin(rad) * 120);
+          ctx.stroke();
+        }
+
+        // Base pillars of scale
+        ctx.fillStyle = "rgba(212, 175, 55, 0.85)";
+        ctx.fillRect(-4, -65, 8, 120); // main stand
+        ctx.fillRect(-30, 55, 60, 10); // base
+
+        // Balance cross-beam (tilting slightly)
+        const tilt = Math.sin(localFrame * 0.03) * 0.12;
+        ctx.rotate(tilt);
+
+        ctx.strokeStyle = "rgba(212, 175, 55, 0.95)";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-60, -55);
+        ctx.lineTo(60, -55);
+        ctx.stroke();
+
+        // Hanging platters
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = "rgba(212, 175, 55, 0.6)";
+        // Left
+        ctx.beginPath();
+        ctx.moveTo(-60, -55);
+        ctx.lineTo(-75, -15);
+        ctx.lineTo(-45, -15);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillRect(-75, -15, 30, 4);
+
+        // Right
+        ctx.beginPath();
+        ctx.moveTo(60, -55);
+        ctx.lineTo(45, -15);
+        ctx.lineTo(75, -15);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillRect(45, -15, 30, 4);
+
+        ctx.restore();
+
+        ctx.fillStyle = "rgba(212, 175, 55, 0.35)";
+        ctx.font = "bold 13px 'Fira Code', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("LEXI AI SOVEREIGN SUPREME ⚖️", width / 2, 35);
+
+      } else {
+        // General: High fidelity abstract flowing ribbon system (Veo 3 default)
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        
+        ctx.strokeStyle = "rgba(212, 175, 55, 0.4)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let i = -100; i < 100; i++) {
+          const x = i * 2;
+          const y = Math.sin(localFrame * 0.05 + i * 0.04) * 40 + Math.cos(localFrame * 0.03 - i * 0.02) * 20;
+          if (i === -100) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+
+        ctx.strokeStyle = "rgba(79, 70, 229, 0.45)";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let i = -100; i < 100; i++) {
+          const x = i * 2;
+          const y = Math.cos(localFrame * 0.04 + i * 0.03) * 35 + Math.sin(localFrame * 0.02 - i * 0.05) * 15;
+          if (i === -100) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+
+        ctx.restore();
+
+        ctx.fillStyle = "rgba(212, 175, 55, 0.85)";
+        ctx.font = "bold 15px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("VEO 3 ACTIVE MOTION SCAPE", width / 2, height / 2 + 5);
+      }
+
+      // 4. Overlaid sovereign frame borders and watermark elements
+      ctx.strokeStyle = "rgba(212, 175, 55, 0.25)";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(2, 2, width - 4, height - 4);
+
+      // Flashing REC circle indicator in corner
+      if (Math.floor(localFrame / 15) % 2 === 0) {
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.arc(width - 25, 25, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "8px sans-serif";
+        ctx.fillText("REC VEO3", width - 68, 28);
+      }
+
+      // Video ID & Code overlay
+      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+      ctx.font = "normal 8px 'Fira Code', monospace";
+      ctx.textAlign = "left";
+      ctx.fillText(`ID: ${generatedVideo.id}`, 20, height - 20);
+      ctx.fillText(`KEY: ${generatedVideo.hash}`, 20, height - 10);
+
+      // Sovereign Emblem at top-left
+      ctx.fillStyle = "rgba(212, 175, 55, 0.85)";
+      ctx.font = "14px sans-serif";
+      ctx.fillText("🌴⚔️", 20, 30);
+
+      animationRef.current = requestAnimationFrame(drawFrame);
+    };
+
+    drawFrame();
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isPlaying, generatedVideo, videoStyle, contextType]);
+
+  return (
+    <div id="lexi-video-generator-root" className="bg-[#050917]/95 border border-[#D4AF37]/35 rounded-2xl p-4 shadow-2xl overflow-hidden relative text-right" style={{ direction: "rtl" }}>
+      
+      {/* Visual pulse for simulated haptic trigger */}
+      {hapticRipple && (
+        <span className="absolute inset-0 bg-yellow-500/10 animate-pulse pointer-events-none" />
+      )}
+
+      {/* Mini luxurious header */}
+      <div className="flex justify-between items-center border-b border-[#D4AF37]/10 pb-2.5 mb-3.5">
+        <div className="flex items-center gap-2">
+          <div className="p-1 px-1.5 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 rounded-lg text-xs font-black flex items-center gap-1">
+            <Video className="w-3.5 h-3.5" />
+            <span>Veo 3</span>
+          </div>
+          <div>
+            <h4 className="text-xs font-black text-white leading-none">
+              {isAr ? "منشئ الفيديو السيادي LEXI Video" : "LEXI Sovereign Video Generator"}
+            </h4>
+            <span className="text-[8px] text-gray-500 block mt-0.5">{isAr ? "توليد مخرجات الفيديو ثنائية الهوية بالأوامر النصية مسبقاً" : "Text to Video Reconstruction Engine"}</span>
+          </div>
+        </div>
+        <Crown className="w-4 h-4 text-[#D4AF37] animate-pulse" />
+      </div>
+
+      {/* Main operational state */}
+      {!generatedVideo && !isGenerating ? (
+        <div className="space-y-3.5">
+          {/* Prompt field */}
+          <div className="space-y-1">
+            <label className="text-[10px] text-[#D4AF37] font-black block">
+              {isAr ? "أمر التوليد بـ Veo 3 ومطابقة الوقائع:" : "Veo 3 Generation Prompt:"}
+            </label>
+            <textarea
+              id="veo-prompt-input"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder={isAr ? "مثال: إثبات تفويض النظام والوصول لصفحة الأكواد رقمياً قبل لحظة التعطيل وحفظ سلامة السجل..." : "e.g. Graphic timeline reconstruction of site failure during the network break..."}
+              className="w-full h-20 p-2.5 bg-[#1c2541]/45 border border-white/10 hover:border-[#D4AF37]/25 focus:border-[#D4AF37] rounded-xl text-xs text-white placeholder-gray-500 resize-none outline-none transition"
+            />
+          </div>
+
+          {/* Prompt helpers */}
+          <div className="flex gap-1 overflow-x-auto pb-1 max-w-full justify-start select-none custom-scrollbar">
+            {[
+              isAr ? "محاكاة عطل الاتصال والـ VPN" : "Simulate VPN crash",
+              isAr ? "إثبات الدخول للبوابة والمطابقة" : "Proof of gate entry",
+              isAr ? "تقرير التكليف المهني بالفيديو" : "Video task report",
+              isAr ? "نمذجة اعتراض مالي سيادي" : "Sovereign financial model"
+            ].map((pText, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => {
+                  setPrompt(pText);
+                  triggerHaptic();
+                }}
+                className="px-2 py-1 text-[9px] bg-white/5 hover:bg-[#D4AF37]/10 border border-white/5 hover:border-[#D4AF37]/30 text-gray-300 rounded-lg flex-shrink-0 cursor-pointer transition text-ellipsis overflow-hidden"
+              >
+                {pText}
+              </button>
+            ))}
+          </div>
+
+          {/* Accordion configuration */}
+          <div className="border border-white/5 rounded-xl bg-[#1c2541]/25 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setShowConfig(!showConfig);
+                triggerHaptic();
+              }}
+              className="w-full flex justify-between items-center p-2.5 text-[10px] font-black text-gray-400 hover:text-white transition cursor-pointer"
+            >
+              <span className="flex items-center gap-1.5">
+                <Sliders className="w-3" />
+                {isAr ? "إعدادات أبعاد المشهد والهوية الفنية" : "Scene Aspect Ratio & Art Style"}
+              </span>
+              <span>{showConfig ? "▲" : "▼"}</span>
+            </button>
+
+            {showConfig && (
+              <div className="p-2.5 bg-[#1c2541] border-t border-white/5 space-y-2.5 text-[10px]">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <span className="text-gray-500 block mb-1">{isAr ? "نسبة الأبعاد" : "Aspect Ratio"}</span>
+                    <div className="flex gap-1">
+                      {["16:9", "9:16", "1:1"].map((asp) => (
+                        <button
+                          key={asp}
+                          type="button"
+                          onClick={() => setAspectRatio(asp as any)}
+                          className={`flex-1 py-1 rounded border text-center font-bold ${
+                            aspectRatio === asp
+                              ? "bg-[#D4AF37]/20 border-[#D4AF37] text-white"
+                              : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
+                          }`}
+                        >
+                          {asp}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-gray-500 block mb-1">{isAr ? "النمط الإخراجي" : "Film Style"}</span>
+                    <div className="flex gap-1 flex-wrap">
+                      {["sovereign", "cinematic", "holographic", "surveillance"].map((style) => (
+                        <button
+                          key={style}
+                          type="button"
+                          onClick={() => setVideoStyle(style as any)}
+                          className={`px-1.5 py-1 rounded border text-[9px] font-bold ${
+                            videoStyle === style
+                              ? "bg-[#D4AF37]/20 border-[#D4AF37] text-white"
+                              : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
+                          }`}
+                        >
+                          {style}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Trigger */}
+          <button
+            type="button"
+            onClick={handleGenerate}
+            className="w-full py-2.5 bg-gradient-to-r from-indigo-700 via-blue-800 to-amber-700 hover:from-indigo-600 hover:to-amber-600 text-white font-extrabold text-xs rounded-xl border border-[#D4AF37]/25 flex items-center justify-center gap-1.5 shadow-lg active:scale-98 transition cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]/20 animate-spin" />
+            <span>{isAr ? "توليد فيلم المطابقة السيادي (Veo 3)" : "Generate Synthetic Sovereign Video"}</span>
+          </button>
+        </div>
+      ) : isGenerating ? (
+        // RENDER PIPELINE WITH LIVE TERMINAL FEED
+        <div className="py-6 space-y-4">
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-full border-4 border-amber-500 border-t-transparent animate-spin mx-auto flex items-center justify-center bg-[#1c2541]/45">
+              <Film className="w-5 h-5 text-amber-400 animate-pulse" />
+            </div>
+            <div>
+              <span className="text-[10px] text-gray-400 block font-mono">{isAr ? "توليد مصفوفة الأبعاد بالموظف الذكي..." : "Synthesizing video space matrix..."}</span>
+              <span className="text-xs font-black text-white">{statusMessage}</span>
+            </div>
+          </div>
+
+          {/* Dynamic glowing progress bar */}
+          <div className="space-y-1">
+            <div className="w-full bg-white/5 border border-white/10 rounded-full h-2.5 overflow-hidden">
+              <div
+                className="bg-gradient-to-l from-indigo-500 via-amber-500 to-emerald-400 h-2.5 rounded-full transition-all duration-300 relative"
+                style={{ width: `${progress}%` }}
+              >
+                <div className="absolute inset-0 bg-white/20 animate-marquee" />
+              </div>
+            </div>
+            <div className="flex justify-between items-center text-[8.5px] font-mono font-bold text-gray-400">
+              <span>{isAr ? "منفذ أتمتة الرسومات الثاني" : "VEO3 GRID SYNTH"}</span>
+              <span className="text-[#D4AF37]">{progress}%</span>
+            </div>
+          </div>
+
+          {/* Console logging display */}
+          <div className="bg-[#02040b] rounded-xl border border-white/10 p-2.5 max-h-[105px] overflow-y-auto font-mono text-[8px] text-emerald-400 space-y-1 text-left select-none scrollbar-none" style={{ direction: "ltr" }}>
+            {logLines.map((log, lIdx) => (
+              <div key={lIdx} className="truncate">
+                <span className="text-indigo-400 font-bold">&gt;&gt;</span> {log}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        // CORNERSTONE PLAYER CONTROLS
+        <div className="space-y-3.5">
+          {/* Dynamic Video Title label */}
+          <div className="bg-[#1c2541] rounded-xl p-2.5 border border-[#D4AF37]/10 flex justify-between items-center text-[10px]">
+            <span className="text-gray-400">{isAr ? "عنوان الوقيعة:" : "Render Frame:"}</span>
+            <span className="font-extrabold text-white max-w-[200px] truncate">{generatedVideo.title}</span>
+          </div>
+
+          {/* Screen Player block with correct Aspect ratio layout */}
+          <div
+            className={`relative rounded-xl border-2 border-[#D4AF37]/30 bg-[#1c2541] overflow-hidden group mx-auto max-w-full`}
+            style={{
+              aspectRatio: aspectRatio === "16:9" ? "16 / 9" : aspectRatio === "9:16" ? "9 / 16" : "1 / 1",
+              height: aspectRatio === "9:16" ? "280px" : "auto"
+            }}
+          >
+            <canvas
+              ref={canvasRef}
+              width={aspectRatio === "16:9" ? 520 : aspectRatio === "1:1" ? 380 : 260}
+              height={aspectRatio === "16:9" ? 292 : aspectRatio === "1:1" ? 380 : 460}
+              className="w-full h-full object-cover block"
+            />
+
+            {!isPlaying && (
+              <div
+                onClick={() => {
+                  setIsPlaying(true);
+                  triggerHaptic();
+                }}
+                className="absolute inset-0 bg-[#1c2541] flex items-center justify-center cursor-pointer group-hover:bg-[#1c2541] transition-all"
+              >
+                <div className="w-14 h-14 rounded-full bg-[#D4AF37]/90 text-black flex items-center justify-center shadow-lg transform group-hover:scale-110 duration-200">
+                  <Play className="w-6 h-6 fill-black ml-1" />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* High utility micro controls */}
+          <div className="flex justify-between items-center bg-[#1c2541]/45 p-2 rounded-xl border border-white/5 text-[9px]">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsPlaying(!isPlaying);
+                  triggerHaptic();
+                }}
+                className="p-1 px-2 bg-white/5 hover:bg-white/10 rounded border border-white/5 text-white flex items-center gap-1 cursor-pointer transition"
+              >
+                <span>{isPlaying ? (isAr ? "إيقاف مؤقت ⏸" : "Pause ⏸") : (isAr ? "تشغيل ▶" : "Play ▶")}</span>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMuted(!isMuted);
+                  triggerHaptic();
+                }}
+                className="p-1 text-gray-400 hover:text-white transition cursor-pointer"
+              >
+                {isMuted ? <VolumeX className="w-3.5 h-3.5 text-rose-400" /> : <Volume2 className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+
+            <div className="flex-1 mx-3 flex items-center gap-1.5">
+              <span className="font-mono text-gray-500">00:{(videoTime).toFixed(1)}</span>
+              <div className="flex-1 bg-white/10 h-1 rounded-full relative overflow-hidden">
+                <div className="bg-[#D4AF37] h-full" style={{ width: `${(videoTime / 10) * 100}%` }} />
+              </div>
+              <span className="font-mono text-gray-400 font-bold">10.0s</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                alert(isAr ? "💾 يتم تحضير وتحميل كود المقطع المشفر سيادياً للخلية..." : "💾 Exporting cryptographic secure video archive...");
+                triggerHaptic();
+              }}
+              className="p-1 bg-amber-500/15 text-[#D4AF37] rounded border border-[#D4AF37]/30 hover:bg-amber-500/25 transition cursor-pointer"
+              title={isAr ? "تحميل المقطع" : "Export Clip"}
+            >
+              <Download className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Action to regenerate */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => {
+                setGeneratedVideo(null);
+                triggerHaptic();
+              }}
+              className="text-[9px] text-[#D4AF37] hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <RotateCcw className="w-3" />
+              <span>{isAr ? "صياغة أمر توليد جديد بـ Veo 3" : "Generate a different prompt"}</span>
+            </button>
+            <span className="text-[7px] text-emerald-400 font-mono font-bold">
+              {generatedVideo.hash}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

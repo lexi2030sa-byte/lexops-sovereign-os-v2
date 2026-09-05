@@ -1,0 +1,1247 @@
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { 
+  Building2, 
+  MapPin, 
+  Plus, 
+  Trash2, 
+  Search, 
+  ShieldCheck, 
+  Compass, 
+  AlertTriangle, 
+  CheckCircle,
+  Clock,
+  Map,
+  FileCheck
+} from "lucide-react";
+import { LEXI, LexiResult } from "../lib/lexi";
+
+export interface Branch {
+  id: string;
+  branch_name: string;
+  branch_type: "restaurant" | "cafe" | "health" | "corporate" | "industrial" | "salon";
+  municipality_license_number: string;
+  latitude: number;
+  longitude: number;
+  safety_radius: number;
+  branch_status: "active" | "suspended";
+  compliance_score: number;
+}
+
+export const municipalTypeLabels = {
+  restaurant: { ar: "مطعم (أغذية وتموين)", en: "Restaurant (Food Sector)" },
+  cafe: { ar: "مقهى (مشروبات وخدمة)", en: "Café (Beverages Services)" },
+  health: { ar: "صحي (طب وطب وقائي)", en: "Health (Preventive Sector)" },
+  salon: { ar: "صالون (عناية وتزيين)", en: "Salon (Personal Services)" },
+  corporate: { ar: "إداري ومقر استشارات", en: "Corporate & Office Duties" },
+  industrial: { ar: "صناعي وخدمات لوجستية", en: "Industrial Logistics" }
+};
+
+export function getActivityBadge(type: string): { textAr: string; textEn: string; icon: string; bgClass: string; textClass: string } {
+  switch (type) {
+    case "restaurant":
+      return { textAr: "مطعم", textEn: "Restaurant", icon: "🍽️", bgClass: "bg-red-500/10 border-red-500/15", textClass: "text-red-400" };
+    case "cafe":
+      return { textAr: "مقهى", textEn: "Café", icon: "☕", bgClass: "bg-amber-500/10 border-amber-500/15", textClass: "text-amber-400" };
+    case "health":
+      return { textAr: "صحي", textEn: "Health", icon: "🏥", bgClass: "bg-emerald-500/10 border-emerald-500/15", textClass: "text-emerald-400" };
+    case "salon":
+      return { textAr: "صالون", textEn: "Salon", icon: "💈", bgClass: "bg-purple-500/10 border-purple-500/15", textClass: "text-purple-400" };
+    case "corporate":
+      return { textAr: "إداري", textEn: "Corporate", icon: "🏢", bgClass: "bg-blue-500/10 border-blue-500/15", textClass: "text-blue-400" };
+    case "industrial":
+      return { textAr: "صناعي", textEn: "Industrial", icon: "🏭", bgClass: "bg-yellow-500/10 border-yellow-500/15", textClass: "text-yellow-400" };
+    default:
+      return { textAr: "عام", textEn: "General", icon: "💼", bgClass: "bg-gray-500/10 border-gray-500/15", textClass: "text-gray-400" };
+  }
+}
+
+export interface HealthComplianceResult {
+  status: "complete" | "partial" | "non_compliant";
+  textAr: string;
+  textEn: string;
+  colorClass: string;
+  icon: string;
+}
+
+export function getHealthComplianceBadge(b: Branch, staff: any[]): HealthComplianceResult {
+  const isHealthSector = ["restaurant", "cafe", "health", "salon"].includes(b.branch_type);
+  if (!isHealthSector) {
+    return {
+      status: "complete",
+      textAr: "مكتمل",
+      textEn: "Complete",
+      colorClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+      icon: "🟢"
+    };
+  }
+  if (!staff || staff.length === 0) {
+    return {
+      status: "non_compliant",
+      textAr: "غير متوافق (شاغر)",
+      textEn: "Non-Compliant (Empty)",
+      colorClass: "bg-red-500/10 text-rose-400 border border-red-500/20",
+      icon: "🔴"
+    };
+  }
+  const total = staff.length;
+  const expiredCount = staff.filter((w: any) => {
+    if (!w.healthCertificate) return true;
+    const isExpired = new Date(w.healthCertificate.expiryDate) < new Date("2026-05-20");
+    return isExpired;
+  }).length;
+
+  if (expiredCount === 0) {
+    return {
+      status: "complete",
+      textAr: "مكتمل",
+      textEn: "Complete",
+      colorClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+      icon: "🟢"
+    };
+  } else if (expiredCount < total) {
+    return {
+      status: "partial",
+      textAr: "ناقص",
+      textEn: "Partial",
+      colorClass: "bg-amber-500/10 text-amber-500 border border-amber-500/20",
+      icon: "🟡"
+    };
+  } else {
+    return {
+      status: "non_compliant",
+      textAr: "غير متوافق",
+      textEn: "Non-Compliant",
+      colorClass: "bg-red-500/10 text-rose-400 border border-red-500/20 animate-pulse",
+      icon: "🔴"
+    };
+  }
+}
+
+export function getBranchReadiness(b: Branch, staff: any[], attendanceLogs: any[] = []): number {
+  let score = 0;
+  
+  // 1. License: 40%
+  const lic = getLicenseStatus(b);
+  if (lic.status === "valid") score += 40;
+
+  // 2. Geofence + GPS Active Status: 30%
+  if (b.branch_status === "active") {
+    if (b.latitude >= 15.0 && b.latitude <= 32.5 && b.longitude >= 34.0 && b.longitude <= 55.0 && b.safety_radius >= 10) {
+      score += 30;
+    }
+  }
+
+  const isHealthSector = ["restaurant", "cafe", "health", "salon"].includes(b.branch_type);
+  const total = staff.length;
+
+  // 3. Health Certificates: 20%
+  if (!isHealthSector) {
+    score += 20;
+  } else {
+    if (total > 0) {
+      const compliantStaff = staff.filter((w: any) => {
+        if (!w.healthCertificate) return false;
+        const isExpired = new Date(w.healthCertificate.expiryDate) < new Date("2026-05-20");
+        return !isExpired;
+      }).length;
+      score += Math.round((compliantStaff / total) * 20);
+    }
+  }
+
+  // 4. Attendance: 10%
+  if (total === 0) {
+    score += isHealthSector ? 0 : 10;
+  } else {
+    const onSiteGPSCount = staff.filter((w: any) => {
+      const logs = (attendanceLogs || []).filter((l: any) => l.employeeName === w.name);
+      return logs.length > 0 && !logs[0].alert;
+    }).length;
+    score += Math.round((onSiteGPSCount / total) * 10);
+  }
+
+  return Math.min(100, score);
+}
+
+export function ReadinessGauge({ score, isDark }: { score: number; isDark: boolean }) {
+  const radius = 18;
+  const stroke = 3;
+  const normalizedRadius = radius - stroke;
+  const circumference = normalizedRadius * 2 * Math.PI;
+  const strokeDashoffset = smoothnessScale(score, circumference);
+
+  function smoothnessScale(s: number, circ: number) {
+    const pct = s / 100;
+    return circ - pct * circ;
+  }
+
+  const strokeColor = score >= 90 
+    ? "stroke-emerald-400" 
+    : score >= 70 
+      ? "stroke-amber-400" 
+      : "stroke-rose-500";
+
+  const textColor = score >= 90 
+    ? "text-emerald-400" 
+    : score >= 70 
+      ? "text-amber-400" 
+      : "text-rose-400";
+
+  return (
+    <div className="relative flex items-center justify-center shrink-0 w-11 h-11">
+      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+        <circle
+          cx="18"
+          cy="18"
+          r={normalizedRadius}
+          fill="transparent"
+          stroke={isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.06)"}
+          strokeWidth={stroke}
+        />
+        <circle
+          cx="18"
+          cy="18"
+          r={normalizedRadius}
+          fill="transparent"
+          stroke="currentColor"
+          strokeWidth={stroke}
+          strokeDasharray={circumference + " " + circumference}
+          style={{ strokeDashoffset }}
+          className={`transition-all duration-700 ease-out fill-none ${strokeColor}`}
+        />
+      </svg>
+      <div className="absolute inset-x-0 inset-y-0 flex flex-col items-center justify-center">
+        <span className={`text-[8.5px] font-mono font-black ${textColor}`}>{score}%</span>
+      </div>
+    </div>
+  );
+}
+
+interface EntityManagerBranchesViewProps {
+  branches: Branch[];
+  setBranches: React.Dispatch<React.SetStateAction<Branch[]>>;
+  selectedBranchId: string;
+  setSelectedBranchId: (id: string) => void;
+  getBranchCompliance: (b: Branch) => number;
+  pushNewC9Event: (type: string, refId: string, payload: any) => void;
+  addAlert: (text: string, severity: "low" | "medium" | "high") => void;
+  lang: "ar" | "en";
+  isDark: boolean;
+  workforce: any;
+  attendanceLogs?: any[];
+}
+
+export function EntityManagerBranchesView({
+  branches,
+  setBranches,
+  selectedBranchId,
+  setSelectedBranchId,
+  getBranchCompliance,
+  pushNewC9Event,
+  addAlert,
+  lang,
+  isDark,
+  workforce,
+  attendanceLogs = []
+}: EntityManagerBranchesViewProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState<string>("all");
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  // Dynamic Map Coordinates Picker / Validator State
+  const [isEditingLocation, setIsEditingLocation] = useState(false);
+  const [editLat, setEditLat] = useState("");
+  const [editLng, setEditLng] = useState("");
+  const [editRadius, setEditRadius] = useState("");
+
+  const startEditingLocation = (b: Branch) => {
+    setEditLat(b.latitude.toFixed(5));
+    setEditLng(b.longitude.toFixed(5));
+    setEditRadius(b.safety_radius.toString());
+    setIsEditingLocation(true);
+    addAlert(
+      lang === "ar" 
+        ? "وضع تعديل الإحداثيات نشط: انقر مباشرةً على الرادار لتحديد الموقع الجديد للفرع!" 
+        : "Interactive GPS mapping mode active: Click anywhere on the radar map to pinpoint coordinates!", 
+      "low"
+    );
+  };
+
+  const cancelEditingLocation = () => {
+    setIsEditingLocation(false);
+  };
+
+  const saveLocationChanges = (b: Branch) => {
+    const freshLat = parseFloat(editLat);
+    const freshLng = parseFloat(editLng);
+    const freshRad = parseFloat(editRadius) || 100;
+
+    // Run LEXI validation checking
+    const check = LEXI.validateBranch({
+      branch_name: b.branch_name,
+      branch_type: b.branch_type,
+      municipality_license_number: b.municipality_license_number,
+      latitude: freshLat,
+      longitude: freshLng,
+      safety_radius: freshRad
+    });
+
+    if (check.decision === "block") {
+      addAlert(
+        lang === "ar"
+          ? `عذرًا، تم حظر الموقع بقرار سيادي من LEXI: ${check.reason}`
+          : `Block stamp issued by LEXI: ${check.reason}`,
+        "high"
+      );
+      return;
+    }
+
+    const updated = branches.map(item => item.id === b.id ? {
+      ...item,
+      latitude: freshLat,
+      longitude: freshLng,
+      safety_radius: freshRad
+    } : item);
+
+    setBranches(updated);
+    pushNewC9Event("تعديل ومعايرة إحداثيات الموقع على الخريطة", b.id, { latitude: freshLat, longitude: freshLng, safety_radius: freshRad });
+    addAlert(
+      lang === "ar"
+        ? `تم تعديل وتثبيت موقع فرع "${b.branch_name}" ومطابقتها تنظيمياً!`
+        : `Updated and locked geofence parameters for branch "${b.branch_name}"!`,
+      "medium"
+    );
+    setIsEditingLocation(false);
+  };
+
+  // Search and filter branches
+  const filteredBranches = branches.filter(b => {
+    const matchesSearch = b.branch_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          b.municipality_license_number.includes(searchTerm);
+    const matchesType = filterType === "all" || b.branch_type === filterType;
+    return matchesSearch && matchesType;
+  });
+
+  const selectedBranch = branches.find(b => b.id === selectedBranchId) || branches[0];
+
+  // Plotting pixel offsets on SVG based on geographic coordinates
+  const getCoordsPixel = (lat: number, lng: number) => {
+    const centerX = 46.6753; // Riyadh Center Lng
+    const centerY = 24.7136; // Riyadh Center Lat
+    const scaleX = 420;      // pixel scaling
+    const scaleY = -420;     // negative because Lat goes higher up but screens go down
+    return {
+      x: 200 + (lng - centerX) * scaleX,
+      y: 150 + (lat - centerY) * scaleY
+    };
+  };
+
+  const liveLat = (selectedBranch && isEditingLocation) ? (parseFloat(editLat) || selectedBranch.latitude) : (selectedBranch ? selectedBranch.latitude : 24.7136);
+  const liveLng = (selectedBranch && isEditingLocation) ? (parseFloat(editLng) || selectedBranch.longitude) : (selectedBranch ? selectedBranch.longitude : 46.6753);
+
+  const activePixel = getCoordsPixel(liveLat, liveLng);
+
+  return (
+    <div className="space-y-6">
+      {/* 1. Header Filters & Tools */}
+      <div className={`p-4 rounded-xl border flex flex-col md:flex-row gap-4 justify-between items-center ${isDark ? "bg-black/40 border-white/5" : "bg-white border-neutral-200"}`}>
+        <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+          {/* Add Branch Button */}
+          <button
+            id="add-branch-btn"
+            onClick={() => setShowAddModal(true)}
+            className="cursor-pointer bg-[#D4AF37] hover:bg-[#b08f2e] text-black font-extrabold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 transition duration-150 shadow-md shadow-[#D4AF37]/10"
+          >
+            <Plus className="w-4 h-4 stroke-[3]" />
+            <span>{lang === "ar" ? "تسجيل فرع جديد" : "Register New Branch"}</span>
+          </button>
+
+          {/* Activity Filter */}
+          <select
+            value={filterType}
+            onChange={e => setFilterType(e.target.value)}
+            className={`cursor-pointer text-xs p-2 rounded-lg border ${isDark ? "bg-black text-gray-200 border-white/10" : "bg-neutral-100 text-neutral-800 border-neutral-300"}`}
+          >
+            <option value="all">{lang === "ar" ? "كل الأنشطة الرقابية" : "All Regulatory Segments"}</option>
+            {Object.entries(municipalTypeLabels).map(([key, val]) => (
+              <option key={key} value={key}>{lang === "ar" ? val.ar : val.en}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Search */}
+        <div className="relative w-full md:w-80">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            placeholder={lang === "ar" ? "ابحث بالاسم أو رقم الرخصة..." : "Search by name or license..."}
+            className={`w-full p-2.5 pl-9 text-xs rounded-lg border text-right focus:outline-none focus:border-[#D4AF37] ${isDark ? "bg-black/60 text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+          />
+          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3 pointer-events-none" />
+        </div>
+      </div>
+
+      {/* 2. Map & Detailed Selected Branch Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Holographic Signal Radar Map (7 Columns) */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="flex justify-between items-center border-b border-white/5 pb-2">
+            <span className="text-[10px] text-gray-400 font-mono">RIYADH DISTRICT COORDS MAPPING HUD</span>
+            <h4 className="text-xs font-extrabold text-[#D4AF37] flex items-center gap-1">
+              <Compass className="text-[#D4AF37] w-3.5 h-3.5 animate-spin" style={{ animationDuration: "12s" }} />
+              <span>{lang === "ar" ? "رادار الامتثال والحدود الجغرافية للفروع" : "Active Municipal Geofencing Radar Map"}</span>
+            </h4>
+          </div>
+
+          <div className={`relative border rounded-2xl p-4 overflow-hidden ${isDark ? "bg-[#040811]/95 border-blue-500/20" : "bg-neutral-900 text-white border-neutral-700"}`} style={{ height: "360px" }}>
+            {/* Ambient effects */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(20,80,250,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(20,80,250,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+            
+            {/* Top Right Label */}
+            <div className="absolute top-3 right-4 flex items-center gap-1.5 flex-row-reverse text-[9px] font-mono text-gray-400">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
+              <span>{lang === "ar" ? "نظام الضبط الجغرافي النشط للبلديات" : "MUNICIPAL GEOLOCATION ACTIVE"}</span>
+            </div>
+
+            {/* Float Overlay Info Box */}
+            {selectedBranch && (
+              <div className="absolute bottom-3 left-3 bg-black/85 border border-white/10 rounded-xl p-3 text-right font-mono text-[9px] text-gray-400 space-y-1 z-10 max-w-xs shadow-lg">
+                <div className="text-white font-extrabold flex items-center justify-end gap-1 flex-row-reverse text-[10px] pb-1 border-b border-white/10 mb-1">
+                  <span className="text-[#D4AF37] font-sans truncate">{selectedBranch.branch_name}</span>
+                  <span>📍</span>
+                </div>
+                <div>ID: <span className="text-white">{selectedBranch.id}</span></div>
+                <div>LAT: <span className="text-white">{selectedBranch.latitude.toFixed(5)}</span></div>
+                <div>LNG: <span className="text-white">{selectedBranch.longitude.toFixed(5)}</span></div>
+                <div>SAFETY BOUNDS: <span className="text-white">{selectedBranch.safety_radius}m</span></div>
+                <div>STATUS: <span className={selectedBranch.branch_status === "active" ? "text-emerald-400" : "text-rose-500"}>{selectedBranch.branch_status.toUpperCase()}</span></div>
+                <div className="pt-1 mt-1 border-t border-white/10 text-[8px] text-blue-300 flex justify-between">
+                  <span>{workforce[selectedBranch.id]?.length || 0}</span>
+                  <span>{lang === "ar" ? "موظفي الفرع النشطين:" : "Active assigned staff:"}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Radar Viewport */}
+            <svg className="w-full h-full" viewBox="0 0 400 300">
+              <line x1="200" y1="0" x2="200" y2="300" stroke="rgba(255,255,255,0.04)" />
+              <line x1="0" y1="150" x2="400" y2="150" stroke="rgba(255,255,255,0.04)" />
+              <circle cx="200" cy="150" r="110" fill="none" stroke="rgba(20,80,250,0.03)" strokeDasharray="3,3" />
+              <circle cx="200" cy="150" r="60" fill="none" stroke="rgba(20,80,250,0.03)" strokeDasharray="3,3" />
+
+              {/* Render Geofence Radius Circles */}
+              {branches.map(b => {
+                const pos = getCoordsPixel(b.latitude, b.longitude);
+                const isSel = b.id === selectedBranchId;
+                const score = getBranchCompliance(b);
+                const color = b.branch_status === "suspended" 
+                  ? "rgba(239, 68, 68, 0.4)" 
+                  : score < 100 
+                  ? "rgba(245, 158, 11, 0.5)" 
+                  : "rgba(16, 185, 129, 0.5)";
+
+                return (
+                  <g key={b.id} className="cursor-pointer" onClick={() => setSelectedBranchId(b.id)}>
+                    {/* Ring fence boundary */}
+                    <circle
+                      cx={pos.x}
+                      cy={pos.y}
+                      r={Math.max(12, b.safety_radius / 3.5)}
+                      fill={isSel ? "rgba(212,175,55,0.03)" : "none"}
+                      stroke={color}
+                      strokeWidth={isSel ? "1.5" : "1"}
+                      strokeDasharray={b.branch_status === "suspended" ? "3,3" : "0"}
+                      className="transition-all duration-300"
+                    />
+                    {/* Dot coordinate anchor */}
+                    <circle
+                      cx={pos.x}
+                      cy={pos.y}
+                      r={isSel ? "4.5" : "3"}
+                      fill={isSel ? "#D4AF37" : b.branch_status === "suspended" ? "#ef4444" : "#10b981"}
+                    />
+                    <text
+                      x={pos.x}
+                      y={pos.y - 10}
+                      textAnchor="middle"
+                      fill={isSel ? "#D4AF37" : "#8c9ba5"}
+                      fontSize="7"
+                      fontFamily="monospace"
+                      fontWeight="bold"
+                    >
+                      {b.id}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Render active workforce on radar map inside Riyadh */}
+              {selectedBranch && (workforce[selectedBranch.id] || []).map((w: any, index: number) => {
+                const angle = (index * 2 * Math.PI) / Math.max(1, (workforce[selectedBranch.id] || []).length);
+                const dist = Math.min(22, selectedBranch.safety_radius / 5);
+                const wx = activePixel.x + Math.cos(angle) * dist;
+                const wy = activePixel.y + Math.sin(angle) * dist;
+
+                return (
+                  <g key={w.id}>
+                    <circle cx={wx} cy={wy} r="5" fill="none" stroke="#3b82f6" className="animate-ping" style={{ animationDuration: "3s" }} />
+                    <circle cx={wx} cy={wy} r="2" fill="#3b82f6" />
+                    <text x={wx} y={wy + 8} textAnchor="middle" fill="#93c5fd" fontSize="5" fontFamily="sans-serif">
+                      {w.name.split(" ")[0]}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+        </div>
+
+        {/* Selected Branch Municipal Card Ledger (5 Columns) */}
+        <div className="lg:col-span-5 space-y-4">
+          <div className="flex justify-between items-center border-b border-white/5 pb-2 flex-row-reverse">
+            <span className="text-[10px] text-gray-500 font-mono">ESTABLISHED BALADY CREDENTIALS</span>
+            <h4 className="text-xs font-black text-white">{lang === "ar" ? "رخصة النشاط والمطابقة الفنية" : "Sovereign Compliance Sheet"}</h4>
+          </div>
+
+          <div className={`p-5 rounded-2xl border space-y-4 text-right transition-all duration-150 ${isDark ? "bg-[#050b16] border-white/5" : "bg-white border-neutral-200"}`}>
+            {selectedBranch ? (
+              isEditingLocation ? (
+                <div className="space-y-4 text-xs font-mono">
+                  <div className="text-right border-b border-white/5 pb-2">
+                    <span className="text-[#D4AF37] font-black">{lang === "ar" ? "تعديل إحداثيات الفرع والامتثال الجغرافي" : "Edit Branch Location & Geofence"}</span>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "خط العرض (Latitude):" : "Latitude:"}</label>
+                      <input
+                        type="text"
+                        value={editLat}
+                        onChange={e => setEditLat(e.target.value)}
+                        className={`w-full p-2 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-black text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "خط الطول (Longitude):" : "Longitude:"}</label>
+                      <input
+                        type="text"
+                        value={editLng}
+                        onChange={e => setEditLng(e.target.value)}
+                        className={`w-full p-2 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-black text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "نصف قطر الأمان الوقائي (متر):" : "Safety Radius (m):"}</label>
+                      <input
+                        type="number"
+                        value={editRadius}
+                        onChange={e => setEditRadius(e.target.value)}
+                        className={`w-full p-2 text-xs rounded border focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-black text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Pre-validation check with LEXI bounds context */}
+                  {(() => {
+                    const latNum = parseFloat(editLat) || 0;
+                    const lngNum = parseFloat(editLng) || 0;
+                    const radNum = parseFloat(editRadius) || 0;
+                    const isOutside = (latNum < 15.0 || latNum > 32.5 || lngNum < 34.0 || lngNum > 55.0);
+                    const isRadiusTooSmall = radNum < 10;
+
+                    return (
+                      <div className={`p-2.5 rounded border text-[10px] space-y-1 text-right ${isOutside || isRadiusTooSmall ? "bg-red-500/10 border-red-500/20 text-red-300" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-300"}`}>
+                        <div className="font-bold">{lang === "ar" ? "حالة التحقق الجغرافي المسبق:" : "Pre-validation Status:"}</div>
+                        {isOutside && (
+                          <div>⚠️ {lang === "ar" ? "خطأ: الإحداثيات تقع خارج الحدود السيادية للمملكة" : "Error: Coordinates outside KSA bounds!"}</div>
+                        )}
+                        {isRadiusTooSmall && (
+                          <div>⚠️ {lang === "ar" ? "خطأ: يجب ألا يقل نصف القطر عن 10 أمتار" : "Error: Safety radius must be at least 10m!"}</div>
+                        )}
+                        {!isOutside && !isRadiusTooSmall && (
+                          <div>✅ {lang === "ar" ? "الإحداثيات سليمة وضمن النطاق التنظيمي والتشغيلي المعتمد" : "All checks clear: holds active compliance state."}</div>
+                        )}
+                      </div>
+                    );
+                  })()}
+
+                  <div className="flex gap-2 pt-2">
+                    <button
+                      onClick={() => saveLocationChanges(selectedBranch)}
+                      className="flex-1 bg-[#D4AF37] hover:bg-[#b08f2e] text-black font-extrabold py-2 rounded-lg text-xs font-sans transition-all focus:outline-none cursor-pointer"
+                    >
+                      {lang === "ar" ? "حفظ وتثبيت الموقع" : "Save coordinates"}
+                    </button>
+                    <button
+                      onClick={cancelEditingLocation}
+                      className={`flex-1 font-sans font-bold text-xs py-2 rounded-lg transition-all focus:outline-none cursor-pointer border ${isDark ? "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10" : "bg-neutral-100 border-neutral-300 text-neutral-700 hover:bg-neutral-200"}`}
+                    >
+                      {lang === "ar" ? "إلغاء الأمر" : "Cancel"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3.5 text-xs font-mono">
+                  <div className="flex justify-between items-center bg-transparent border-b border-white/5 pb-2 flex-row-reverse">
+                    <span className="text-gray-400 font-sans">{lang === "ar" ? "الاسم التجاري للفرع:" : "Branch name:"}</span>
+                    <span className="text-[#D4AF37] font-extrabold font-sans text-sm">{selectedBranch.branch_name}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center flex-row-reverse">
+                    <span className="text-gray-400 font-sans">{lang === "ar" ? "نوع ترخيص قوى وبلدي:" : "Regulatory Category:"}</span>
+                    <span className="text-blue-300 bg-blue-500/10 border border-blue-500/20 rounded px-2.5 py-0.5 font-sans font-bold">
+                      {lang === "ar" ? municipalTypeLabels[selectedBranch.branch_type]?.ar : municipalTypeLabels[selectedBranch.branch_type]?.en}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center flex-row-reverse">
+                    <span className="text-gray-400 font-sans">{lang === "ar" ? "رقم رخصة البلدية (بلدي):" : "Balady License Number:"}</span>
+                    <span className="text-white font-extrabold font-mono">{selectedBranch.municipality_license_number}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center flex-row-reverse">
+                    <span className="text-gray-400 font-sans">{lang === "ar" ? "الإحداثيات الجغرافية (العرض، الطول):" : "GPS Coordinates:"}</span>
+                    <span className="text-gray-200">{selectedBranch.latitude.toFixed(5)}, {selectedBranch.longitude.toFixed(5)}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center flex-row-reverse">
+                    <span className="text-gray-400 font-sans">{lang === "ar" ? "نصف قطر الأمان الوقائي للعمل:" : "Safe Fence Radius Area:"}</span>
+                    <span className="text-gray-200 font-extrabold">{selectedBranch.safety_radius} متر (m)</span>
+                  </div>
+
+                  <div className="flex justify-between items-center flex-row-reverse">
+                    <span className="text-gray-400 font-sans">{lang === "ar" ? "معدل امتثال الأفراد بالفرع:" : "Staff Compliance Score:"}</span>
+                    <span className={`font-black text-sm ${getBranchCompliance(selectedBranch) === 100 ? "text-emerald-400" : "text-amber-400"}`}>
+                      {getBranchCompliance(selectedBranch)}%
+                    </span>
+                  </div>
+
+                  {/* Operations */}
+                  <div className="border-t border-white/5 pt-4 flex flex-col gap-2">
+                    <button
+                      onClick={() => startEditingLocation(selectedBranch)}
+                      className="w-full font-sans font-extrabold text-xs py-2 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/20 transition-all focus:outline-none cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <span>📍 {lang === "ar" ? "تحديد النطاق الجغرافي بالرادار" : "Position & Radius Mapping"}</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        const updated = branches.map(b => b.id === selectedBranch.id ? { ...b, branch_status: b.branch_status === "active" ? "suspended" : "active" as any } : b);
+                        setBranches(updated);
+                        pushNewC9Event("تحديث رخصة وتشغيل الفرع السيادي", selectedBranch.id, { action: "toggle_status", status: selectedBranch.branch_status === "active" ? "suspended" : "active" });
+                        addAlert(
+                          lang === "ar" 
+                            ? `تم تغيير حالة نشاط وترخيص الفرع "${selectedBranch.branch_name}" بنجاح!` 
+                            : `License state of "${selectedBranch.branch_name}" toggled successfully!`, 
+                          selectedBranch.branch_status === "active" ? "high" : "low"
+                        );
+                      }}
+                      className={`w-full font-sans font-bold text-xs py-2 rounded-lg transition-all focus:outline-none cursor-pointer border ${selectedBranch.branch_status === "active" ? "bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20" : "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20"}`}
+                    >
+                      {selectedBranch.branch_status === "active" 
+                        ? (lang === "ar" ? "⚠️ تعليق رخصة النشاط من بلدي" : "⚠️ Suspend balady activity") 
+                        : (lang === "ar" ? "✅ تفعيل وتشغيل رخصة النشاط" : "✅ Activate balady activity")}
+                    </button>
+                  </div>
+                </div>
+              )
+            ) : (
+              <p className="text-xs text-gray-500 text-center italic py-10">
+                {lang === "ar" ? "يرجى تحديد فرع للاطلاع على رخصته الاستثمارية." : "Select a branch to explore license parameters."}
+              </p>
+            )}
+          </div>
+        </div>
+
+      </div>
+
+      {/* 3. Grid Table of Commercial Branches */}
+      <div className="space-y-3 text-right">
+        <h4 className="text-xs font-black text-[#D4AF37] flex items-center justify-end gap-1.5 flex-row-reverse pb-1 border-b border-[#D4AF37]/20">
+          <Building2 className="w-4 h-4 text-blue-400" />
+          <span>{lang === "ar" ? "فروع المنشأة المسجلة تحت بوابة بلدي الرقمية" : "KSA Municipal Registered Branch Database"}</span>
+        </h4>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredBranches.map(b => {
+             const compScore = getBranchCompliance(b);
+             const isSel = b.id === selectedBranchId;
+             const isSuspended = b.branch_status === "suspended";
+             const licBadge = getLicenseStatus(b);
+
+             // Get workforce and calculate dynamic sovereign readiness v9.0
+             const staffList = workforce[b.id] || [];
+             const readinessScore = getBranchReadiness(b, staffList, attendanceLogs);
+             const activity = getActivityBadge(b.branch_type);
+             const healthCompliance = getHealthComplianceBadge(b, staffList);
+
+             return (
+               <div
+                 key={b.id}
+                 id={`branch-card-${b.id}`}
+                 onClick={() => setSelectedBranchId(b.id)}
+                 className={`p-4 rounded-xl border cursor-pointer transition-all duration-300 relative text-right flex flex-col justify-between ${
+                   isSel 
+                     ? "border-[#D4AF37] bg-[#D4AF37]/5 shadow-[0_0_12px_rgba(212,175,55,0.08)]" 
+                     : isDark 
+                       ? "bg-black/30 hover:border-white/10 border-white/5" 
+                       : "bg-white border-neutral-200 text-neutral-800 shadow-sm hover:border-neutral-300"
+                 }`}
+               >
+                 <div className="flex justify-between items-center flex-row-reverse pb-2 border-b border-white/5">
+                   <span className="font-mono text-[9px] text-[#D4AF37] font-bold">{b.id}</span>
+                   <span className={`px-2 py-0.5 rounded text-[8px] font-bold ${isSuspended ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"}`}>
+                     {isSuspended ? (lang === "ar" ? "نصف قطر معلّق" : "SUSPENDED") : (lang === "ar" ? "نشط ومجاز" : "AUTHORIZED")}
+                   </span>
+                 </div>
+
+                 {/* Body Segment with Circular Gauge and Activity Badge */}
+                 <div className="py-3 flex items-start gap-3 flex-row-reverse">
+                   {/* 1. Branch Readiness Circular Gauge */}
+                   <div className="text-center">
+                     <ReadinessGauge score={readinessScore} isDark={isDark} />
+                     <span className="block text-[6.5px] text-gray-400 font-sans tracking-tight mt-0.5 whitespace-nowrap">
+                       {lang === "ar" ? "جاهزية الفرع" : "Readiness"}
+                     </span>
+                   </div>
+
+                   {/* 2. Branch Name and activity classification */}
+                   <div className="flex-1 min-w-0 text-right pr-1">
+                     <div className="flex items-center gap-1 flex-row-reverse">
+                       <h5 className={`text-xs font-black leading-snug truncate ${isDark ? "text-white" : "text-neutral-800"}`}>
+                         {b.branch_name}
+                       </h5>
+                       <span className="text-xs shrink-0" title={lang === "ar" ? activity.textAr : activity.textEn}>{activity.icon}</span>
+                     </div>
+                     
+                     {/* Activity pill */}
+                     <div className="mt-1 flex justify-end gap-1 flex-row-reverse items-center">
+                       <span className={`px-1.5 py-0.5 rounded text-[8px] font-sans font-bold ${activity.bgClass} ${activity.textClass}`}>
+                         {lang === "ar" ? activity.textAr : activity.textEn}
+                       </span>
+                       
+                       {/* Health compliance badge v9.0 */}
+                       <span className={`px-1.5 py-0.5 rounded text-[8px] font-sans font-extrabold ${healthCompliance.colorClass}`}>
+                         {healthCompliance.icon} {lang === "ar" ? healthCompliance.textAr : healthCompliance.textEn}
+                       </span>
+                     </div>
+                   </div>
+                 </div>
+
+                 {/* Licensing status details */}
+                 <div className="space-y-1.5 pt-2 border-t border-white/5">
+                   <div className="flex justify-between items-center flex-row-reverse text-[9px] font-mono">
+                     <span className="text-gray-400 font-sans">{lang === "ar" ? "الرخصة البلدية:" : "Balady License:"}</span>
+                     <span className={`font-bold ${isDark ? "text-white" : "text-neutral-700"}`}>{b.municipality_license_number}</span>
+                   </div>
+
+                   <div className="flex justify-between items-center flex-row-reverse text-[9px] font-mono">
+                     <span className="text-gray-400 font-sans">{lang === "ar" ? "حالة الرخصة:" : "License Status:"}</span>
+                     <span className={`px-1.5 py-0.5 rounded text-[7.5px] font-bold font-sans ${licBadge.colorClass}`}>
+                       {lang === "ar" ? licBadge.textAr : licBadge.textEn}
+                     </span>
+                   </div>
+                 </div>
+
+                 {/* Compliance slider bar */}
+                 <div className="mt-3 space-y-1">
+                   <div className="flex justify-between items-center flex-row-reverse text-[9px] font-mono">
+                     <span className="text-gray-400 font-sans">{lang === "ar" ? "نسبة الامتثال الجغرافي والصحي:" : "Compliance state:"}</span>
+                     <span className={`font-black ${compScore === 100 ? "text-emerald-400" : "text-amber-400"}`}>{compScore}%</span>
+                   </div>
+                   <div className="w-full bg-neutral-700/30 rounded-full h-1 overflow-hidden">
+                     <div 
+                       className={`h-full ${compScore === 100 ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} 
+                       style={{ width: `${compScore}%` }} 
+                     />
+                   </div>
+                 </div>
+               </div>
+             );
+          })}
+        </div>
+      </div>
+
+      {/* Add Branch Modal Component Inclusion */}
+      <AnimatePresence>
+        {showAddModal && (
+          <AddBranchModal
+            lang={lang}
+            isDark={isDark}
+            onClose={() => setShowAddModal(false)}
+            onAddBranch={(newB) => {
+              // Append to state
+              const genId = `BR-${100 + branches.length + 1}`;
+              const freshBranch: Branch = {
+                id: genId,
+                branch_name: newB.branch_name,
+                branch_type: newB.branch_type as any,
+                municipality_license_number: newB.municipality_license_number,
+                latitude: newB.latitude,
+                longitude: newB.longitude,
+                safety_radius: newB.safety_radius,
+                branch_status: "active",
+                compliance_score: 100
+              };
+              setBranches([...branches, freshBranch]);
+              pushNewC9Event("تأسيس فرع معتمد بالرخص البلدية", genId, freshBranch);
+              addAlert(
+                lang === "ar" 
+                  ? `تم تأسيس فرع "${newB.branch_name}" وتدقيقه سيادياً بالرقم المالي.` 
+                  : `Successfully recorded "${newB.branch_name}" matching civil coordinates!`, 
+                "medium"
+              );
+              setShowAddModal(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// Global License Evaluation Helper
+export function getLicenseStatus(b: Branch): { status: "valid" | "expired" | "missing"; textAr: string; textEn: string; colorClass: string } {
+  if (!b.municipality_license_number || b.municipality_license_number.trim() === "") {
+    return {
+      status: "missing",
+      textAr: "رخصة مفقودة ⚠️",
+      textEn: "Missing License ⚠️",
+      colorClass: "bg-red-500/10 text-rose-400 border border-red-500/30"
+    };
+  }
+  // Let BR-104 represent expired status for demo diversity
+  if (b.id === "BR-104") {
+    return {
+      status: "expired",
+      textAr: "منتهية الصلاحية ❌",
+      textEn: "License Expired ❌",
+      colorClass: "bg-amber-500/10 text-amber-500 border border-amber-500/30 animate-pulse"
+    };
+  }
+  return {
+    status: "valid",
+    textAr: "رخصة سارية ✅",
+    textEn: "Valid License ✅",
+    colorClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+  };
+}
+
+// ==========================================
+// AddBranchModal (Specific Modal Component Request)
+// ==========================================
+interface AddBranchModalProps {
+  onClose: () => void;
+  onAddBranch: (b: {
+    branch_name: string;
+    branch_type: string;
+    municipality_license_number: string;
+    latitude: number;
+    longitude: number;
+    safety_radius: number;
+  }) => void;
+  lang: "ar" | "en";
+  isDark: boolean;
+}
+
+export function AddBranchModal({ onClose, onAddBranch, lang, isDark }: AddBranchModalProps) {
+  const [formData, setFormData] = useState({
+    branch_name: "",
+    branch_type: "restaurant",
+    municipality_license_number: "",
+    latitude: "24.7136",
+    longitude: "46.6753",
+    safety_radius: "100"
+  });
+
+  const [lexiResult, setLexiResult] = useState<LexiResult | null>(null);
+  const [stampStatus, setStampStatus] = useState<"idle" | "success" | "shaking">("idle");
+
+  // Real-time automatic LEXI verification as inputs update
+  React.useEffect(() => {
+    const lat = parseFloat(formData.latitude) || 0;
+    const lng = parseFloat(formData.longitude) || 0;
+    const radius = parseFloat(formData.safety_radius) || 0;
+
+    const check = LEXI.validateBranch({
+      branch_name: formData.branch_name,
+      branch_type: formData.branch_type,
+      municipality_license_number: formData.municipality_license_number,
+      latitude: lat,
+      longitude: lng,
+      safety_radius: radius
+    });
+
+    setLexiResult(check);
+  }, [formData]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Compile values
+    const lat = parseFloat(formData.latitude) || 0;
+    const lng = parseFloat(formData.longitude) || 0;
+    const radius = parseFloat(formData.safety_radius) || 100;
+
+    // Run final verification check
+    const check: LexiResult = LEXI.validateBranch({
+      branch_name: formData.branch_name,
+      branch_type: formData.branch_type,
+      municipality_license_number: formData.municipality_license_number,
+      latitude: lat,
+      longitude: lng,
+      safety_radius: radius
+    });
+
+    setLexiResult(check);
+
+    if (check.decision === "block") {
+      setStampStatus("shaking");
+      setTimeout(() => setStampStatus("idle"), 800);
+      return;
+    }
+
+    setStampStatus("success");
+
+    // Success Block - delay slightly to show LEXI ALLOW stamp with Gold flash
+    setTimeout(() => {
+      onAddBranch({
+        branch_name: formData.branch_name,
+        branch_type: formData.branch_type,
+        municipality_license_number: formData.municipality_license_number,
+        latitude: lat,
+        longitude: lng,
+        safety_radius: radius
+      });
+      onClose();
+    }, 1200);
+  };
+
+  // Convert radius to a neat preview size
+  const previewRadius = Math.min(48, Math.max(12, parseFloat(formData.safety_radius) / 3));
+
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={stampStatus === "shaking" ? { 
+          x: [0, -6, 6, -6, 6, 0],
+          borderColor: ["rgba(239, 68, 68, 0.4)", "rgba(239, 68, 68, 0.8)", "rgba(239, 68, 68, 0.4)"] 
+        } : { scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className={`w-full max-w-lg p-6 rounded-2xl border shadow-2xl relative text-right transition-all ${
+          stampStatus === "shaking" ? "ring-2 ring-red-500/60" : ""
+        } ${isDark ? "bg-[#0b1019] border-[#D4AF37]/30 text-white" : "bg-white text-neutral-800 border-neutral-300"}`}
+      >
+        {/* Gold Sovereign success cover screen overlay */}
+        {stampStatus === "success" && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            className="absolute inset-0 bg-amber-500/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center z-55 border border-[#D4AF37] shadow-[0_0_50px_rgba(212,175,55,0.3)] animate-pulse"
+          >
+            <div className="bg-[#D4AF37] text-black w-14 h-14 rounded-full flex items-center justify-center font-black text-2xl shadow-[0_0_20px_#D4AF37]">
+              ✓
+            </div>
+            <p className="text-[#D4AF37] text-sm font-black mt-3 font-sans text-center px-4">
+              {lang === "ar" ? "تم توثيق وتدشين الفرع بنجاح! 🏛️" : "Sovereign Branch Registered Validly! 🏛️"}
+            </p>
+            <p className="text-gray-400 text-[10px] uppercase font-mono tracking-widest mt-1">Balady Ledger Approved</p>
+          </motion.div>
+        )}
+        <div className="flex justify-between items-center border-b border-white/10 pb-3 flex-row-reverse mb-4">
+          <h3 className="text-sm font-black text-[#D4AF37] flex items-center gap-1.5">
+            <Building2 className="w-4.5 h-4.5 text-[#D4AF37]" />
+            <span>{lang === "ar" ? "تسجيل فرع مؤمن ومطابقة الترخيص بلدي" : "Register Geofenced Commercial Branch"}</span>
+          </h3>
+          <button 
+            type="button"
+            onClick={onClose}
+            className="text-gray-400 hover:text-white font-bold cursor-pointer font-mono"
+          >
+            ❌
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-right">
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "اسم الفرع التجاري:" : "Branch name:"}</label>
+              <input
+                type="text"
+                required
+                value={formData.branch_name}
+                onChange={e => setFormData({ ...formData, branch_name: e.target.value })}
+                placeholder={lang === "ar" ? "مثال: فرع العليا السيادي للأغذية" : "e.g., Al Olaya Food Court"}
+                className={`w-full p-2 text-xs rounded focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-black/60 text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "نوع النشاط الرقابي بلدي:" : "Regulatory Category:"}</label>
+              <select
+                value={formData.branch_type}
+                onChange={e => setFormData({ ...formData, branch_type: e.target.value })}
+                className={`w-full p-2 text-xs rounded focus:border-[#D4AF37] focus:outline-none ${isDark ? "bg-black/60 text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              >
+                {Object.entries(municipalTypeLabels).map(([key, val]) => (
+                  <option key={key} value={key}>{lang === "ar" ? val.ar : val.en}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">
+                {lang === "ar" ? "رقم رخصة البلدية (10 خانات تبدأ بـ 14):" : "Balady Municipal License (10 digits starting with 14):"}
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.municipality_license_number}
+                onChange={e => setFormData({ ...formData, municipality_license_number: e.target.value })}
+                placeholder="14XXXXXXXX"
+                className={`w-full p-2 text-xs rounded focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-black/60 text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+              
+              {/* Municipality Auto-Validation HUD v9.0 */}
+              {formData.municipality_license_number && (
+                <div className="mt-1.5 text-[9px] font-sans font-black flex items-center justify-end gap-1 flex-row-reverse">
+                  {!formData.municipality_license_number.startsWith("14") ? (
+                    <span className="text-rose-400">❌ {lang === "ar" ? "بادئة رخصة بلدية غير صالحة (يجب أن تبدأ بـ 14)" : "Invalid prefix (must start with 14)"}</span>
+                  ) : formData.municipality_license_number.replace(/\D/g, "").length < 10 ? (
+                    <span className="text-amber-400">⚠️ {lang === "ar" ? "رقم رخصة بلدي ناقص (تشترط 10 أرقام على الأقل)" : "Incomplete (Balady rules require at least 10 numbers)"}</span>
+                  ) : (
+                    <span className="text-emerald-400 font-extrabold">✅ {lang === "ar" ? "رخصة بلدية صالحة ومطابقة للأنظمة" : "Valid Balady License Verified ✅"}</span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "نصف قطر الأمان الوقائي (متر):" : "Safe Geofence Radius (m):"}</label>
+              <input
+                type="number"
+                required
+                value={formData.safety_radius}
+                onChange={e => setFormData({ ...formData, safety_radius: e.target.value })}
+                placeholder="100"
+                className={`w-full p-2 text-xs rounded focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-black/60 text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "خط العرض الجغرافي (داخل السعودية):" : "GPS Latitude Anchor (KSA bounds):"}</label>
+              <input
+                type="text"
+                required
+                value={formData.latitude}
+                onChange={e => setFormData({ ...formData, latitude: e.target.value })}
+                placeholder="24.7136"
+                className={`w-full p-2 text-xs rounded focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-black/60 text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-gray-400 mb-1 font-bold">{lang === "ar" ? "خط الطول الجغرافي (داخل السعودية):" : "GPS Longitude Anchor (KSA bounds):"}</label>
+              <input
+                type="text"
+                required
+                value={formData.longitude}
+                onChange={e => setFormData({ ...formData, longitude: e.target.value })}
+                placeholder="46.6753"
+                className={`w-full p-2 text-xs rounded focus:border-[#D4AF37] focus:outline-none text-right font-mono ${isDark ? "bg-black/60 text-white border-white/10" : "bg-neutral-50 text-neutral-900 border-neutral-300"}`}
+              />
+            </div>
+          </div>
+
+          {/* Interactive Live Safety Radius SVG Circle Visualizer before Saving */}
+          <div className={`p-4 rounded-xl border flex flex-col items-center justify-center relative ${isDark ? "bg-black/50 border-white/5" : "bg-neutral-50 border-neutral-200"}`}>
+            <div className="text-right w-full mb-1">
+              <span className="text-[#D4AF37] text-[10px] bg-[#D4AF37]/10 px-2 py-0.5 rounded font-sans font-extrabold animate-pulse">
+                💡 {lang === "ar" ? "اضغط على أي مكان بالخريطة لتحديد الإحداثيات فورياً!" : "Click anywhere on the map to set the coordinates directly!"}
+              </span>
+            </div>
+            <div className="flex justify-between items-center w-full mb-2 flex-row-reverse text-[9px] font-mono border-t border-white/5 pt-1.5">
+              <span className="text-[#D4AF37] font-sans font-black flex items-center gap-1">
+                <span>📍 {lang === "ar" ? "خرائط المحاكاة الجغرافية والتحقق السيادي:" : "Sovereign Geofence Simulator Map Preview:"}</span>
+              </span>
+              
+              {/* Check if coordinates reside outside Saudi Arabia kingdom bounds */}
+              {(() => {
+                const lat = parseFloat(formData.latitude) || 0;
+                const lng = parseFloat(formData.longitude) || 0;
+                const isOutside = (lat < 15.0 || lat > 32.5 || lng < 34.0 || lng > 55.0);
+                return isOutside ? (
+                  <span className="text-red-400 font-extrabold animate-pulse">
+                    ⚠️ {lang === "ar" ? "إحداثيات خارج الحدود السيادية!" : "GPS OUTSIDE KSA BOUNDS!"}
+                  </span>
+                ) : (
+                  <span className="text-emerald-400">
+                    🟢 {lang === "ar" ? "إحداثيات داخل الحدود التنظيمية" : "Inside Sovereign Territory"}
+                  </span>
+                );
+              })()}
+            </div>
+
+            <div className={`relative w-full h-28 flex items-center justify-center bg-black/90 rounded-lg overflow-hidden border ${
+              (() => {
+                const lat = parseFloat(formData.latitude) || 0;
+                const lng = parseFloat(formData.longitude) || 0;
+                return (lat < 15.0 || lat > 32.5 || lng < 34.0 || lng > 55.0) ? "border-red-500/55 bg-red-950/20" : "border-white/5";
+              })()
+            }`}>
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(20,80,250,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(20,80,250,0.02)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+              
+              <svg 
+                className="w-full h-full cursor-crosshair" 
+                viewBox="0 0 400 100"
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickPctX = (e.clientX - rect.left) / rect.width;
+                  const clickPctY = (e.clientY - rect.top) / rect.height;
+
+                  const minLat = 15.0;
+                  const maxLat = 32.5;
+                  const minLng = 34.0;
+                  const maxLng = 55.0;
+
+                  const lng = minLng + clickPctX * (maxLng - minLng);
+                  const lat = minLat + (1.0 - clickPctY) * (maxLat - minLat);
+
+                  setFormData(prev => ({
+                    ...prev,
+                    latitude: lat.toFixed(5),
+                    longitude: lng.toFixed(5)
+                  }));
+                }}
+              >
+                <line x1="200" y1="0" x2="200" y2="100" stroke="rgba(255,255,255,0.03)" />
+                <line x1="0" y1="50" x2="400" y2="50" stroke="rgba(255,255,255,0.03)" />
+                
+                {/* Stylized vector boundary of Saudi Arabia (KSA) */}
+                <path
+                  d="M 100 25 L 140 15 L 180 16 L 220 20 L 260 25 L 300 22 L 320 32 L 280 42 L 260 62 L 240 72 L 220 82 L 160 85 L 130 72 L 100 62 L 80 52 L 75 40 Z"
+                  fill="none"
+                  stroke={(() => {
+                    const lat = parseFloat(formData.latitude) || 0;
+                    const lng = parseFloat(formData.longitude) || 0;
+                    return (lat < 15.0 || lat > 32.5 || lng < 34.0 || lng > 55.0) ? "rgba(239, 68, 68, 0.2)" : "rgba(212, 175, 55, 0.15)";
+                  })()}
+                  strokeWidth="1.5"
+                  strokeDasharray="4,4"
+                />
+
+                {/* Plotting coordinate node mapping calculated dynamically */}
+                {(() => {
+                  const lat = parseFloat(formData.latitude) || 24.7136;
+                  const lng = parseFloat(formData.longitude) || 46.6753;
+                  const minLat = 15.0;
+                  const maxLat = 32.5;
+                  const minLng = 34.0;
+                  const maxLng = 55.0;
+
+                  const pctX = (lng - minLng) / (maxLng - minLng);
+                  const pctY = 1.0 - (lat - minLat) / (maxLat - minLat); // Lat grows upwards, Y decreases down
+
+                  const x = Math.max(10, Math.min(390, pctX * 400));
+                  const y = Math.max(10, Math.min(90, pctY * 100));
+
+                  const isOut = (lat < 15.0 || lat > 32.5 || lng < 34.0 || lng > 55.0);
+                  const colorMatch = isOut ? "#ef4444" : "#D4AF37";
+
+                  return (
+                    <g>
+                      {/* Safe Geofence circular radius */}
+                      <circle
+                        cx={x}
+                        cy={y}
+                        r={previewRadius}
+                        fill={isOut ? "rgba(239, 68, 68, 0.05)" : "rgba(212, 175, 55, 0.04)"}
+                        stroke={colorMatch}
+                        strokeWidth="1"
+                        className="transition-all duration-300"
+                        strokeDasharray={isOut ? "2,2" : "0"}
+                      />
+                      
+                      {/* GPS Blip Ring */}
+                      <circle
+                        cx={x}
+                        cy={y}
+                        r="6"
+                        fill="none"
+                        stroke={colorMatch}
+                        strokeWidth="1"
+                        className="animate-ping"
+                      />
+
+                      {/* GPS Dot */}
+                      <circle cx={x} cy={y} r="2.5" fill={colorMatch} />
+                      
+                      {/* Marker Metadata Flag */}
+                      <text x={x + 7} y={y + 2} fill={isOut ? "#f87171" : "#e5e7eb"} fontSize="6" fontFamily="monospace">
+                        LAT: {lat.toFixed(4)} | LNG: {lng.toFixed(4)}
+                      </text>
+                      <text x={x + 7} y={y + 8} fill={isOut ? "#ef4444" : "#D4AF37"} fontSize="5.5" fontFamily="monospace" fontWeight="bold">
+                        FENCE RAD: {formData.safety_radius || "100"}m
+                      </text>
+                    </g>
+                  );
+                })()}
+              </svg>
+            </div>
+          </div>
+
+          {/* Interactive LEXI Evaluative Guard v7.0 */}
+          {lexiResult && (
+            <div className={`p-4 rounded-xl text-right text-xs space-y-1.5 transition-all ${lexiResult.decision === "block" ? "bg-red-500/10 border border-red-500/30 text-red-200" : "bg-emerald-500/10 border border-emerald-500/35 text-emerald-200"}`}>
+              <div className="flex justify-between items-center border-b border-white/5 pb-1 flex-row-reverse mb-1">
+                <span className="font-sans font-black text-[#D4AF37] flex items-center gap-1.5">
+                  <FileCheck className="w-4 h-4" />
+                  <span>{lang === "ar" ? "تحليل الامتثال الرقمي بمحرك LEXI" : "LEXI DECISION RESPONSE"}</span>
+                </span>
+                <span className="font-mono text-[9px] font-bold bg-[#D4AF37]/20 text-[#D4AF37] px-1.5 rounded">{lexiResult.sealId}</span>
+              </div>
+              <p className="font-sans text-[10px] text-gray-400">
+                <strong className="text-white">{lang === "ar" ? "المادة النظامية:" : "Statutory Article:"}</strong> {lexiResult.article}
+              </p>
+              <p className="font-medium text-xs font-sans leading-relaxed pt-1">
+                <strong className="text-white">{lang === "ar" ? "قرار الفحص والتعليق:" : "Evaluation Outcome:"}</strong> {lexiResult.reason}
+              </p>
+              {lexiResult.decision === "block" && (
+                <div className="flex items-center gap-1.5 justify-end text-rose-400 font-bold font-sans text-[10px] pt-1 pt-1.5 border-t border-red-500/10 mt-1.5">
+                  <span>{lang === "ar" ? "القرار السيادي: تم الرفض وحظر التفعيل الفوري." : "SOVEREIGN DECISION: PROPOSAL STRICTLY REFUSED & BLOCKED."}</span>
+                  <AlertTriangle className="w-3.5 h-3.5 text-rose-400 stroke-[2.5]" />
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="flex justify-between items-center pt-3 border-t border-white/10 flex-row-reverse">
+            <button
+              type="submit"
+              disabled={lexiResult?.decision === "block"}
+              className={`bg-[#D4AF37] hover:bg-[#b08f2e] text-black font-extrabold px-6 py-2 rounded-lg text-xs transition active:scale-95 cursor-pointer flex items-center gap-1.5 ${lexiResult?.decision === "block" ? "opacity-30 cursor-not-allowed" : ""}`}
+            >
+              <ShieldCheck className="w-4.5 h-4.5 text-black" />
+              <span>{lang === "ar" ? "تصديق وتدشين الفرع بالكتلة" : "Confirm Sovereign Registration"}</span>
+            </button>
+            <span className="text-[9px] font-mono text-gray-500">LEDGER C9-V7-SECURITY</span>
+          </div>
+
+        </form>
+      </motion.div>
+    </div>
+  );
+}
+
