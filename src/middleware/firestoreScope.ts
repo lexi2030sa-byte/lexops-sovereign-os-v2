@@ -1,8 +1,28 @@
-import * as admin from "firebase-admin";
 import { Request, Response, NextFunction } from "express";
 import { adminAuth, adminDb } from "../lib/firebase-admin";
 
-// Extend Express Request interface to include our scoped properties
+/**
+ * Authenticated user context attached to Express Request by requireFirebaseAuth
+ */
+export interface AuthenticatedUser {
+  uid: string;
+  email?: string;
+  role?: string;
+  entityId?: string;
+}
+
+/**
+ * Extend Express global Request interface to include authenticated user context
+ */
+declare global {
+  namespace Express {
+    interface Request {
+      user?: AuthenticatedUser;
+    }
+  }
+}
+
+// Extend Express Request interface to include verified user context
 export interface ScopedRequest extends Request {
   userId?: string;
   userEmail?: string;
@@ -11,162 +31,151 @@ export interface ScopedRequest extends Request {
 }
 
 /**
- * Express middleware to enforce document-level security on Firestore queries.
- * It resolves the authenticated user's organization unique ID (entityId) and scopes queries to it.
+ * Fail-closed Firebase Bearer token authentication middleware.
+ * 
+ * Validates Authorization: Bearer <idToken> using Firebase Admin SDK.
+ * No client-controlled fallback from headers, query, body, email heuristics, or defaults.
+ * 
+ * On success: attaches verified identity to req.user and calls next()
+ * On failure: returns 401
  */
-export async function enforceFirestoreScope(req: ScopedRequest, res: Response, next: NextFunction) {
+export async function requireFirebaseAuth(req: ScopedRequest, res: Response, next: NextFunction) {
   try {
-    let uid = "";
-    let decodedToken: any = null;
-    let email = "";
-
-    // 1. Authenticate user - Try Firebase ID Token first
     const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      const token = authHeader.split("Bearer ")[1];
-      try {
-        decodedToken = await adminAuth.verifyIdToken(token);
-        uid = decodedToken.uid;
-        email = decodedToken.email || "";
-      } catch (tokenErr) {
-        console.warn("Firebase ID Token verification failed, trying fallback:", tokenErr);
-      }
-    }
 
-    // 2. Fallback to headers or query parameters for sandbox/local simulations compatibility
-    if (!uid) {
-      uid = (req.headers["user-id"] as string) || 
-            (req.headers["x-user-id"] as string) || 
-            (req.query.userId as string) || 
-            (req.body?.userId as string) || 
-            "";
-      email = (req.headers["user-email"] as string) || 
-              (req.headers["x-user-email"] as string) || 
-              (req.query.userEmail as string) || 
-              (req.body?.userEmail as string) || 
-              "";
-    }
-
-    if (!uid) {
+    // Fail-closed: Missing or malformed Authorization header
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
-        error: "غير مصرح — يرجى تسجيل الدخول أولاً للوصول إلى قاعدة البيانات السيادية.",
-        code: "UNAUTHORIZED"
+        error: "Authentication required.",
+        code: "AUTH_REQUIRED"
       });
     }
 
-    // 3. Resolve organization unique ID (entityId) from authenticated profile
-    let entityId = "";
-    let role = "user";
+    const token = authHeader.slice("Bearer ".length).trim();
 
-    // A. Check for special bypasses (Founder & Government Inspectors)
-    if (email === "sultan2030famli@gmail.com" || email === "sultanbooy100@gmail.com" || email === "founder@lexops.sa" || uid === "founder-uid") {
-      entityId = "7001002003"; // LexOps Sovereign OS
-      role = "SOVEREIGN_CONTROLLER";
-    } else if (email === "inspector@hr.gov.sa" || email?.endsWith(".gov.sa")) {
-      entityId = "GOV-GATEWAY"; // Government Gateway
-      role = "government";
-    } else {
-      // B. Resolve regular users from Firestore profile documents
-      try {
-        // Query the 'requests' collection keyed by UID
-        const requestDocRef = adminDb.collection("requests").doc(uid);
-        const requestDoc = await requestDocRef.get();
-
-        if (requestDoc.exists) {
-          const reqData = requestDoc.data();
-          if (reqData) {
-            role = reqData.type || "user";
-            
-            if (role === "orgadmin") {
-              entityId = reqData.crNumber || "ORG-GEN";
-            } else if (role === "employee" || role === "freelancer") {
-              // Fetch from employees subcollection/collection
-              const employeeDocRef = adminDb.collection("employees").doc(uid);
-              const employeeDoc = await employeeDocRef.get();
-              if (employeeDoc.exists) {
-                const empData = employeeDoc.data();
-                entityId = empData?.entityId || "FREE-ENT";
-              } else {
-                entityId = "FREE-ENT";
-              }
-            }
-          }
-        }
-      } catch (dbErr) {
-        console.warn("Failed resolving entityId from Firestore, checking legacy fallbacks:", dbErr);
-      }
-
-      // C. Fallback for legacy sandbox users
-// Option B: Dual Claims & Live DB Verification (Zero-Trust Fallback)
-    if (!entityId) {
-  // Option B: Dual Claims & Live DB Verification (Zero-Trust Fallback)
-    entityId = (decodedToken.entityId || decodedToken.orgId || decodedToken.activeOrg) as string;
-
-    if (!entityId) {
-      try {
-        // Zero-Trust verification: استعلام قاعدة بيانات Firestore حياً لمطابقة معرّف الكيان الفعلي
-        const userDoc = await adminDb.collection("users").doc(uid).get();
-        if (userDoc.exists) {
-          const userData = userDoc.data();
-          entityId = userData?.entityId || userData?.activeOrg;
-        }
-        
-        if (!entityId && email) {
-          const orgsSnapshot = await adminDb
-            .collection("organizations")
-            .where("adminEmail", "==", email)
-            .limit(1)
-            .get();
-          if (!orgsSnapshot.empty) {
-            entityId = orgsSnapshot.docs[0].id;
-          }
-        }
-      } catch (dbError) {
-        console.warn("Sovereign DB Scope Fallback failed to verify entityId:", dbError);
-      }
+    // Fail-closed: Empty bearer token
+    if (!token) {
+      return res.status(401).json({
+        error: "Authentication required.",
+        code: "AUTH_REQUIRED"
+      });
     }
+
+    let decodedToken: any;
+    try {
+      decodedToken = await adminAuth.verifyIdToken(token);
+    } catch (tokenErr) {
+      console.error("Firebase ID Token verification failed:", tokenErr);
+      return res.status(401).json({
+        error: "Invalid or expired token.",
+        code: "INVALID_TOKEN"
+      });
+    }
+
+    // Attach verified identity to request
+    req.user = {
+      uid: decodedToken.uid,
+      email: decodedToken.email || undefined,
+      role: decodedToken.role || undefined,
+      entityId: decodedToken.entityId || undefined
+    };
+
+    // Backward compatibility: also attach to individual fields
+    req.userId = decodedToken.uid;
+    req.userEmail = decodedToken.email || "";
+
+    console.log(`[requireFirebaseAuth] User ${decodedToken.uid} (${decodedToken.email}) authenticated`);
+    next();
+  } catch (err) {
+    console.error("Error in requireFirebaseAuth middleware:", err);
+    return res.status(500).json({
+      error: "Internal authentication error.",
+      code: "AUTH_INTERNAL_ERROR"
+    });
+  }
 }
 
-    if (!entityId) {
-      try {
-        // Zero-Trust verification: استعلام قاعدة بيانات Firestore حياً لمطابقة معرّف الكيان الفعلي
-        const userDoc = await adminDb.collection("users").doc(uid).get();
-        if (userDoc.exists) {
-          const userData = userDoc.data();
-          entityId = userData?.entityId || userData?.activeOrg;
-        }
-        
-        if (!entityId && email) {
-          const orgsSnapshot = await adminDb
-            .collection("organizations")
-            .where("adminEmail", "==", email)
-            .limit(1)
-            .get();
-          if (!orgsSnapshot.empty) {
-            entityId = orgsSnapshot.docs[0].id;
-          }
-        }
-      } catch (dbError) {
-        console.warn("Sovereign DB Scope Fallback failed to verify entityId:", dbError);
-      }
-    }
-        
+/**
+ * Express middleware to enforce document-level security on Firestore queries.
+ * 
+ * REQUIRES: requireFirebaseAuth has already verified and attached req.user.uid
+ * 
+ * Resolves entityId from:
+ * 1. verified token claim (entityId)
+ * 2. server-side users/{verifiedUid} document (entityId or activeOrg field)
+ * 
+ * Resolves role from:
+ * 1. verified token claim (role)
+ * 2. server-side users/{verifiedUid} document (role field)
+ * 
+ * Does NOT accept:
+ * - client headers (user-id, x-user-id, user-email, x-user-email)
+ * - query parameters (userId, userEmail)
+ * - request body (userId, userEmail)
+ * - email heuristics (hard-coded emails, .gov.sa rules)
+ * - hard-coded UIDs or default entity IDs
+ * - requests collection lookup
+ * - employees collection lookup by UID
+ * - organizations collection email lookup
+ */
+export async function enforceFirestoreScope(req: ScopedRequest, res: Response, next: NextFunction) {
+  try {
+    // Prerequisite: requireFirebaseAuth must have run first
+    if (!req.user || !req.user.uid) {
+      return res.status(401).json({
+        error: "Authentication required.",
+        code: "AUTH_REQUIRED"
+      });
     }
 
-    // Attach resolved credentials to request object
-    req.userId = uid;
-    req.userEmail = email;
+    const verifiedUid = req.user.uid;
+    const tokenEntityId = req.user.entityId;
+    const tokenRole = req.user.role;
+    let userData: any = null;
+
+    // Read users/{verifiedUid} once if either entityId or role is missing from token
+    if (!tokenEntityId || !tokenRole) {
+      try {
+        const userDoc = await adminDb.collection("users").doc(verifiedUid).get();
+        if (userDoc.exists) {
+          userData = userDoc.data();
+        }
+      } catch (dbErr) {
+        console.warn("Failed to resolve entity/role from users collection:", dbErr);
+      }
+    }
+
+    // Resolve entityId: prefer token claim, then userData fallback
+    const entityId = tokenEntityId || userData?.entityId || userData?.activeOrg || "";
+
+    // Resolve role: prefer token claim, then userData fallback
+    const role = tokenRole || userData?.role || "user";
+
+    // Fail-closed: If no entityId could be resolved, deny access
+    if (!entityId) {
+      return res.status(403).json({
+        error: "Authorization context missing.",
+        code: "AUTHORIZATION_CONTEXT_MISSING"
+      });
+    }
+
+    // Update trusted user context with resolved entity and role
+    req.user.entityId = entityId;
+    req.user.role = role;
+
+    // Attach resolved context to request
+    req.userId = verifiedUid;
+    req.userEmail = req.user.email || "";
     req.userEntityId = entityId;
     req.userRole = role;
 
-    console.log(`[Sovereign Firestore Scope] User ${uid} (${email}) resolved to entityId: ${entityId} [Role: ${role}]`);
-
+    console.log(`[enforceFirestoreScope] User ${verifiedUid} resolved to entityId: ${entityId} [Role: ${role}]`);
     next();
   } catch (err) {
     console.error("Error in enforceFirestoreScope middleware:", err);
-    res.status(500).json({
-      error: "خطأ داخلي في نظام التحقق من الهوية والامتثال السيادي.",
-      details: String(err)
+    return res.status(500).json({
+      error: "Internal authorization error.",
+      code: "AUTHZ_INTERNAL_ERROR"
     });
   }
 }
