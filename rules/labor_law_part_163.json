@@ -1,0 +1,49 @@
+{
+  "article_number": "16",
+  "article_title": "السياسات التنظيمية",
+  "content": "على الشركة وضع سياسات تنظيمية تتضمن إجراءات سير العمل",
+  "compliance_rules": [
+    {
+      "rule_id": "R175-1",
+      "rule_type": "إلزامي",
+      "description": "سياسة تقديم الخدمات للعمالة المنزلية والمهنية",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R175-2",
+      "rule_type": "إلزامي",
+      "description": "سياسات الإدارة المالية والمحاسبية",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R175-3",
+      "rule_type": "إلزامي",
+      "description": "سياسة أمن المعلومات والتقنية",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R175-4",
+      "rule_type": "إلزامي",
+      "description": "سياسة خدمة العملاء",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R175-5",
+      "rule_type": "إلزامي",
+      "description": "سياسة إدارة الشكاوى",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R175-6",
+      "rule_type": "إلزامي",
+      "description": "سياسة إدارة المخاطر",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    }
+  ]
+}
