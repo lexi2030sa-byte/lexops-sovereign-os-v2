@@ -1,0 +1,14 @@
+{
+  "article_number": "2",
+  "article_title": "التقويم",
+  "content": "التقويم المعمول به في المنشأة هو تقويم أم القرى",
+  "compliance_rules": [
+    {
+      "rule_id": "R76-1",
+      "rule_type": "إلزامي",
+      "description": "التقويم المعمول به في المنشأة هو تقويم أم القرى",
+      "penalty": "غير محدد",
+      "priority": "متوسطة"
+    }
+  ]
+}

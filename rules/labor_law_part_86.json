@@ -1,0 +1,14 @@
+{
+  "article_number": "19",
+  "article_title": "تقييم الأداء",
+  "content": "يقيم أداء العامل في التقرير وفق تقديرات تحددها المنشأة",
+  "compliance_rules": [
+    {
+      "rule_id": "R93-1",
+      "rule_type": "إلزامي",
+      "description": "يقيم الأداء وفق تقديرات من خمسة مستويات",
+      "penalty": "غير محدد",
+      "priority": "متوسطة"
+    }
+  ]
+}

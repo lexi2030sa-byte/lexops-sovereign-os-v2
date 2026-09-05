@@ -1,0 +1,14 @@
+{
+  "article_number": "18",
+  "article_title": "تقارير الأداء",
+  "content": "تعد المنشأة تقارير عن الأداء بشكل دوري لجميع العاملين",
+  "compliance_rules": [
+    {
+      "rule_id": "R92-1",
+      "rule_type": "إلزامي",
+      "description": "تعد تقارير أداء مرة كل سنة على الأقل",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "article_number": "15",
+  "article_title": "الأجور",
+  "content": "تدفع أجور العمال بالعملة الرسمية للبلد في تاريخ الاستحقاق",
+  "compliance_rules": [
+    {
+      "rule_id": "R89-1",
+      "rule_type": "إلزامي",
+      "description": "تدفع الأجور عبر البنوك المعتمدة في المملكة",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    }
+  ]
+}
