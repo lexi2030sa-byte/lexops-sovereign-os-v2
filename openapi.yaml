@@ -1,0 +1,112 @@
+openapi: 3.0.3
+info:
+  title: LexOps Sovereign OS API Contracts
+  version: 2026.1.0
+  description: Sovereign Legal Intelligence & Governance System API Specifications for KSA Enterprise Operations.
+servers:
+  - url: http://localhost:3000
+    description: Development Local Container Gateway
+  - url: https://ais-dev-i3wqubqd6ppmwzg5bklpco-248644207267.europe-west2.run.app
+    description: Production Cloud Run Gateway
+paths:
+  /api/health:
+    get:
+      summary: Health Check Endpoint
+      responses:
+        '200':
+          description: Server operational status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  time:
+                    type: string
+                    example: "2026-08-12T16:00:00.000Z"
+
+  /api/entities/current:
+    get:
+      summary: Retrieve Current Entity with Isolation Guarding
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+            example: "USR-001"
+      responses:
+        '200':
+          description: Entity record returned safely
+        '400':
+          description: Isolated due to data overlap or dual mapping breach
+        '403':
+          description: Scope violation detected
+
+  /api/firestore/query:
+    post:
+      summary: Document-level Firestore Scoped Query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - collectionName
+              properties:
+                collectionName:
+                  type: string
+                  example: "citations"
+                where:
+                  type: array
+      responses:
+        '200':
+          description: Scoped query results
+        '403':
+          description: Forbidden - unauthorized entity access
+
+  /api/agent/generate-objection:
+    post:
+      summary: Generate Sovereign Objection Document via LEXI AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                violationText:
+                  type: string
+                grounds:
+                  type: string
+                userRole:
+                  type: string
+      responses:
+        '200':
+          description: Generated Markdown Objection document sealed with C9 Hash
+
+  /api/emailer/send:
+    post:
+      summary: Send Automated Email Notification via Nodemailer / Gmail OAuth2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - to
+                - type
+              properties:
+                to:
+                  type: string
+                type:
+                  type: string
+                  enum: [violation, health_warning, share_citation, broadcast_alert]
+                data:
+                  type: object
+      responses:
+        '200':
+          description: Email log result (delivered / simulated)

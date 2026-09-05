@@ -1,0 +1,193 @@
+{
+  "entities": {
+    "SovereignRequest": {
+      "title": "SovereignRequest",
+      "description": "Onboarding registration request pending founder approval.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "name": { "type": "string" },
+        "orgName": { "type": "string" },
+        "crNumber": { "type": "string" },
+        "sector": { "type": "string" },
+        "tier": { "type": "string" },
+        "nationalId": { "type": "string" },
+        "approvedByFounder": { "type": "boolean" },
+        "submittedAt": { "type": "string" }
+      },
+      "required": ["id", "email", "role", "approvedByFounder"]
+    },
+    "CrowdsourceEntry": {
+      "title": "CrowdsourceEntry",
+      "description": "Enterprise and organization challenges with compliance and statutory processes in Saudi Arabia.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orgName": { "type": "string" },
+        "sector": { "type": "string" },
+        "employeeCount": { "type": "integer" },
+        "challenges": { "type": "string" },
+        "usesDigitalSystem": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "submittedAt": { "type": "string" }
+      },
+      "required": ["id", "orgName", "employeeCount", "challenges", "email"]
+    },
+    "Organization": {
+      "title": "Organization",
+      "description": "Saudi company commercial registration onboarded to LexOps Sovereign platform.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "crNumber": { "type": "string" },
+        "email": { "type": "string" },
+        "sector": { "type": "string" },
+        "tier": { "type": "string" },
+        "onboardedAt": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "name", "crNumber", "sector", "tier"]
+    },
+    "Employee": {
+      "title": "Employee",
+      "description": "Firms workforce biometric/geofence registered representative.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nationalId": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "entityId": { "type": "string" },
+        "entityName": { "type": "string" },
+        "joinedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "nationalId", "entityId"]
+    },
+    "Citation": {
+      "title": "Citation",
+      "description": "Legal/municipal compliance infraction logged by system sensors.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "entityId": { "type": "string" },
+        "entityName": { "type": "string" },
+        "employeeName": { "type": "string" },
+        "type": { "type": "string" },
+        "details": { "type": "string" },
+        "impactLevel": { "type": "string" },
+        "status": { "type": "string" },
+        "issuedAt": { "type": "string" },
+        "markdownContent": { "type": "string" }
+      },
+      "required": ["id", "entityName", "employeeName", "type", "status"]
+    },
+    "Appeal": {
+      "title": "Appeal",
+      "description": "An objection filed by an entity or employee against a specific citation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "entityId": { "type": "string" },
+        "citationId": { "type": "string" },
+        "employeeName": { "type": "string" },
+        "grounds": { "type": "string" },
+        "status": { "type": "string" },
+        "submittedAt": { "type": "string" },
+        "markdownContent": { "type": "string" }
+      },
+      "required": ["id", "citationId", "employeeName", "grounds", "status"]
+    },
+    "C9Event": {
+      "title": "C9Event",
+      "description": "Sovereign intelligence ledger blocks tracking regulatory assertions.",
+      "type": "object",
+      "properties": {
+        "eventId": { "type": "string" },
+        "type": { "type": "string" },
+        "refId": { "type": "string" },
+        "payload": { "type": "object" },
+        "createdAt": { "type": "string" },
+        "hash": { "type": "string" },
+        "prevHash": { "type": "string" }
+      },
+      "required": ["eventId", "type", "refId", "hash", "prevHash"]
+    },
+    "SupportRequest": {
+      "title": "SupportRequest",
+      "description": "Technical and operational support tickets requested by employees and organization admins.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "senderRole": { "type": "string" },
+        "entityId": { "type": "string" },
+        "entityName": { "type": "string" },
+        "title": { "type": "string" },
+        "details": { "type": "string" },
+        "status": { "type": "string" },
+        "submittedAt": { "type": "string" },
+        "reply": { "type": "string" },
+        "resolvedAt": { "type": "string" }
+      },
+      "required": ["id", "senderId", "senderName", "senderRole", "entityId", "entityName", "title", "details", "status"]
+    },
+    "SovereignClipboard": {
+      "title": "SovereignClipboard",
+      "description": "Secure captured clipboard elements audited and stored safely under sovereign protocols.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "content": { "type": "string" },
+        "dataType": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "riskReport": { "type": "string" },
+        "syncedAt": { "type": "string" }
+      },
+      "required": ["id", "content", "dataType", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/sovereign_clipboards/{clipboardId}": {
+      "schema": "SovereignClipboard",
+      "description": "Encrypted secure clipboard vault storage database collection"
+    },
+    "/support_requests/{ticketId}": {
+      "schema": "SupportRequest",
+      "description": "Support tickets and solutions ledger"
+    },
+    "/crowdsource_entries/{entryId}": {
+      "schema": "CrowdsourceEntry",
+      "description": "Crowdsourced feedback on statutory challenges."
+    },
+    "/organizations/{orgId}": {
+      "schema": "Organization",
+      "description": "List of companies regulated by LexOps."
+    },
+    "/employees/{empId}": {
+      "schema": "Employee",
+      "description": "Active staff profiles with workforce data links."
+    },
+    "/citations/{citationId}": {
+      "schema": "Citation",
+      "description": "Statutory citations and compliance infractions."
+    },
+    "/appeals/{appealId}": {
+      "schema": "Appeal",
+      "description": "Infraction objections and regulatory appeals."
+    },
+    "/c9_events/{eventId}": {
+      "schema": "C9Event",
+      "description": "C9 blockchain audit timeline ledger events."
+    },
+    "/requests/{requestId}": {
+      "schema": "SovereignRequest",
+      "description": "Sovereign onboard registration requests submitted by entities and individuals."
+    }
+  }
+}
