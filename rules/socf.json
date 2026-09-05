@@ -1,0 +1,336 @@
+# إطار الامتثال التشغيلي السيادي (SOCF)بصيغة JSON 372ef68b731d80d5866cef2f2bd77d5f
+
+# إطار الامتثال التشغيلي السيادي (SOCF)بصيغة **JSON**
+
+سلطان…
+
+**وثيقة تشغيلية سيادية موحدة SOCF** بصيغة **JSON** —لمحركات LEXI (الامتثال – المخاطر – التدقيق – الرواتب – الموارد البشرية – المحرك السيادي).
+
+> هندسة كاملة تُنتج “نظام تشغيل سيادي للامتثال”
+> 
+> 
+> Sovereign Operational Compliance Framework (SOCF)
+> 
+
+---
+
+# ✅ **SOCF.json — النسخة السيادية التشغيلية الموحدة**
+
+```json
+{
+  "SOCF": {
+    "version": "1.0.0",
+    "updated_at": "2026-06-01",
+    "modules": {
+      "AUDIT": [
+        {
+          "id": "AUD-C9-IMMUTABLE-001",
+          "name": "عدم قابلية سجل الحقيقة للتعديل",
+          "description": "منع أي عملية UPDATE أو DELETE على السجلات التشغيلية لضمان النزاهة السيادية.",
+          "sources": ["نسخة 4", "Claim 9 Protocol"],
+          "conditions": [
+            "operation in ['UPDATE','DELETE']"
+          ],
+          "actions": [
+            "block_operation",
+            "log_sovereign_incident"
+          ],
+          "severity": "CRITICAL",
+          "tags": ["C9", "Integrity", "Audit"]
+        },
+        {
+          "id": "AUD-REPEAT-180-002",
+          "name": "التحقق من تكرار المخالفة (180 يوم)",
+          "description": "تفعيل قاعدة التكرار النظامية لمضاعفة العقوبة عند تكرار نفس المخالفة خلال 180 يوماً.",
+          "sources": ["نسخة 3", "نسخة 4"],
+          "conditions": [
+            "same_violation_detected",
+            "days_since_last_violation <= 180"
+          ],
+          "actions": [
+            "double_penalty",
+            "flag_recidivism_risk"
+          ],
+          "severity": "HIGH",
+          "tags": ["Recurrence", "Labor", "Municipal"]
+        },
+        {
+          "id": "AUD-PHOTO-EVIDENCE-003",
+          "name": "التوثيق الفوتوغرافي الإلزامي",
+          "description": "لا تُقبل المخالفة البلدية أو الغذائية دون دليل مادي (صور/فيديو).",
+          "sources": ["نسخة 5"],
+          "conditions": [
+            "violation_requires_evidence == true"
+          ],
+          "actions": [
+            "require_photo_video",
+            "attach_evidence_to_case"
+          ],
+          "severity": "HIGH",
+          "tags": ["Evidence", "Municipal", "Food"]
+        }
+      ],
+
+      "RISK": [
+        {
+          "id": "RISK-AI-CONFIDENCE-001",
+          "name": "عتبة اليقين الاستدلالي 80%",
+          "description": "تعليق القرار تلقائياً إذا انخفضت درجة يقين LEXI عن 80%.",
+          "sources": ["نسخة 4"],
+          "conditions": [
+            "confidence_score < 80"
+          ],
+          "actions": [
+            "suspend_auto_decision",
+            "route_to_founder_review"
+          ],
+          "severity": "HIGH",
+          "tags": ["AI", "Risk", "Governance"]
+        },
+        {
+          "id": "RISK-UNAUTHORIZED-LABOR-002",
+          "name": "تشغيل العمالة غير النظامية",
+          "description": "تصنيف المخالفة كجسيمة عند تشغيل عامل دون رخصة أو بمهنة غير مطابقة.",
+          "sources": ["نسخة 3"],
+          "conditions": [
+            "worker_not_registered",
+            "job_title_mismatch == true"
+          ],
+          "actions": [
+            "immediate_fine",
+            "freeze_services"
+          ],
+          "severity": "CRITICAL",
+          "tags": ["Labor", "GOSI", "Risk"]
+        },
+        {
+          "id": "RISK-FOOD-SAFETY-003",
+          "name": "خطر الصحة العامة",
+          "description": "إغلاق فوري عند وجود خطر يهدد صحة المستهلك (تسمم، تلوث).",
+          "sources": ["نسخة 5"],
+          "conditions": [
+            "public_health_threat == true"
+          ],
+          "actions": [
+            "close_establishment",
+            "issue_max_penalty"
+          ],
+          "severity": "CRITICAL",
+          "tags": ["Food", "Health", "Municipal"]
+        }
+      ],
+
+      "COMPLY": [
+        {
+          "id": "CMP-ROYAL-11438-001",
+          "name": "فلتر القرار الملكي 11438",
+          "description": "إبطال المخالفات غير الجسيمة التي لم تُمنح مهلة 3 أيام.",
+          "sources": ["نسخة 4"],
+          "conditions": [
+            "violation_severity == 'non_serious'",
+            "no_warning_sent"
+          ],
+          "actions": [
+            "invalidate_violation",
+            "suspend_financial_impact"
+          ],
+          "severity": "CRITICAL",
+          "tags": ["Royal", "Labor", "Compliance"]
+        },
+        {
+          "id": "CMP-LICENSE-MUNICIPAL-002",
+          "name": "امتثال التراخيص البلدية",
+          "description": "لا يُسمح بممارسة النشاط دون رخصة بلدية سارية.",
+          "sources": ["نسخة 3", "نسخة 5"],
+          "conditions": [
+            "balady_license_valid == false"
+          ],
+          "actions": [
+            "block_operation",
+            "issue_fine"
+          ],
+          "severity": "HIGH",
+          "tags": ["Municipal", "Licensing"]
+        },
+        {
+          "id": "CMP-GOSI-REGISTRATION-003",
+          "name": "تسجيل التأمينات خلال شهر الالتحاق",
+          "description": "يجب تسجيل الموظف في GOSI قبل نهاية شهر التعيين.",
+          "sources": ["نسخة 4", "نسخة 3"],
+          "conditions": [
+            "employee_status == 'new_hire'",
+            "current_day > last_day_of_month"
+          ],
+          "actions": [
+            "create_gosi_violation",
+            "lower_compliance_score"
+          ],
+          "severity": "MEDIUM",
+          "tags": ["GOSI", "Labor", "Compliance"]
+        }
+      ],
+
+      "PAYROLL": [
+        {
+          "id": "PAY-NET-FORMULA-001",
+          "name": "معادلة صافي الراتب السيادية",
+          "description": "صافي الراتب = الأساسي + البدلات - الحسميات + الإضافي.",
+          "sources": ["نسخة 4", "نسخة 3"],
+          "conditions": [
+            "payroll_cycle_closed == false"
+          ],
+          "actions": [
+            "calculate_daily_rate",
+            "calculate_hourly_rate"
+          ],
+          "severity": "MEDIUM",
+          "tags": ["Payroll", "Finance"]
+        },
+        {
+          "id": "PAY-WPS-002",
+          "name": "حماية الأجور",
+          "description": "فرض غرامة تتعدد بتعدد العمال عند تأخر الرواتب.",
+          "sources": ["نسخة 3"],
+          "conditions": [
+            "salary_delay_days > 10"
+          ],
+          "actions": [
+            "calculate_wps_fine",
+            "freeze_services"
+          ],
+          "severity": "HIGH",
+          "tags": ["WPS", "Labor"]
+        },
+        {
+          "id": "PAY-MUNICIPAL-UNIT-003",
+          "name": "غرامة وحدات العاملين",
+          "description": "احتساب الغرامة البلدية لكل عامل مخالف.",
+          "sources": ["نسخة 5"],
+          "conditions": [
+            "workers_violating > 1"
+          ],
+          "actions": [
+            "multiply_penalty_by_workers"
+          ],
+          "severity": "MEDIUM",
+          "tags": ["Municipal", "Food", "Payroll"]
+        }
+      ],
+
+      "HR": [
+        {
+          "id": "HR-PROBATION-80-001",
+          "name": "تنبيه اليوم 80 لفترة التجربة",
+          "description": "تنبيه إلزامي لاتخاذ قرار الاستمرار قبل اليوم 90.",
+          "sources": ["نسخة 4", "نسخة 3"],
+          "conditions": [
+            "probation_day == 80"
+          ],
+          "actions": [
+            "notify_hr",
+            "update_lifecycle_stage"
+          ],
+          "severity": "HIGH",
+          "tags": ["HR", "Contracts"]
+        },
+        {
+          "id": "HR-HEALTH-CERT-002",
+          "name": "إدارة الشهادات الصحية",
+          "description": "لا يُسمح للعامل الغذائي بالعمل دون شهادة صحية سارية.",
+          "sources": ["نسخة 5"],
+          "conditions": [
+            "worker_in_food_activity == true",
+            "health_certificate_expired == true"
+          ],
+          "actions": [
+            "block_worker",
+            "require_certificate_renewal"
+          ],
+          "severity": "HIGH",
+          "tags": ["Food", "HR"]
+        },
+        {
+          "id": "HR-ABSENCE-ARTICLE80-003",
+          "name": "إنهاء العقد للغياب",
+          "description": "فسخ العقد عند الغياب المتصل > 15 يوم أو المتقطع > 30 يوم.",
+          "sources": ["نسخة 3"],
+          "conditions": [
+            "absence_consecutive > 15",
+            "OR absence_total > 30"
+          ],
+          "actions": [
+            "terminate_under_article_80",
+            "file_absence_report"
+          ],
+          "severity": "CRITICAL",
+          "tags": ["HR", "Termination"]
+        }
+      ],
+
+      "ENGINE": [
+        {
+          "id": "ENG-DAILY-SCAN-01AM",
+          "name": "الفحص السيادي اليومي",
+          "description": "فحص شامل للتراخيص، الإقامات، الشهادات الصحية، التأمينات.",
+          "sources": ["نسخة 4"],
+          "conditions": [
+            "time == '01:00'"
+          ],
+          "actions": [
+            "scan_all_entities",
+            "trigger_expiry_alerts"
+          ],
+          "severity": "HIGH",
+          "tags": ["Engine", "Automation"]
+        },
+        {
+          "id": "ENG-OBJECTION-FLOW-002",
+          "name": "مسار الاعتراض السيادي",
+          "description": "تعليق الأثر المالي للمخالفة حتى صدور القرار.",
+          "sources": ["نسخة 4", "نسخة 3"],
+          "conditions": [
+            "objection_submitted == true"
+          ],
+          "actions": [
+            "freeze_financial_penalty",
+            "generate_legal_draft"
+          ],
+          "severity": "MEDIUM",
+          "tags": ["Objection", "Legal"]
+        },
+        {
+          "id": "ENG-MUNICIPAL-REMOVAL-003",
+          "name": "إزالة التشوه البصري",
+          "description": "إجراءات رفع المركبات المهملة بعد انتهاء المهلة.",
+          "sources": ["نسخة 5"],
+          "conditions": [
+            "visual_pollution_notice_expired == true"
+          ],
+          "actions": [
+            "photograph_vehicle",
+            "prepare_removal_report",
+            "tow_vehicle"
+          ],
+          "severity": "HIGH",
+          "tags": ["Municipal", "Field"]
+        }
+      ]
+    }
+  }
+}
+```
+
+---
+
+# 🎯 **الآن لديك: SOCF.json — النسخة السيادية التشغيلية الموحدة**
+
+هذه الوثيقة:
+
+- **تجمع السيادة + النظام + القطاع** في محرك واحد
+- جاهزة للتحميل في **LEXI Engine**
+- قابلة للتوسّع إلى **S8 / S9 / SPE / C9**
+- وتُعتبر الآن **المرجع الأعلى للامتثال في LexOps Sovereign OS**
+
+---
+
+##

@@ -1,0 +1,233 @@
+# ملف محرك الربط المنطقي – JSON Logic File 38def68b731d80e8b14de91db82347bd
+
+# ملف محرك الربط المنطقي – JSON Logic File
+
+*Legal Logic Bridge بين نظام العمل السعودي والكود البرمجي*
+
+فيما يلي مسودة عملية لملف JSON يمكن اعتباره **نواة محرك القواعد القانونية** في LexOps.
+
+الملف مصمم ليكون:
+
+- قابل للتوسّع (إضافة قواعد جديدة بسهولة)
+- قابل للقراءة من أي خدمة (Cloud Run / Firestore / LEXI)
+- يعمل كمترجم بين **القانون** و**الكود**
+
+> يمكن حفظه مثلًا باسم:
+> 
+> 
+> `legal_logic_rules.json`
+> 
+
+```json
+{
+  "metadata": {
+    "version": "1.0.0",
+    "jurisdiction": "Saudi Arabia",
+    "source": [
+      "نظام العمل السعودي 2026",
+      "القرار الملكي 11438"
+    ],
+    "last_updated": "2026-03-28"
+  },
+
+  "rules": [
+
+    {
+      "id": "probation_period_90_days",
+      "name": "حساب فترة التجربة 90 يوماً",
+      "category": "employment_contract",
+      "description_ar": "حساب تاريخ نهاية فترة التجربة (90 يوماً) من تاريخ بداية العقد.",
+      "description_en": "Calculate probation end date (90 days) from contract start date.",
+      "inputs": {
+        "contract_start_date": "date"
+      },
+      "outputs": {
+        "probation_end_date": "date"
+      },
+      "logic": {
+        "operation": "add_days",
+        "params": {
+          "base_date": "{{contract_start_date}}",
+          "days": 90
+        }
+      }
+    },
+
+    {
+      "id": "license_radar_30_days",
+      "name": "تنبيه قبل انتهاء الرخصة بـ 30 يوماً",
+      "category": "license_compliance",
+      "description_ar": "إطلاق تنبيه إذا تبقى 30 يوماً أو أقل على انتهاء الرخصة.",
+      "description_en": "Trigger alert when 30 days or less remain before license expiry.",
+      "inputs": {
+        "license_expiry_date": "date",
+        "current_date": "date"
+      },
+      "outputs": {
+        "should_alert": "boolean",
+        "days_remaining": "number"
+      },
+      "logic": {
+        "operation": "compare_days",
+        "params": {
+          "from_date": "{{current_date}}",
+          "to_date": "{{license_expiry_date}}"
+        },
+        "conditions": [
+          {
+            "if": {
+              "less_or_equal": {
+                "left": "{{days_difference}}",
+                "right": 30
+              }
+            },
+            "then": {
+              "should_alert": true,
+              "days_remaining": "{{days_difference}}"
+            }
+          },
+          {
+            "else": {
+              "should_alert": false,
+              "days_remaining": "{{days_difference}}"
+            }
+          }
+        ]
+      }
+    },
+
+    {
+      "id": "max_probation_extension_rule",
+      "name": "منع تجاوز الحد الأقصى لفترة التجربة",
+      "category": "employment_contract",
+      "description_ar": "التحقق من أن مجموع فترات التجربة لا يتجاوز 180 يوماً.",
+      "description_en": "Ensure total probation periods do not exceed 180 days.",
+      "inputs": {
+        "total_probation_days": "number"
+      },
+      "outputs": {
+        "is_valid": "boolean",
+        "violation_message": "string"
+      },
+      "logic": {
+        "conditions": [
+          {
+            "if": {
+              "less_or_equal": {
+                "left": "{{total_probation_days}}",
+                "right": 180
+              }
+            },
+            "then": {
+              "is_valid": true,
+              "violation_message": ""
+            }
+          },
+          {
+            "else": {
+              "is_valid": false,
+              "violation_message": "إجمالي فترة التجربة تجاوز الحد النظامي (180 يوماً)."
+            }
+          }
+        ]
+      }
+    },
+
+    {
+      "id": "lexi_usage_quota_standard",
+      "name": "كوتا LEXI – الباقة الأساسية",
+      "category": "ai_quota",
+      "description_ar": "السماح بثلاثة استعلامات يومياً فقط في الباقة الأساسية.",
+      "description_en": "Allow only 3 daily LEXI queries for Standard plan.",
+      "inputs": {
+        "plan_type": "string",
+        "daily_hits": "number"
+      },
+      "outputs": {
+        "allowed": "boolean",
+        "reason": "string"
+      },
+      "logic": {
+        "conditions": [
+          {
+            "if": {
+              "and": [
+                { "equals": { "left": "{{plan_type}}", "right": "standard" } },
+                { "less_than": { "left": "{{daily_hits}}", "right": 3 } }
+              ]
+            },
+            "then": {
+              "allowed": true,
+              "reason": ""
+            }
+          },
+          {
+            "if": {
+              "and": [
+                { "equals": { "left": "{{plan_type}}", "right": "standard" } },
+                { "greater_or_equal": { "left": "{{daily_hits}}", "right": 3 } }
+              ]
+            },
+            "then": {
+              "allowed": false,
+              "reason": "تم استهلاك الحد اليومي لاستعلامات LEXI في الباقة الأساسية."
+            }
+          }
+        ]
+      }
+    },
+
+    {
+      "id": "lexi_usage_quota_pro",
+      "name": "كوتا LEXI – باقة الامتثال",
+      "category": "ai_quota",
+      "description_ar": "السماح بعشرين استعلاماً يومياً في باقة الامتثال.",
+      "description_en": "Allow 20 daily LEXI queries for Pro/Compliance plan.",
+      "inputs": {
+        "plan_type": "string",
+        "daily_hits": "number"
+      },
+      "outputs": {
+        "allowed": "boolean",
+        "reason": "string"
+      },
+      "logic": {
+        "conditions": [
+          {
+            "if": {
+              "and": [
+                { "equals": { "left": "{{plan_type}}", "right": "pro" } },
+                { "less_than": { "left": "{{daily_hits}}", "right": 20 } }
+              ]
+            },
+            "then": {
+              "allowed": true,
+              "reason": ""
+            }
+          },
+          {
+            "if": {
+              "and": [
+                { "equals": { "left": "{{plan_type}}", "right": "pro" } },
+                { "greater_or_equal": { "left": "{{daily_hits}}", "right": 20 } }
+              ]
+            },
+            "then": {
+              "allowed": false,
+              "reason": "تم استهلاك الحد اليومي لاستعلامات LEXI في باقة الامتثال."
+            }
+          }
+        ]
+      }
+    }
+
+  ]
+}
+```
+
+هذا الملف يمكن:
+
+- تخزينه في **Firestore (legal_engine_config)** أو في **Cloud Storage**
+- تحميله في Cloud Run عند الإقلاع
+- تمرير المدخلات (inputs) من الكود، وتنفيذ المنطق (logic) في طبقة خدمة واحدة
+- توسيعه لاحقًا بإضافة قواعد جديدة لنظام العمل 2026 والقرار الملكي 11438 بنفس النمط

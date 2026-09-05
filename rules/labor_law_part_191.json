@@ -1,0 +1,35 @@
+{
+  "article_number": "45",
+  "article_title": "محظورات الإعلان",
+  "content": "يحظر على المرخص له الآتي",
+  "compliance_rules": [
+    {
+      "rule_id": "R204-1",
+      "rule_type": "حظر",
+      "description": "تقديم إعلان يخالف ضوابط التسويق والإعلانات",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R204-2",
+      "rule_type": "حظر",
+      "description": "تقديم إعلان يتضمن ادعاءً كاذباً أو تضليلاً",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R204-3",
+      "rule_type": "حظر",
+      "description": "تقديم إعلان لا يراعي أنظمة الاتجار بالأشخاص",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    },
+    {
+      "rule_id": "R204-4",
+      "rule_type": "حظر",
+      "description": "تقديم منتج أو إعلان يخالف الخصوصية الاجتماعية والدينية",
+      "penalty": "غير محدد",
+      "priority": "عالية"
+    }
+  ]
+}

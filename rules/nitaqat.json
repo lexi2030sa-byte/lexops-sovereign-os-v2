@@ -1,0 +1,12928 @@
+# التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23f2f0f48af814
+
+# التوطين و نطاقات 2 بصيغة JSON
+
+ملف 1: نسب نطاقات_1.pdf
+
+{
+
+"file_name": "نسب نطاقات_1.pdf",
+
+"file_id": "531daffd-4eeb-47f6-abe4-6ef11ae829fa",
+
+"document_type": "جدول نسب التوطين",
+
+"description": "جدول يوضح نسب التوطين المطلوبة (الحد الأدنى والأعلى) لكل نطاق (أحمر، أخضر منخفض، أخضر متوسط، أخضر مرتفع، بلاتيني) بناءً على النشاط الاقتصادي وحجم الكيان.",
+
+"compliance_model": "تفاضلي",
+
+"operational_rules": [
+
+{
+
+"rule_id": "NISAB-001",
+
+"activity": "البترول والغاز الطبيعي",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 30,
+
+"medium_green_min": 31,
+
+"medium_green_max": 46,
+
+"high_green_min": 46,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 81
+
+},
+
+{
+
+"rule_id": "NISAB-002",
+
+"activity": "البترول والغاز الطبيعي",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 46,
+
+"medium_green_min": 46,
+
+"medium_green_max": 66,
+
+"high_green_min": 66,
+
+"high_green_max": 81,
+
+"platinum_min": 81,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-003",
+
+"activity": "البترول والغاز الطبيعي",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 46,
+
+"medium_green_min": 46,
+
+"medium_green_max": 66,
+
+"high_green_min": 66,
+
+"high_green_max": 81,
+
+"platinum_min": 81,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-004",
+
+"activity": "البترول والغاز الطبيعي",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 46,
+
+"medium_green_min": 46,
+
+"medium_green_max": 66,
+
+"high_green_min": 66,
+
+"high_green_max": 81,
+
+"platinum_min": 81,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-005",
+
+"activity": "البترول والغاز الطبيعي",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 35,
+
+"low_green_max": 56,
+
+"medium_green_min": 56,
+
+"medium_green_max": 71,
+
+"high_green_min": 71,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-006",
+
+"activity": "البترول والغاز الطبيعي",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 35,
+
+"low_green_max": 56,
+
+"medium_green_min": 56,
+
+"medium_green_max": 71,
+
+"high_green_min": 71,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-007",
+
+"activity": "المناجم والمحاجر",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 41,
+
+"high_green_min": 42,
+
+"high_green_max": 56,
+
+"platinum_min": 56,
+
+"platinum_max": 56
+
+},
+
+{
+
+"rule_id": "NISAB-008",
+
+"activity": "المناجم والمحاجر",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 37,
+
+"medium_green_min": 38,
+
+"medium_green_max": 50,
+
+"high_green_min": 51,
+
+"high_green_max": 65,
+
+"platinum_min": 65,
+
+"platinum_max": 65
+
+},
+
+{
+
+"rule_id": "NISAB-009",
+
+"activity": "المناجم والمحاجر",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 38,
+
+"medium_green_min": 39,
+
+"medium_green_max": 51,
+
+"high_green_min": 52,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-010",
+
+"activity": "المناجم والمحاجر",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 39,
+
+"medium_green_min": 40,
+
+"medium_green_max": 52,
+
+"high_green_min": 53,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-011",
+
+"activity": "المناجم والمحاجر",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 36,
+
+"low_green_max": 46,
+
+"medium_green_min": 46,
+
+"medium_green_max": 56,
+
+"high_green_min": 56,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-012",
+
+"activity": "المناجم والمحاجر",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 36,
+
+"low_green_max": 46,
+
+"medium_green_min": 46,
+
+"medium_green_max": 56,
+
+"high_green_min": 56,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-013",
+
+"activity": "الصناعات البتروكيماوية والفحم والمطاط",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 25,
+
+"medium_green_min": 25,
+
+"medium_green_max": 39,
+
+"high_green_min": 39,
+
+"high_green_max": 69,
+
+"platinum_min": 69,
+
+"platinum_max": 69
+
+},
+
+{
+
+"rule_id": "NISAB-014",
+
+"activity": "الصناعات البتروكيماوية والفحم والمطاط",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 25,
+
+"low_green_max": 36,
+
+"medium_green_min": 36,
+
+"medium_green_max": 50,
+
+"high_green_min": 50,
+
+"high_green_max": 80,
+
+"platinum_min": 80,
+
+"platinum_max": 80
+
+},
+
+{
+
+"rule_id": "NISAB-015",
+
+"activity": "الصناعات البتروكيماوية والفحم والمطاط",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 25,
+
+"low_green_max": 36,
+
+"medium_green_min": 36,
+
+"medium_green_max": 50,
+
+"high_green_min": 50,
+
+"high_green_max": 80,
+
+"platinum_min": 80,
+
+"platinum_max": 80
+
+},
+
+{
+
+"rule_id": "NISAB-016",
+
+"activity": "الصناعات البتروكيماوية والفحم والمطاط",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 25,
+
+"low_green_max": 36,
+
+"medium_green_min": 36,
+
+"medium_green_max": 50,
+
+"high_green_min": 50,
+
+"high_green_max": 80,
+
+"platinum_min": 80,
+
+"platinum_max": 80
+
+},
+
+{
+
+"rule_id": "NISAB-017",
+
+"activity": "الصناعات البتروكيماوية والفحم والمطاط",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 45,
+
+"low_green_max": 56,
+
+"medium_green_min": 56,
+
+"medium_green_max": 69,
+
+"high_green_min": 69,
+
+"high_green_max": 80,
+
+"platinum_min": 80,
+
+"platinum_max": 80
+
+},
+
+{
+
+"rule_id": "NISAB-018",
+
+"activity": "الصناعات البتروكيماوية والفحم والمطاط",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 45,
+
+"low_green_max": 56,
+
+"medium_green_min": 56,
+
+"medium_green_max": 69,
+
+"high_green_min": 69,
+
+"high_green_max": 80,
+
+"platinum_min": 80,
+
+"platinum_max": 80
+
+},
+
+{
+
+"rule_id": "NISAB-019",
+
+"activity": "صناعة الاسمنت",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 37,
+
+"high_green_min": 38,
+
+"high_green_max": 49,
+
+"platinum_min": 49,
+
+"platinum_max": 49
+
+},
+
+{
+
+"rule_id": "NISAB-020",
+
+"activity": "صناعة الاسمنت",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 37,
+
+"medium_green_min": 38,
+
+"medium_green_max": 51,
+
+"high_green_min": 52,
+
+"high_green_max": 63,
+
+"platinum_min": 63,
+
+"platinum_max": 63
+
+},
+
+{
+
+"rule_id": "NISAB-021",
+
+"activity": "صناعة الاسمنت",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 38,
+
+"medium_green_min": 39,
+
+"medium_green_max": 52,
+
+"high_green_min": 53,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-022",
+
+"activity": "صناعة الاسمنت",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 39,
+
+"medium_green_min": 40,
+
+"medium_green_max": 53,
+
+"high_green_min": 54,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-023",
+
+"activity": "صناعة الاسمنت",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 40,
+
+"low_green_max": 49,
+
+"medium_green_min": 49,
+
+"medium_green_max": 56,
+
+"high_green_min": 56,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-024",
+
+"activity": "صناعة الاسمنت",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 40,
+
+"low_green_max": 49,
+
+"medium_green_min": 49,
+
+"medium_green_max": 56,
+
+"high_green_min": 56,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-025",
+
+"activity": "الكهرباء والغاز والمياه",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 36,
+
+"high_green_min": 37,
+
+"high_green_max": 46,
+
+"platinum_min": 46,
+
+"platinum_max": 46
+
+},
+
+{
+
+"rule_id": "NISAB-026",
+
+"activity": "الكهرباء والغاز والمياه",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-027",
+
+"activity": "الكهرباء والغاز والمياه",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-028",
+
+"activity": "الكهرباء والغاز والمياه",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-029",
+
+"activity": "الكهرباء والغاز والمياه",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 23,
+
+"low_green_max": 41,
+
+"medium_green_min": 42,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-030",
+
+"activity": "الكهرباء والغاز والمياه",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 23,
+
+"low_green_max": 41,
+
+"medium_green_min": 42,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-031",
+
+"activity": "التشييد والبناء",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 17,
+
+"high_green_min": 18,
+
+"high_green_max": 22,
+
+"platinum_min": 22,
+
+"platinum_max": 22
+
+},
+
+{
+
+"rule_id": "NISAB-032",
+
+"activity": "التشييد والبناء",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 14,
+
+"high_green_min": 15,
+
+"high_green_max": 16,
+
+"platinum_min": 16,
+
+"platinum_max": 16
+
+},
+
+{
+
+"rule_id": "NISAB-033",
+
+"activity": "التشييد والبناء",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 14,
+
+"high_green_min": 15,
+
+"high_green_max": 16,
+
+"platinum_min": 16,
+
+"platinum_max": 16
+
+},
+
+{
+
+"rule_id": "NISAB-034",
+
+"activity": "التشييد والبناء",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 14,
+
+"high_green_min": 15,
+
+"high_green_max": 16,
+
+"platinum_min": 16,
+
+"platinum_max": 16
+
+},
+
+{
+
+"rule_id": "NISAB-035",
+
+"activity": "التشييد والبناء",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 14,
+
+"high_green_min": 15,
+
+"high_green_max": 16,
+
+"platinum_min": 16,
+
+"platinum_max": 16
+
+},
+
+{
+
+"rule_id": "NISAB-036",
+
+"activity": "التشييد والبناء",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 14,
+
+"high_green_min": 15,
+
+"high_green_max": 16,
+
+"platinum_min": 16,
+
+"platinum_max": 16
+
+},
+
+{
+
+"rule_id": "NISAB-037",
+
+"activity": "مقاولات الصيانة والتشغيل",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-038",
+
+"activity": "مقاولات الصيانة والتشغيل",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-039",
+
+"activity": "مقاولات الصيانة والتشغيل",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-040",
+
+"activity": "مقاولات الصيانة والتشغيل",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-041",
+
+"activity": "مقاولات الصيانة والتشغيل",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-042",
+
+"activity": "مقاولات الصيانة والتشغيل",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-043",
+
+"activity": "تجارة الذهب والمجوهرات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 36,
+
+"high_green_min": 37,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-044",
+
+"activity": "تجارة الذهب والمجوهرات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 36,
+
+"high_green_min": 37,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-045",
+
+"activity": "تجارة الذهب والمجوهرات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 36,
+
+"high_green_min": 37,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-046",
+
+"activity": "تجارة الذهب والمجوهرات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 36,
+
+"high_green_min": 37,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-047",
+
+"activity": "تجارة الذهب والمجوهرات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 36,
+
+"high_green_min": 37,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-048",
+
+"activity": "تجارة الذهب والمجوهرات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 36,
+
+"high_green_min": 37,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-049",
+
+"activity": "الصيدليات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-050",
+
+"activity": "الصيدليات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 25,
+
+"high_green_min": 26,
+
+"high_green_max": 32,
+
+"platinum_min": 32,
+
+"platinum_max": 32
+
+},
+
+{
+
+"rule_id": "NISAB-051",
+
+"activity": "الصيدليات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 19,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-052",
+
+"activity": "الصيدليات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 19,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-053",
+
+"activity": "الصيدليات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 19,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-054",
+
+"activity": "الصيدليات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 19,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-055",
+
+"activity": "الترفيه والسياحة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 23,
+
+"medium_green_min": 24,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-056",
+
+"activity": "الترفيه والسياحة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 48,
+
+"platinum_min": 48,
+
+"platinum_max": 48
+
+},
+
+{
+
+"rule_id": "NISAB-057",
+
+"activity": "الترفيه والسياحة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 35,
+
+"high_green_min": 36,
+
+"high_green_max": 49,
+
+"platinum_min": 49,
+
+"platinum_max": 49
+
+},
+
+{
+
+"rule_id": "NISAB-058",
+
+"activity": "الترفيه والسياحة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 23,
+
+"low_green_max": 29,
+
+"medium_green_min": 30,
+
+"medium_green_max": 36,
+
+"high_green_min": 37,
+
+"high_green_max": 50,
+
+"platinum_min": 50,
+
+"platinum_max": 50
+
+},
+
+{
+
+"rule_id": "NISAB-059",
+
+"activity": "الترفيه والسياحة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 30,
+
+"medium_green_min": 31,
+
+"medium_green_max": 37,
+
+"high_green_min": 38,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-060",
+
+"activity": "الترفيه والسياحة",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 30,
+
+"medium_green_min": 31,
+
+"medium_green_max": 37,
+
+"high_green_min": 38,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-061",
+
+"activity": "النقل البري للركاب خارج المدن والنقل الدولي",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 12,
+
+"medium_green_min": 13,
+
+"medium_green_max": 16,
+
+"high_green_min": 17,
+
+"high_green_max": 23,
+
+"platinum_min": 23,
+
+"platinum_max": 23
+
+},
+
+{
+
+"rule_id": "NISAB-062",
+
+"activity": "النقل البري للركاب خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 17,
+
+"high_green_min": 18,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-063",
+
+"activity": "النقل البري للركاب خارج المدن والنقل الدولي",
+
+"
+
+{
+
+"rule_id": "NISAB-063",
+
+"activity": "النقل البري للركاب خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 17,
+
+"high_green_min": 18,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-064",
+
+"activity": "النقل البري للركاب خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 17,
+
+"high_green_min": 18,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-065",
+
+"activity": "النقل البري للركاب خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 19,
+
+"high_green_min": 20,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-066",
+
+"activity": "النقل البري للركاب خارج المدن والنقل الدولي",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 19,
+
+"high_green_min": 20,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-067",
+
+"activity": "النقل البري للركاب خارج المدن والنقل الدولي",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 19,
+
+"high_green_min": 20,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-068",
+
+"activity": "تقويم السلع والخدمات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 23,
+
+"low_green_max": 31,
+
+"medium_green_min": 32,
+
+"medium_green_max": 39,
+
+"high_green_min": 40,
+
+"high_green_max": 47,
+
+"platinum_min": 47,
+
+"platinum_max": 47
+
+},
+
+{
+
+"rule_id": "NISAB-069",
+
+"activity": "تقويم السلع والخدمات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-070",
+
+"activity": "تقويم السلع والخدمات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-071",
+
+"activity": "تقويم السلع والخدمات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-072",
+
+"activity": "تقويم السلع والخدمات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-073",
+
+"activity": "تقويم السلع والخدمات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-074",
+
+"activity": "النقل البحري",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-075",
+
+"activity": "النقل البحري",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-076",
+
+"activity": "النقل البحري",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-077",
+
+"activity": "النقل البحري",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-078",
+
+"activity": "النقل البحري",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 23,
+
+"medium_green_min": 24,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 45,
+
+"platinum_min": 45,
+
+"platinum_max": 45
+
+},
+
+{
+
+"rule_id": "NISAB-079",
+
+"activity": "النقل البحري",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 23,
+
+"medium_green_min": 24,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 45,
+
+"platinum_min": 45,
+
+"platinum_max": 45
+
+},
+
+{
+
+"rule_id": "NISAB-080",
+
+"activity": "النقل البري للبضائع داخل المدن",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-081",
+
+"activity": "النقل البري للبضائع داخل المدن",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 39,
+
+"platinum_min": 39,
+
+"platinum_max": 39
+
+},
+
+{
+
+"rule_id": "NISAB-082",
+
+"activity": "النقل البري للبضائع داخل المدن",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 39,
+
+"platinum_min": 39,
+
+"platinum_max": 39
+
+},
+
+{
+
+"rule_id": "NISAB-083",
+
+"activity": "النقل البري للبضائع داخل المدن",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 39,
+
+"platinum_min": 39,
+
+"platinum_max": 39
+
+},
+
+{
+
+"rule_id": "NISAB-084",
+
+"activity": "النقل البري للبضائع داخل المدن",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-085",
+
+"activity": "النقل البري للبضائع داخل المدن",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-086",
+
+"activity": "النقل البري للركاب داخل المدن",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-087",
+
+"activity": "النقل البري للركاب داخل المدن",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-088",
+
+"activity": "النقل البري للركاب داخل المدن",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-089",
+
+"activity": "النقل البري للركاب داخل المدن",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-090",
+
+"activity": "النقل البري للركاب داخل المدن",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-091",
+
+"activity": "النقل البري للركاب داخل المدن",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-092",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 51,
+
+"high_green_min": 52,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-093",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 41,
+
+"medium_green_min": 42,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-094",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 41,
+
+"medium_green_min": 42,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-095",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 41,
+
+"medium_green_min": 42,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-096",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 43,
+
+"medium_green_min": 44,
+
+"medium_green_max": 60,
+
+"high_green_min": 61,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-097",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 43,
+
+"medium_green_min": 44,
+
+"medium_green_max": 60,
+
+"high_green_min": 61,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-098",
+
+"activity": "التخزين",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 33,
+
+"platinum_min": 33,
+
+"platinum_max": 33
+
+},
+
+{
+
+"rule_id": "NISAB-099",
+
+"activity": "التخزين",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 29,
+
+"medium_green_min": 30,
+
+"medium_green_max": 37,
+
+"high_green_min": 38,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-100",
+
+"activity": "التخزين",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 29,
+
+"medium_green_min": 30,
+
+"medium_green_max": 37,
+
+"high_green_min": 38,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-101",
+
+"activity": "التخزين",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 29,
+
+"medium_green_min": 30,
+
+"medium_green_max": 37,
+
+"high_green_min": 38,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-102",
+
+"activity": "التخزين",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 39,
+
+"medium_green_min": 40,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-103",
+
+"activity": "التخزين",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 39,
+
+"medium_green_min": 40,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-104",
+
+"activity": "النقل الجوي",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 31,
+
+"medium_green_min": 32,
+
+"medium_green_max": 40,
+
+"high_green_min": 41,
+
+"high_green_max": 49,
+
+"platinum_min": 49,
+
+"platinum_max": 49
+
+},
+
+{
+
+"rule_id": "NISAB-105",
+
+"activity": "النقل الجوي",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 40,
+
+"medium_green_min": 41,
+
+"medium_green_max": 49,
+
+"high_green_min": 50,
+
+"high_green_max": 59,
+
+"platinum_min": 59,
+
+"platinum_max": 59
+
+},
+
+{
+
+"rule_id": "NISAB-106",
+
+"activity": "النقل الجوي",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 41,
+
+"medium_green_min": 42,
+
+"medium_green_max": 50,
+
+"high_green_min": 51,
+
+"high_green_max": 60,
+
+"platinum_min": 60,
+
+"platinum_max": 60
+
+},
+
+{
+
+"rule_id": "NISAB-107",
+
+"activity": "النقل الجوي",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 42,
+
+"medium_green_min": 43,
+
+"medium_green_max": 51,
+
+"high_green_min": 52,
+
+"high_green_max": 61,
+
+"platinum_min": 61,
+
+"platinum_max": 61
+
+},
+
+{
+
+"rule_id": "NISAB-108",
+
+"activity": "النقل الجوي",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 31,
+
+"low_green_max": 43,
+
+"medium_green_min": 44,
+
+"medium_green_max": 52,
+
+"high_green_min": 53,
+
+"high_green_max": 62,
+
+"platinum_min": 62,
+
+"platinum_max": 62
+
+},
+
+{
+
+"rule_id": "NISAB-109",
+
+"activity": "النقل الجوي",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 32,
+
+"low_green_max": 44,
+
+"medium_green_min": 45,
+
+"medium_green_max": 53,
+
+"high_green_min": 54,
+
+"high_green_max": 63,
+
+"platinum_min": 63,
+
+"platinum_max": 63
+
+},
+
+{
+
+"rule_id": "NISAB-110",
+
+"activity": "الاتصالات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 61,
+
+"platinum_min": 61,
+
+"platinum_max": 61
+
+},
+
+{
+
+"rule_id": "NISAB-111",
+
+"activity": "الاتصالات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 36,
+
+"low_green_max": 46,
+
+"medium_green_min": 47,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-112",
+
+"activity": "الاتصالات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 36,
+
+"low_green_max": 46,
+
+"medium_green_min": 47,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-113",
+
+"activity": "الاتصالات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 36,
+
+"low_green_max": 46,
+
+"medium_green_min": 47,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-114",
+
+"activity": "الاتصالات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-115",
+
+"activity": "الاتصالات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-116",
+
+"activity": "التأمين وخدمات الأعمال",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 30,
+
+"medium_green_min": 31,
+
+"medium_green_max": 41,
+
+"high_green_min": 42,
+
+"high_green_max": 53,
+
+"platinum_min": 53,
+
+"platinum_max": 53
+
+},
+
+{
+
+"rule_id": "NISAB-117",
+
+"activity": "التأمين وخدمات الأعمال",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 33,
+
+"low_green_max": 44,
+
+"medium_green_min": 45,
+
+"medium_green_max": 55,
+
+"high_green_min": 56,
+
+"high_green_max": 65,
+
+"platinum_min": 65,
+
+"platinum_max": 65
+
+},
+
+{
+
+"rule_id": "NISAB-118",
+
+"activity": "التأمين وخدمات الأعمال",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 34,
+
+"low_green_max": 45,
+
+"medium_green_min": 46,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-119",
+
+"activity": "التأمين وخدمات الأعمال",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 35,
+
+"low_green_max": 46,
+
+"medium_green_min": 47,
+
+"medium_green_max": 57,
+
+"high_green_min": 58,
+
+"high_green_max": 67,
+
+"platinum_min": 67,
+
+"platinum_max": 67
+
+},
+
+{
+
+"rule_id": "NISAB-120",
+
+"activity": "التأمين وخدمات الأعمال",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 36,
+
+"low_green_max": 47,
+
+"medium_green_min": 48,
+
+"medium_green_max": 58,
+
+"high_green_min": 59,
+
+"high_green_max": 68,
+
+"platinum_min": 68,
+
+"platinum_max": 68
+
+},
+
+{
+
+"rule_id": "NISAB-121",
+
+"activity": "التأمين وخدمات الأعمال",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 37,
+
+"low_green_max": 48,
+
+"medium_green_min": 49,
+
+"medium_green_max": 59,
+
+"high_green_min": 60,
+
+"high_green_max": 69,
+
+"platinum_min": 69,
+
+"platinum_max": 69
+
+},
+
+{
+
+"rule_id": "NISAB-122",
+
+"activity": "المؤسسات المالية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 51,
+
+"low_green_max": 65,
+
+"medium_green_min": 66,
+
+"medium_green_max": 82,
+
+"high_green_min": 83,
+
+"high_green_max": 88,
+
+"platinum_min": 88,
+
+"platinum_max": 88
+
+},
+
+{
+
+"rule_id": "NISAB-123",
+
+"activity": "المؤسسات المالية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 56,
+
+"low_green_max": 76,
+
+"medium_green_min": 77,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-124",
+
+"activity": "المؤسسات المالية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 56,
+
+"low_green_max": 76,
+
+"medium_green_min": 77,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-125",
+
+"activity": "المؤسسات المالية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 56,
+
+"low_green_max": 76,
+
+"medium_green_min": 77,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-126",
+
+"activity": "المؤسسات المالية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 86,
+
+"medium_green_min": 87,
+
+"medium_green_max": 91,
+
+"high_green_min": 92,
+
+"high_green_max": 94,
+
+"platinum_min": 94,
+
+"platinum_max": 94
+
+},
+
+{
+
+"rule_id": "NISAB-
+
+{
+
+"rule_id": "NISAB-126",
+
+"activity": "المؤسسات المالية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 86,
+
+"medium_green_min": 87,
+
+"medium_green_max": 91,
+
+"high_green_min": 92,
+
+"high_green_max": 94,
+
+"platinum_min": 94,
+
+"platinum_max": 94
+
+},
+
+{
+
+"rule_id": "NISAB-127",
+
+"activity": "المؤسسات المالية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 86,
+
+"medium_green_min": 87,
+
+"medium_green_max": 91,
+
+"high_green_min": 92,
+
+"high_green_max": 94,
+
+"platinum_min": 94,
+
+"platinum_max": 94
+
+},
+
+{
+
+"rule_id": "NISAB-128",
+
+"activity": "مكاتب التحصيل وخدمات العقارات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 38,
+
+"medium_green_min": 39,
+
+"medium_green_max": 49,
+
+"high_green_min": 50,
+
+"high_green_max": 65,
+
+"platinum_min": 65,
+
+"platinum_max": 65
+
+},
+
+{
+
+"rule_id": "NISAB-129",
+
+"activity": "مكاتب التحصيل وخدمات العقارات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 62,
+
+"platinum_min": 62,
+
+"platinum_max": 62
+
+},
+
+{
+
+"rule_id": "NISAB-130",
+
+"activity": "مكاتب التحصيل وخدمات العقارات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 62,
+
+"platinum_min": 62,
+
+"platinum_max": 62
+
+},
+
+{
+
+"rule_id": "NISAB-131",
+
+"activity": "مكاتب التحصيل وخدمات العقارات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 62,
+
+"platinum_min": 62,
+
+"platinum_max": 62
+
+},
+
+{
+
+"rule_id": "NISAB-132",
+
+"activity": "مكاتب التحصيل وخدمات العقارات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 62,
+
+"platinum_min": 62,
+
+"platinum_max": 62
+
+},
+
+{
+
+"rule_id": "NISAB-133",
+
+"activity": "مكاتب التحصيل وخدمات العقارات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 62,
+
+"platinum_min": 62,
+
+"platinum_max": 62
+
+},
+
+{
+
+"rule_id": "NISAB-134",
+
+"activity": "الخدمات الاستشارية والأعمال",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 23,
+
+"low_green_max": 31,
+
+"medium_green_min": 32,
+
+"medium_green_max": 39,
+
+"high_green_min": 40,
+
+"high_green_max": 47,
+
+"platinum_min": 47,
+
+"platinum_max": 47
+
+},
+
+{
+
+"rule_id": "NISAB-135",
+
+"activity": "الخدمات الاستشارية والأعمال",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-136",
+
+"activity": "الخدمات الاستشارية والأعمال",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-137",
+
+"activity": "الخدمات الاستشارية والأعمال",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-138",
+
+"activity": "الخدمات الاستشارية والأعمال",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-139",
+
+"activity": "الخدمات الاستشارية والأعمال",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-140",
+
+"activity": "الخدمات الجماعية والاجتماعية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 56,
+
+"platinum_min": 56,
+
+"platinum_max": 56
+
+},
+
+{
+
+"rule_id": "NISAB-141",
+
+"activity": "الخدمات الجماعية والاجتماعية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 19,
+
+"low_green_max": 31,
+
+"medium_green_min": 32,
+
+"medium_green_max": 51,
+
+"high_green_min": 52,
+
+"high_green_max": 83,
+
+"platinum_min": 83,
+
+"platinum_max": 83
+
+},
+
+{
+
+"rule_id": "NISAB-142",
+
+"activity": "الخدمات الجماعية والاجتماعية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 33,
+
+"medium_green_min": 34,
+
+"medium_green_max": 53,
+
+"high_green_min": 54,
+
+"high_green_max": 85,
+
+"platinum_min": 85,
+
+"platinum_max": 85
+
+},
+
+{
+
+"rule_id": "NISAB-143",
+
+"activity": "الخدمات الجماعية والاجتماعية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 33,
+
+"medium_green_min": 34,
+
+"medium_green_max": 53,
+
+"high_green_min": 54,
+
+"high_green_max": 85,
+
+"platinum_min": 85,
+
+"platinum_max": 85
+
+},
+
+{
+
+"rule_id": "NISAB-144",
+
+"activity": "الخدمات الجماعية والاجتماعية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 33,
+
+"medium_green_min": 34,
+
+"medium_green_max": 53,
+
+"high_green_min": 54,
+
+"high_green_max": 85,
+
+"platinum_min": 85,
+
+"platinum_max": 85
+
+},
+
+{
+
+"rule_id": "NISAB-145",
+
+"activity": "الخدمات الجماعية والاجتماعية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 33,
+
+"medium_green_min": 34,
+
+"medium_green_max": 53,
+
+"high_green_min": 54,
+
+"high_green_max": 85,
+
+"platinum_min": 85,
+
+"platinum_max": 85
+
+},
+
+{
+
+"rule_id": "NISAB-146",
+
+"activity": "مكاتب الخدمات العامة (تعقيب)",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 25,
+
+"low_green_max": 46,
+
+"medium_green_min": 47,
+
+"medium_green_max": 70,
+
+"high_green_min": 71,
+
+"high_green_max": 90,
+
+"platinum_min": 90,
+
+"platinum_max": 90
+
+},
+
+{
+
+"rule_id": "NISAB-147",
+
+"activity": "مكاتب الخدمات العامة (تعقيب)",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 47,
+
+"medium_green_min": 48,
+
+"medium_green_max": 71,
+
+"high_green_min": 72,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-148",
+
+"activity": "مكاتب الخدمات العامة (تعقيب)",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 48,
+
+"medium_green_min": 49,
+
+"medium_green_max": 72,
+
+"high_green_min": 73,
+
+"high_green_max": 92,
+
+"platinum_min": 92,
+
+"platinum_max": 92
+
+},
+
+{
+
+"rule_id": "NISAB-149",
+
+"activity": "مكاتب الخدمات العامة (تعقيب)",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 49,
+
+"medium_green_min": 50,
+
+"medium_green_max": 73,
+
+"high_green_min": 74,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-150",
+
+"activity": "مكاتب الخدمات العامة (تعقيب)",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 50,
+
+"medium_green_min": 51,
+
+"medium_green_max": 74,
+
+"high_green_min": 75,
+
+"high_green_max": 94,
+
+"platinum_min": 94,
+
+"platinum_max": 94
+
+},
+
+{
+
+"rule_id": "NISAB-151",
+
+"activity": "مكاتب الخدمات العامة (تعقيب)",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 75,
+
+"high_green_min": 76,
+
+"high_green_max": 95,
+
+"platinum_min": 95,
+
+"platinum_max": 95
+
+},
+
+{
+
+"rule_id": "NISAB-152",
+
+"activity": "وكالء الاستقدام الأهليين",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 37,
+
+"low_green_max": 61,
+
+"medium_green_min": 62,
+
+"medium_green_max": 75,
+
+"high_green_min": 76,
+
+"high_green_max": 90,
+
+"platinum_min": 90,
+
+"platinum_max": 90
+
+},
+
+{
+
+"rule_id": "NISAB-153",
+
+"activity": "وكالء الاستقدام الأهليين",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 37,
+
+"low_green_max": 61,
+
+"medium_green_min": 62,
+
+"medium_green_max": 75,
+
+"high_green_min": 76,
+
+"high_green_max": 90,
+
+"platinum_min": 90,
+
+"platinum_max": 90
+
+},
+
+{
+
+"rule_id": "NISAB-154",
+
+"activity": "وكالء الاستقدام الأهليين",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 37,
+
+"low_green_max": 61,
+
+"medium_green_min": 62,
+
+"medium_green_max": 75,
+
+"high_green_min": 76,
+
+"high_green_max": 90,
+
+"platinum_min": 90,
+
+"platinum_max": 90
+
+},
+
+{
+
+"rule_id": "NISAB-155",
+
+"activity": "وكالء الاستقدام الأهليين",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 37,
+
+"low_green_max": 61,
+
+"medium_green_min": 62,
+
+"medium_green_max": 75,
+
+"high_green_min": 76,
+
+"high_green_max": 90,
+
+"platinum_min": 90,
+
+"platinum_max": 90
+
+},
+
+{
+
+"rule_id": "NISAB-156",
+
+"activity": "وكالء الاستقدام الأهليين",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 37,
+
+"low_green_max": 61,
+
+"medium_green_min": 62,
+
+"medium_green_max": 75,
+
+"high_green_min": 76,
+
+"high_green_max": 90,
+
+"platinum_min": 90,
+
+"platinum_max": 90
+
+},
+
+{
+
+"rule_id": "NISAB-157",
+
+"activity": "وكالء الاستقدام الأهليين",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 37,
+
+"low_green_max": 61,
+
+"medium_green_min": 62,
+
+"medium_green_max": 75,
+
+"high_green_min": 76,
+
+"high_green_max": 90,
+
+"platinum_min": 90,
+
+"platinum_max": 90
+
+},
+
+{
+
+"rule_id": "NISAB-158",
+
+"activity": "الخدمات الشخصية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-159",
+
+"activity": "الخدمات الشخصية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 43,
+
+"high_green_min": 44,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-160",
+
+"activity": "الخدمات الشخصية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 43,
+
+"high_green_min": 44,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-161",
+
+"activity": "الخدمات الشخصية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 43,
+
+"high_green_min": 44,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-162",
+
+"activity": "الخدمات الشخصية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 43,
+
+"high_green_min": 44,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-163",
+
+"activity": "الخدمات الشخصية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 43,
+
+"high_green_min": 44,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-164",
+
+"activity": "ورش ومحلات الصيانة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-165",
+
+"activity": "ورش ومحلات الصيانة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-166",
+
+"activity": "ورش ومحلات الصيانة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-167",
+
+"activity": "ورش ومحلات الصيانة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-168",
+
+"activity": "ورش ومحلات الصيانة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-169",
+
+"activity": "ورش ومحلات الصيانة",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-170",
+
+"activity": "الطباعة والنشر والإعلام",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-171",
+
+"activity": "الطباعة والنشر والإعلام",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 23,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 42,
+
+"platinum_min": 42,
+
+"platinum_max": 42
+
+},
+
+{
+
+"rule_id": "NISAB-172",
+
+"activity": "الطباعة والنشر والإعلام",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 29,
+
+"medium_green_min": 30,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 43,
+
+"platinum_min": 43,
+
+"platinum_max": 43
+
+},
+
+{
+
+"rule_id": "NISAB-173",
+
+"activity": "الطباعة والنشر والإعلام",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 25,
+
+"low_green_max": 30,
+
+"medium_green_min": 31,
+
+"medium_green_max": 35,
+
+"high_green_min": 36,
+
+"high_green_max": 44,
+
+"platinum_min": 44,
+
+"platinum_max": 44
+
+},
+
+{
+
+"rule_id": "NISAB-174",
+
+"activity": "الطباعة والنشر والإعلام",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-175",
+
+"activity": "الطباعة والنشر والإعلام",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-176",
+
+"activity": "المختبرات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 25,
+
+"high_green_min": 26,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-177",
+
+"activity": "المختبرات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 32,
+
+"platinum_min": 32,
+
+"platinum_max": 32
+
+},
+
+{
+
+"rule_id": "NISAB-178",
+
+"activity": "المختبرات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 32,
+
+"platinum_min": 32,
+
+"platinum_max": 32
+
+},
+
+{
+
+"rule_id": "NISAB-179",
+
+"activity": "المختبرات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 32,
+
+"platinum_min": 32,
+
+"platinum_max": 32
+
+},
+
+{
+
+"rule_id": "NISAB-180",
+
+"activity": "المختبرات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 23,
+
+"medium_green_min": 24,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 33,
+
+"platinum_min": 33,
+
+"platinum_max": 33
+
+},
+
+{
+
+"rule_id": "NISAB-181",
+
+"activity": "المختبرات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 23,
+
+"medium_green_min": 24,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 33,
+
+"platinum_min": 33,
+
+"platinum_max": 33
+
+},
+
+{
+
+"rule_id": "NISAB-182",
+
+"activity": "الخدمات الصحية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 19,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-183",
+
+"activity": "الخدمات الصحية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-184",
+
+"activity": "الخدمات الصحية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-185",
+
+"activity": "الخدمات الصحية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-186",
+
+"activity": "الخدمات الصحية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-187",
+
+"activity": "الخدمات الصحية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-188",
+
+"activity": "المعاهد",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 56,
+
+"medium_green_min": 57,
+
+"medium_green_max": 76,
+
+"high_green_min": 77,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-189",
+
+"activity": "المعاهد",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 56,
+
+"medium_green_min": 57,
+
+"medium_green_max": 76,
+
+"high_green_min": 77,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-190",
+
+"activity": "المعاهد",
+
+"size": "متوسطة فئة-ب",
+
+"red_range
+
+{
+
+"rule_id": "NISAB-190",
+
+"activity": "المعاهد",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 56,
+
+"medium_green_min": 57,
+
+"medium_green_max": 76,
+
+"high_green_min": 77,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-191",
+
+"activity": "المعاهد",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 56,
+
+"medium_green_min": 57,
+
+"medium_green_max": 76,
+
+"high_green_min": 77,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-192",
+
+"activity": "المعاهد",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 56,
+
+"medium_green_min": 57,
+
+"medium_green_max": 76,
+
+"high_green_min": 77,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-193",
+
+"activity": "المعاهد",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 56,
+
+"medium_green_min": 57,
+
+"medium_green_max": 76,
+
+"high_green_min": 77,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-194",
+
+"activity": "مدارس أهلية بنات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 80,
+
+"low_green_max": 87,
+
+"medium_green_min": 88,
+
+"medium_green_max": 94,
+
+"high_green_min": 95,
+
+"high_green_max": 99,
+
+"platinum_min": 99,
+
+"platinum_max": 99
+
+},
+
+{
+
+"rule_id": "NISAB-195",
+
+"activity": "مدارس أهلية بنات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 77,
+
+"low_green_max": 84,
+
+"medium_green_min": 85,
+
+"medium_green_max": 91,
+
+"high_green_min": 92,
+
+"high_green_max": 96,
+
+"platinum_min": 96,
+
+"platinum_max": 96
+
+},
+
+{
+
+"rule_id": "NISAB-196",
+
+"activity": "مدارس أهلية بنات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 75,
+
+"low_green_max": 82,
+
+"medium_green_min": 83,
+
+"medium_green_max": 87,
+
+"high_green_min": 88,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-197",
+
+"activity": "مدارس أهلية بنات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 66,
+
+"low_green_max": 73,
+
+"medium_green_min": 74,
+
+"medium_green_max": 78,
+
+"high_green_min": 79,
+
+"high_green_max": 84,
+
+"platinum_min": 84,
+
+"platinum_max": 84
+
+},
+
+{
+
+"rule_id": "NISAB-198",
+
+"activity": "مدارس أهلية بنات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 65,
+
+"low_green_max": 72,
+
+"medium_green_min": 73,
+
+"medium_green_max": 77,
+
+"high_green_min": 78,
+
+"high_green_max": 83,
+
+"platinum_min": 83,
+
+"platinum_max": 83
+
+},
+
+{
+
+"rule_id": "NISAB-199",
+
+"activity": "مدارس أهلية بنات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 64,
+
+"low_green_max": 71,
+
+"medium_green_min": 72,
+
+"medium_green_max": 76,
+
+"high_green_min": 77,
+
+"high_green_max": 82,
+
+"platinum_min": 82,
+
+"platinum_max": 82
+
+},
+
+{
+
+"rule_id": "NISAB-200",
+
+"activity": "مدارس أهلية بنين",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-201",
+
+"activity": "مدارس أهلية بنين",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-202",
+
+"activity": "مدارس أهلية بنين",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-203",
+
+"activity": "مدارس أهلية بنين",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-204",
+
+"activity": "مدارس أهلية بنين",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-205",
+
+"activity": "مدارس أهلية بنين",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-206",
+
+"activity": "مدارس أجنبية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-207",
+
+"activity": "مدارس أجنبية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 41,
+
+"platinum_min": 41,
+
+"platinum_max": 41
+
+},
+
+{
+
+"rule_id": "NISAB-208",
+
+"activity": "مدارس أجنبية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 41,
+
+"platinum_min": 41,
+
+"platinum_max": 41
+
+},
+
+{
+
+"rule_id": "NISAB-209",
+
+"activity": "مدارس أجنبية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 41,
+
+"platinum_min": 41,
+
+"platinum_max": 41
+
+},
+
+{
+
+"rule_id": "NISAB-210",
+
+"activity": "مدارس أجنبية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 41,
+
+"platinum_min": 41,
+
+"platinum_max": 41
+
+},
+
+{
+
+"rule_id": "NISAB-211",
+
+"activity": "مدارس أجنبية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 41,
+
+"platinum_min": 41,
+
+"platinum_max": 41
+
+},
+
+{
+
+"rule_id": "NISAB-212",
+
+"activity": "حراسات أمنية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 75,
+
+"low_green_max": 78,
+
+"medium_green_min": 79,
+
+"medium_green_max": 81,
+
+"high_green_min": 82,
+
+"high_green_max": 85,
+
+"platinum_min": 85,
+
+"platinum_max": 85
+
+},
+
+{
+
+"rule_id": "NISAB-213",
+
+"activity": "حراسات أمنية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 76,
+
+"low_green_max": 79,
+
+"medium_green_min": 80,
+
+"medium_green_max": 82,
+
+"high_green_min": 83,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-214",
+
+"activity": "حراسات أمنية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 76,
+
+"low_green_max": 79,
+
+"medium_green_min": 80,
+
+"medium_green_max": 82,
+
+"high_green_min": 83,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-215",
+
+"activity": "حراسات أمنية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 76,
+
+"low_green_max": 79,
+
+"medium_green_min": 80,
+
+"medium_green_max": 82,
+
+"high_green_min": 83,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-216",
+
+"activity": "حراسات أمنية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 77,
+
+"low_green_max": 80,
+
+"medium_green_min": 81,
+
+"medium_green_max": 83,
+
+"high_green_min": 84,
+
+"high_green_max": 87,
+
+"platinum_min": 87,
+
+"platinum_max": 87
+
+},
+
+{
+
+"rule_id": "NISAB-217",
+
+"activity": "حراسات أمنية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 77,
+
+"low_green_max": 80,
+
+"medium_green_min": 81,
+
+"medium_green_max": 83,
+
+"high_green_min": 84,
+
+"high_green_max": 87,
+
+"platinum_min": 87,
+
+"platinum_max": 87
+
+},
+
+{
+
+"rule_id": "NISAB-218",
+
+"activity": "مكاتب التوظيف الأهلية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 75,
+
+"low_green_max": 78,
+
+"medium_green_min": 79,
+
+"medium_green_max": 81,
+
+"high_green_min": 82,
+
+"high_green_max": 85,
+
+"platinum_min": 85,
+
+"platinum_max": 85
+
+},
+
+{
+
+"rule_id": "NISAB-219",
+
+"activity": "مكاتب التوظيف الأهلية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 76,
+
+"low_green_max": 79,
+
+"medium_green_min": 80,
+
+"medium_green_max": 82,
+
+"high_green_min": 83,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-220",
+
+"activity": "مكاتب التوظيف الأهلية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 76,
+
+"low_green_max": 79,
+
+"medium_green_min": 80,
+
+"medium_green_max": 82,
+
+"high_green_min": 83,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-221",
+
+"activity": "مكاتب التوظيف الأهلية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 76,
+
+"low_green_max": 79,
+
+"medium_green_min": 80,
+
+"medium_green_max": 82,
+
+"high_green_min": 83,
+
+"high_green_max": 86,
+
+"platinum_min": 86,
+
+"platinum_max": 86
+
+},
+
+{
+
+"rule_id": "NISAB-222",
+
+"activity": "مكاتب التوظيف الأهلية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 77,
+
+"low_green_max": 80,
+
+"medium_green_min": 81,
+
+"medium_green_max": 83,
+
+"high_green_min": 84,
+
+"high_green_max": 87,
+
+"platinum_min": 87,
+
+"platinum_max": 87
+
+},
+
+{
+
+"rule_id": "NISAB-223",
+
+"activity": "مكاتب التوظيف الأهلية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 77,
+
+"low_green_max": 80,
+
+"medium_green_min": 81,
+
+"medium_green_max": 83,
+
+"high_green_min": 84,
+
+"high_green_max": 87,
+
+"platinum_min": 87,
+
+"platinum_max": 87
+
+},
+
+{
+
+"rule_id": "NISAB-224",
+
+"activity": "رياض الأطفال",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 81,
+
+"medium_green_min": 82,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-225",
+
+"activity": "رياض الأطفال",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 81,
+
+"medium_green_min": 82,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-226",
+
+"activity": "رياض الأطفال",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 81,
+
+"medium_green_min": 82,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-227",
+
+"activity": "رياض الأطفال",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 81,
+
+"medium_green_min": 82,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-228",
+
+"activity": "رياض الأطفال",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 81,
+
+"medium_green_min": 82,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-229",
+
+"activity": "رياض الأطفال",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 71,
+
+"low_green_max": 81,
+
+"medium_green_min": 82,
+
+"medium_green_max": 86,
+
+"high_green_min": 87,
+
+"high_green_max": 91,
+
+"platinum_min": 91,
+
+"platinum_max": 91
+
+},
+
+{
+
+"rule_id": "NISAB-230",
+
+"activity": "المخابز وتجارة الخبز",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 10,
+
+"medium_green_min": 11,
+
+"medium_green_max": 13,
+
+"high_green_min": 14,
+
+"high_green_max": 20,
+
+"platinum_min": 20,
+
+"platinum_max": 20
+
+},
+
+{
+
+"rule_id": "NISAB-231",
+
+"activity": "المخابز وتجارة الخبز",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 12,
+
+"medium_green_min": 13,
+
+"medium_green_max": 15,
+
+"high_green_min": 16,
+
+"high_green_max": 21,
+
+"platinum_min": 21,
+
+"platinum_max": 21
+
+},
+
+{
+
+"rule_id": "NISAB-232",
+
+"activity": "المخابز وتجارة الخبز",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 12,
+
+"medium_green_min": 13,
+
+"medium_green_max": 16,
+
+"high_green_min": 17,
+
+"high_green_max": 22,
+
+"platinum_min": 22,
+
+"platinum_max": 22
+
+},
+
+{
+
+"rule_id": "NISAB-233",
+
+"activity": "المخابز وتجارة الخبز",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 12,
+
+"medium_green_min": 13,
+
+"medium_green_max": 16,
+
+"high_green_min": 17,
+
+"high_green_max": 22,
+
+"platinum_min": 22,
+
+"platinum_max": 22
+
+},
+
+{
+
+"rule_id": "NISAB-234",
+
+"activity": "المخابز وتجارة الخبز",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-235",
+
+"activity": "المخابز وتجارة الخبز",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-236",
+
+"activity": "الخرسانة الجاهزة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-237",
+
+"activity": "الخرسانة الجاهزة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-238",
+
+"activity": "الخرسانة الجاهزة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-239",
+
+"activity": "الخرسانة الجاهزة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-240",
+
+"activity": "الخرسانة الجاهزة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-241",
+
+"activity": "الخرسانة الجاهزة",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-242",
+
+"activity": "تقنية المعلومات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 38,
+
+"high_green_min": 39,
+
+"high_green_max": 56,
+
+"platinum_min": 56,
+
+"platinum_max": 56
+
+},
+
+{
+
+"rule_id": "NISAB-243",
+
+"activity": "تقنية المعلومات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 64,
+
+"platinum_min": 64,
+
+"platinum_max": 64
+
+},
+
+{
+
+"rule_id": "NISAB-244",
+
+"activity": "تقنية المعلومات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 32,
+
+"low_green_max": 39,
+
+"medium_green_min": 40,
+
+"medium_green_max": 49,
+
+"high_green_min": 50,
+
+"high_green_max": 67,
+
+"platinum_min": 67,
+
+"platinum_max": 67
+
+},
+
+{
+
+"rule_id": "NISAB-245",
+
+"activity": "تقنية المعلومات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 35,
+
+"low_green_max": 42,
+
+"medium_green_min": 43,
+
+"medium_green_max": 52,
+
+"high_green_min": 53,
+
+"high_green_max": 70,
+
+"platinum_min": 70,
+
+"platinum_max": 70
+
+},
+
+{
+
+"rule_id": "NISAB-246",
+
+"activity": "تقنية المعلومات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 38,
+
+"low_green_max": 45,
+
+"medium_green_min": 46,
+
+"medium_green_max": 55,
+
+"high_green_min": 56,
+
+"high_green_max": 73,
+
+"platinum_min": 73,
+
+"platinum_max": 73
+
+},
+
+{
+
+"rule_id": "NISAB-247",
+
+"activity": "تقنية المعلومات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 48,
+
+"medium_green_min": 49,
+
+"medium_green_max": 58,
+
+"high_green_min": 59,
+
+"high_green_max": 76,
+
+"platinum_min": 76,
+
+"platinum_max": 76
+
+},
+
+{
+
+"rule_id": "NISAB-248",
+
+"activity": "مدارس أهلية بنين وبنات",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 46,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 56,
+
+"high_green_min": 57,
+
+"high_green_max": 67,
+
+"platinum_min": 67,
+
+"platinum_max": 67
+
+},
+
+{
+
+"rule_id": "NISAB-249",
+
+"activity": "مدارس أهلية بنين وبنات",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 44,
+
+"low_green_max": 49,
+
+"medium_green_min": 50,
+
+"medium_green_max": 54,
+
+"high_green_min": 55,
+
+"high_green_max": 65,
+
+"platinum_min": 65,
+
+"platinum_max": 65
+
+},
+
+{
+
+"rule_id": "NISAB-250",
+
+"activity": "مدارس أهلية بنين وبنات",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 42,
+
+"low_green_max": 47,
+
+"medium_green_min": 48,
+
+"medium_green_max": 52,
+
+"high_green_min": 53,
+
+"high_green_max": 63,
+
+"platinum_min": 63,
+
+"platinum_max": 63
+
+},
+
+{
+
+"rule_id": "NISAB-251",
+
+"activity": "مدارس أهلية بنين وبنات",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 40,
+
+"low_green_max": 45,
+
+"medium_green_min": 46,
+
+"medium_green_max": 50,
+
+"high_green_min": 51,
+
+"high_green_max": 61,
+
+"platinum_min": 61,
+
+"platinum_max": 61
+
+},
+
+{
+
+"rule_id": "NISAB-252",
+
+"activity": "مدارس أهلية بنين وبنات",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 40,
+
+"low_green_max": 45,
+
+"medium_green_min": 46,
+
+"medium_green_max": 50,
+
+"high_green_min": 51,
+
+"high_green_max": 61,
+
+"platinum_min": 61,
+
+"platinum_max": 61
+
+},
+
+{
+
+"rule_id": "NISAB-253",
+
+"activity": "مدارس أهلية بنين وبنات",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 40,
+
+"low_green_max": 45,
+
+"medium_green_min": 46,
+
+"medium_green_max": 50,
+
+"high_green_min": 51,
+
+"high_green_max": 61,
+
+"platinum_min": 61,
+
+"platinum_max": 61
+
+},
+
+{
+
+"rule_id": "NISAB-254",
+
+"activity": "محطات الوقود",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 20,
+
+"high_green_min":
+
+{
+
+"rule_id": "NISAB-254",
+
+"activity": "محطات الوقود",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-255",
+
+"activity": "محطات الوقود",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-256",
+
+"activity": "محطات الوقود",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-257",
+
+"activity": "محطات الوقود",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-258",
+
+"activity": "محطات الوقود",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 8,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 32,
+
+"platinum_min": 32,
+
+"platinum_max": 32
+
+},
+
+{
+
+"rule_id": "NISAB-259",
+
+"activity": "محطات الوقود",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 25,
+
+"high_green_min": 26,
+
+"high_green_max": 32,
+
+"platinum_min": 32,
+
+"platinum_max": 32
+
+},
+
+{
+
+"rule_id": "NISAB-260",
+
+"activity": "الحجر والجرانيت والطوب",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-261",
+
+"activity": "الحجر والجرانيت والطوب",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-262",
+
+"activity": "الحجر والجرانيت والطوب",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-263",
+
+"activity": "الحجر والجرانيت والطوب",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-264",
+
+"activity": "الحجر والجرانيت والطوب",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-265",
+
+"activity": "الحجر والجرانيت والطوب",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-266",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 19,
+
+"high_green_min": 20,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-267",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-268",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-269",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-270",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-271",
+
+"activity": "النقل البري للبضائع خارج المدن والنقل الدولي",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 27,
+
+"platinum_min": 27,
+
+"platinum_max": 27
+
+},
+
+{
+
+"rule_id": "NISAB-272",
+
+"activity": "مراكز ذوي الإعاقة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 31,
+
+"low_green_max": 41,
+
+"medium_green_min": 42,
+
+"medium_green_max": 51,
+
+"high_green_min": 52,
+
+"high_green_max": 61,
+
+"platinum_min": 61,
+
+"platinum_max": 61
+
+},
+
+{
+
+"rule_id": "NISAB-273",
+
+"activity": "مراكز ذوي الإعاقة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 56,
+
+"platinum_min": 56,
+
+"platinum_max": 56
+
+},
+
+{
+
+"rule_id": "NISAB-274",
+
+"activity": "مراكز ذوي الإعاقة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 56,
+
+"platinum_min": 56,
+
+"platinum_max": 56
+
+},
+
+{
+
+"rule_id": "NISAB-275",
+
+"activity": "مراكز ذوي الإعاقة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 56,
+
+"platinum_min": 56,
+
+"platinum_max": 56
+
+},
+
+{
+
+"rule_id": "NISAB-276",
+
+"activity": "مراكز ذوي الإعاقة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 56,
+
+"platinum_min": 56,
+
+"platinum_max": 56
+
+},
+
+{
+
+"rule_id": "NISAB-277",
+
+"activity": "مراكز ذوي الإعاقة",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 46,
+
+"high_green_min": 47,
+
+"high_green_max": 56,
+
+"platinum_min": 56,
+
+"platinum_max": 56
+
+},
+
+{
+
+"rule_id": "NISAB-278",
+
+"activity": "مراكز ضيافة الأطفال",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-279",
+
+"activity": "مراكز ضيافة الأطفال",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-280",
+
+"activity": "مراكز ضيافة الأطفال",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-281",
+
+"activity": "مراكز ضيافة الأطفال",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-282",
+
+"activity": "مراكز ضيافة الأطفال",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-283",
+
+"activity": "مراكز ضيافة الأطفال",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-284",
+
+"activity": "السلع والخدمات النسائية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-285",
+
+"activity": "السلع والخدمات النسائية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-286",
+
+"activity": "السلع والخدمات النسائية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-287",
+
+"activity": "السلع والخدمات النسائية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-288",
+
+"activity": "السلع والخدمات النسائية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-289",
+
+"activity": "السلع والخدمات النسائية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 81,
+
+"low_green_max": 85,
+
+"medium_green_min": 86,
+
+"medium_green_max": 89,
+
+"high_green_min": 90,
+
+"high_green_max": 93,
+
+"platinum_min": 93,
+
+"platinum_max": 93
+
+},
+
+{
+
+"rule_id": "NISAB-290",
+
+"activity": "محلات الغاز",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-291",
+
+"activity": "محلات الغاز",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 19,
+
+"high_green_min": 20,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-292",
+
+"activity": "محلات الغاز",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-293",
+
+"activity": "محلات الغاز",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 31,
+
+"platinum_min": 31,
+
+"platinum_max": 31
+
+},
+
+{
+
+"rule_id": "NISAB-294",
+
+"activity": "محلات الغاز",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 32,
+
+"platinum_min": 32,
+
+"platinum_max": 32
+
+},
+
+{
+
+"rule_id": "NISAB-295",
+
+"activity": "محلات الغاز",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 33,
+
+"platinum_min": 33,
+
+"platinum_max": 33
+
+},
+
+{
+
+"rule_id": "NISAB-296",
+
+"activity": "معاهد الشراكات الاستراتيجية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 12,
+
+"medium_green_min": 13,
+
+"medium_green_max": 19,
+
+"high_green_min": 20,
+
+"high_green_max": 25,
+
+"platinum_min": 25,
+
+"platinum_max": 25
+
+},
+
+{
+
+"rule_id": "NISAB-297",
+
+"activity": "معاهد الشراكات الاستراتيجية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 6,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-298",
+
+"activity": "معاهد الشراكات الاستراتيجية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 6,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-299",
+
+"activity": "معاهد الشراكات الاستراتيجية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 6,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-300",
+
+"activity": "معاهد الشراكات الاستراتيجية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 31,
+
+"platinum_min": 31,
+
+"platinum_max": 31
+
+},
+
+{
+
+"rule_id": "NISAB-301",
+
+"activity": "معاهد الشراكات الاستراتيجية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 31,
+
+"platinum_min": 31,
+
+"platinum_max": 31
+
+},
+
+{
+
+"rule_id": "NISAB-302",
+
+"activity": "الكليات الصحية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-303",
+
+"activity": "الكليات الصحية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 13,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 19,
+
+"high_green_min": 20,
+
+"high_green_max": 23,
+
+"platinum_min": 23,
+
+"platinum_max": 23
+
+},
+
+{
+
+"rule_id": "NISAB-304",
+
+"activity": "الكليات الصحية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 22,
+
+"platinum_min": 22,
+
+"platinum_max": 22
+
+},
+
+{
+
+"rule_id": "NISAB-305",
+
+"activity": "الكليات الصحية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 17,
+
+"high_green_min": 18,
+
+"high_green_max": 21,
+
+"platinum_min": 21,
+
+"platinum_max": 21
+
+},
+
+{
+
+"rule_id": "NISAB-306",
+
+"activity": "الكليات الصحية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 16,
+
+"high_green_min": 17,
+
+"high_green_max": 20,
+
+"platinum_min": 20,
+
+"platinum_max": 20
+
+},
+
+{
+
+"rule_id": "NISAB-307",
+
+"activity": "الكليات الصحية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 12,
+
+"medium_green_min": 13,
+
+"medium_green_max": 15,
+
+"high_green_min": 16,
+
+"high_green_max": 19,
+
+"platinum_min": 19,
+
+"platinum_max": 19
+
+},
+
+{
+
+"rule_id": "NISAB-308",
+
+"activity": "مراكز التزيين ومشاغل الخياطة النسائية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 35,
+
+"high_green_min": 36,
+
+"high_green_max": 45,
+
+"platinum_min": 45,
+
+"platinum_max": 45
+
+},
+
+{
+
+"rule_id": "NISAB-309",
+
+"activity": "مراكز التزيين ومشاغل الخياطة النسائية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 34,
+
+"medium_green_min": 35,
+
+"medium_green_max": 41,
+
+"high_green_min": 42,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-310",
+
+"activity": "مراكز التزيين ومشاغل الخياطة النسائية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 43,
+
+"high_green_min": 44,
+
+"high_green_max": 53,
+
+"platinum_min": 53,
+
+"platinum_max": 53
+
+},
+
+{
+
+"rule_id": "NISAB-311",
+
+"activity": "مراكز التزيين ومشاغل الخياطة النسائية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 31,
+
+"low_green_max": 38,
+
+"medium_green_min": 39,
+
+"medium_green_max": 45,
+
+"high_green_min": 46,
+
+"high_green_max": 55,
+
+"platinum_min": 55,
+
+"platinum_max": 55
+
+},
+
+{
+
+"rule_id": "NISAB-312",
+
+"activity": "مراكز التزيين ومشاغل الخياطة النسائية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 35,
+
+"low_green_max": 43,
+
+"medium_green_min": 44,
+
+"medium_green_max": 51,
+
+"high_green_min": 52,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-313",
+
+"activity": "مراكز التزيين ومشاغل الخياطة النسائية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 35,
+
+"low_green_max": 43,
+
+"medium_green_min": 44,
+
+"medium_green_max": 51,
+
+"high_green_min": 52,
+
+"high_green_max": 66,
+
+"platinum_min": 66,
+
+"platinum_max": 66
+
+},
+
+{
+
+"rule_id": "NISAB-314",
+
+"activity": "الإيواء والفنادق",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 19,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 41,
+
+"platinum_min": 41,
+
+"platinum_max": 41
+
+},
+
+{
+
+"rule_id": "NISAB-315",
+
+"activity": "الإيواء والفنادق",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 31,
+
+"medium_green_min": 32,
+
+"medium_green_max": 41,
+
+"high_green_min": 42,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-316",
+
+"activity": "الإيواء والفنادق",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 31,
+
+"medium_green_min": 32,
+
+"medium_green_max": 41,
+
+"high_green_min": 42,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-317",
+
+"activity": "الإيواء والفنادق",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 31,
+
+"medium_green_min": 32,
+
+"medium_green_max": 41,
+
+"high_green_min": 42,
+
+"
+
+{
+
+"rule_id": "NISAB-317",
+
+"activity": "الإيواء والفنادق",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 27,
+
+"low_green_max": 31,
+
+"medium_green_min": 32,
+
+"medium_green_max": 41,
+
+"high_green_min": 42,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-318",
+
+"activity": "الإيواء والفنادق",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 34,
+
+"medium_green_min": 35,
+
+"medium_green_max": 43,
+
+"high_green_min": 44,
+
+"high_green_max": 53,
+
+"platinum_min": 53,
+
+"platinum_max": 53
+
+},
+
+{
+
+"rule_id": "NISAB-319",
+
+"activity": "الإيواء والفنادق",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 29,
+
+"low_green_max": 34,
+
+"medium_green_min": 35,
+
+"medium_green_max": 43,
+
+"high_green_min": 44,
+
+"high_green_max": 53,
+
+"platinum_min": 53,
+
+"platinum_max": 53
+
+},
+
+{
+
+"rule_id": "NISAB-320",
+
+"activity": "نقل الحجاج والمعتمرين",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 16,
+
+"medium_green_min": 17,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-321",
+
+"activity": "نقل الحجاج والمعتمرين",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-322",
+
+"activity": "نقل الحجاج والمعتمرين",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-323",
+
+"activity": "نقل الحجاج والمعتمرين",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-324",
+
+"activity": "نقل الحجاج والمعتمرين",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-325",
+
+"activity": "نقل الحجاج والمعتمرين",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-326",
+
+"activity": "صناعة المصوغات والمجوهرات وسك النقود",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-327",
+
+"activity": "صناعة المصوغات والمجوهرات وسك النقود",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-328",
+
+"activity": "صناعة المصوغات والمجوهرات وسك النقود",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 27,
+
+"high_green_min": 28,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-329",
+
+"activity": "صناعة المصوغات والمجوهرات وسك النقود",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 26,
+
+"high_green_min": 27,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-330",
+
+"activity": "صناعة المصوغات والمجوهرات وسك النقود",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 26,
+
+"high_green_min": 27,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-331",
+
+"activity": "صناعة المصوغات والمجوهرات وسك النقود",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 26,
+
+"high_green_min": 27,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-332",
+
+"activity": "مقاولات النظافة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 19,
+
+"medium_green_min": 20,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 25,
+
+"platinum_min": 25,
+
+"platinum_max": 25
+
+},
+
+{
+
+"rule_id": "NISAB-333",
+
+"activity": "مقاولات النظافة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 13,
+
+"medium_green_min": 14,
+
+"medium_green_max": 19,
+
+"high_green_min": 20,
+
+"high_green_max": 22,
+
+"platinum_min": 22,
+
+"platinum_max": 22
+
+},
+
+{
+
+"rule_id": "NISAB-334",
+
+"activity": "مقاولات النظافة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 21,
+
+"platinum_min": 21,
+
+"platinum_max": 21
+
+},
+
+{
+
+"rule_id": "NISAB-335",
+
+"activity": "مقاولات النظافة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 17,
+
+"high_green_min": 18,
+
+"high_green_max": 20,
+
+"platinum_min": 20,
+
+"platinum_max": 20
+
+},
+
+{
+
+"rule_id": "NISAB-336",
+
+"activity": "مقاولات النظافة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 16,
+
+"high_green_min": 17,
+
+"high_green_max": 19,
+
+"platinum_min": 19,
+
+"platinum_max": 19
+
+},
+
+{
+
+"rule_id": "NISAB-337",
+
+"activity": "مقاولات النظافة",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 15,
+
+"high_green_min": 16,
+
+"high_green_max": 18,
+
+"platinum_min": 18,
+
+"platinum_max": 18
+
+},
+
+{
+
+"rule_id": "NISAB-338",
+
+"activity": "الكليات الجامعية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-339",
+
+"activity": "الكليات الجامعية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-340",
+
+"activity": "الكليات الجامعية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-341",
+
+"activity": "الكليات الجامعية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-342",
+
+"activity": "الكليات الجامعية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-343",
+
+"activity": "الكليات الجامعية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 41,
+
+"low_green_max": 51,
+
+"medium_green_min": 52,
+
+"medium_green_max": 61,
+
+"high_green_min": 62,
+
+"high_green_max": 71,
+
+"platinum_min": 71,
+
+"platinum_max": 71
+
+},
+
+{
+
+"rule_id": "NISAB-344",
+
+"activity": "معاهد اللغات وخدمات الترجمة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 40,
+
+"high_green_min": 41,
+
+"high_green_max": 45,
+
+"platinum_min": 45,
+
+"platinum_max": 45
+
+},
+
+{
+
+"rule_id": "NISAB-345",
+
+"activity": "معاهد اللغات وخدمات الترجمة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 40,
+
+"high_green_min": 41,
+
+"high_green_max": 45,
+
+"platinum_min": 45,
+
+"platinum_max": 45
+
+},
+
+{
+
+"rule_id": "NISAB-346",
+
+"activity": "معاهد اللغات وخدمات الترجمة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 40,
+
+"high_green_min": 41,
+
+"high_green_max": 45,
+
+"platinum_min": 45,
+
+"platinum_max": 45
+
+},
+
+{
+
+"rule_id": "NISAB-347",
+
+"activity": "معاهد اللغات وخدمات الترجمة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 28,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 40,
+
+"high_green_min": 41,
+
+"high_green_max": 45,
+
+"platinum_min": 45,
+
+"platinum_max": 45
+
+},
+
+{
+
+"rule_id": "NISAB-348",
+
+"activity": "معاهد اللغات وخدمات الترجمة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 37,
+
+"medium_green_min": 38,
+
+"medium_green_max": 42,
+
+"high_green_min": 43,
+
+"high_green_max": 47,
+
+"platinum_min": 47,
+
+"platinum_max": 47
+
+},
+
+{
+
+"rule_id": "NISAB-349",
+
+"activity": "معاهد اللغات وخدمات الترجمة",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 37,
+
+"medium_green_min": 38,
+
+"medium_green_max": 42,
+
+"high_green_min": 43,
+
+"high_green_max": 47,
+
+"platinum_min": 47,
+
+"platinum_max": 47
+
+},
+
+{
+
+"rule_id": "NISAB-350",
+
+"activity": "مصانع الألبان",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-351",
+
+"activity": "مصانع الألبان",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 26,
+
+"high_green_min": 27,
+
+"high_green_max": 31,
+
+"platinum_min": 31,
+
+"platinum_max": 31
+
+},
+
+{
+
+"rule_id": "NISAB-352",
+
+"activity": "مصانع الألبان",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 26,
+
+"high_green_min": 27,
+
+"high_green_max": 31,
+
+"platinum_min": 31,
+
+"platinum_max": 31
+
+},
+
+{
+
+"rule_id": "NISAB-353",
+
+"activity": "مصانع الألبان",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 26,
+
+"high_green_min": 27,
+
+"high_green_max": 31,
+
+"platinum_min": 31,
+
+"platinum_max": 31
+
+},
+
+{
+
+"rule_id": "NISAB-354",
+
+"activity": "مصانع الألبان",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-355",
+
+"activity": "مصانع الألبان",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-356",
+
+"activity": "بيع الهواتف المحمولة وصيانتها",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 6,
+
+"low_green_max": 11,
+
+"medium_green_min": 12,
+
+"medium_green_max": 15,
+
+"high_green_min": 16,
+
+"high_green_max": 19,
+
+"platinum_min": 19,
+
+"platinum_max": 19
+
+},
+
+{
+
+"rule_id": "NISAB-357",
+
+"activity": "بيع الهواتف المحمولة وصيانتها",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-358",
+
+"activity": "بيع الهواتف المحمولة وصيانتها",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-359",
+
+"activity": "بيع الهواتف المحمولة وصيانتها",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 28,
+
+"platinum_min": 28,
+
+"platinum_max": 28
+
+},
+
+{
+
+"rule_id": "NISAB-360",
+
+"activity": "بيع الهواتف المحمولة وصيانتها",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-361",
+
+"activity": "بيع الهواتف المحمولة وصيانتها",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 11,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 23,
+
+"high_green_min": 24,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-362",
+
+"activity": "التصنيع – المواد الكيميائية, معدات النقل, المركبات ذات المحركات, منتجات اللدائن والمطاط, الصناعات التحويلية الأخرى",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 93,
+
+"low_green_max": 95,
+
+"medium_green_min": 96,
+
+"medium_green_max": 97,
+
+"high_green_min": 98,
+
+"high_green_max": 99,
+
+"platinum_min": 99,
+
+"platinum_max": 99
+
+},
+
+{
+
+"rule_id": "NISAB-363",
+
+"activity": "التصنيع – المواد الكيميائية, معدات النقل, المركبات ذات المحركات, منتجات اللدائن والمطاط, الصناعات التحويلية الأخرى",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 93,
+
+"low_green_max": 95,
+
+"medium_green_min": 96,
+
+"medium_green_max": 97,
+
+"high_green_min": 98,
+
+"high_green_max": 99,
+
+"platinum_min": 99,
+
+"platinum_max": 99
+
+},
+
+{
+
+"rule_id": "NISAB-364",
+
+"activity": "التصنيع – المواد الكيميائية, معدات النقل, المركبات ذات المحركات, منتجات اللدائن والمطاط, الصناعات التحويلية الأخرى",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 93,
+
+"low_green_max": 95,
+
+"medium_green_min": 96,
+
+"medium_green_max": 97,
+
+"high_green_min": 98,
+
+"high_green_max": 99,
+
+"platinum_min": 99,
+
+"platinum_max": 99
+
+},
+
+{
+
+"rule_id": "NISAB-365",
+
+"activity": "التصنيع – المواد الكيميائية, معدات النقل, المركبات ذات المحركات, منتجات اللدائن والمطاط, الصناعات التحويلية الأخرى",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 93,
+
+"low_green_max": 95,
+
+"medium_green_min": 96,
+
+"medium_green_max": 97,
+
+"high_green_min": 98,
+
+"high_green_max": 99,
+
+"platinum_min": 99,
+
+"platinum_max": 99
+
+},
+
+{
+
+"rule_id": "NISAB-366",
+
+"activity": "التصنيع – المواد الكيميائية, معدات النقل, المركبات ذات المحركات, منتجات اللدائن والمطاط, الصناعات التحويلية الأخرى",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 93,
+
+"low_green_max": 95,
+
+"medium_green_min": 96,
+
+"medium_green_max": 97,
+
+"high_green_min": 98,
+
+"high_green_max": 99,
+
+"platinum_min": 99,
+
+"platinum_max": 99
+
+},
+
+{
+
+"rule_id": "NISAB-367",
+
+"activity": "التصنيع – المواد الكيميائية, معدات النقل, المركبات ذات المحركات, منتجات اللدائن والمطاط, الصناعات التحويلية الأخرى",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 93,
+
+"low_green_max": 95,
+
+"medium_green_min": 96,
+
+"medium_green_max": 97,
+
+"high_green_min": 98,
+
+"high_green_max": 99,
+
+"platinum_min": 99,
+
+"platinum_max": 99
+
+},
+
+{
+
+"rule_id": "NISAB-368",
+
+"activity": "المغاسل",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-369",
+
+"activity": "المغاسل",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-370",
+
+"activity": "المغاسل",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-371",
+
+"activity": "المغاسل",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-372",
+
+"activity": "المغاسل",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-373",
+
+"activity": "المغاسل",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 9,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 18,
+
+"high_green_min": 19,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-374",
+
+"activity": "الصالات والمراكز الرياضية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 26,
+
+"high_green_min": 27,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-375",
+
+"activity": "الصالات والمراكز الرياضية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-376",
+
+"activity": "الصالات والمراكز الرياضية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-377",
+
+"activity": "الصالات والمراكز الرياضية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 18,
+
+"low_green_max": 22,
+
+"medium_green_min": 23,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-378",
+
+"activity": "الصالات والمراكز الرياضية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-379",
+
+"activity": "الصالات والمراكز الرياضية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max
+
+{
+
+"rule_id": "NISAB-379",
+
+"activity": "الصالات والمراكز الرياضية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-380",
+
+"activity": "وكالء الأدوية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 22,
+
+"high_green_min": 23,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-381",
+
+"activity": "وكالء الأدوية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-382",
+
+"activity": "وكالء الأدوية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-383",
+
+"activity": "وكالء الأدوية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 24,
+
+"medium_green_min": 25,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-384",
+
+"activity": "وكالء الأدوية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 39,
+
+"platinum_min": 39,
+
+"platinum_max": 39
+
+},
+
+{
+
+"rule_id": "NISAB-385",
+
+"activity": "وكالء الأدوية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 29,
+
+"medium_green_min": 30,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 39,
+
+"platinum_min": 39,
+
+"platinum_max": 39
+
+},
+
+{
+
+"rule_id": "NISAB-386",
+
+"activity": "كيانات مجمعة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-387",
+
+"activity": "كيانات مجمعة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 25,
+
+"medium_green_min": 26,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-388",
+
+"activity": "كيانات مجمعة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 25,
+
+"medium_green_min": 26,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-389",
+
+"activity": "كيانات مجمعة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 25,
+
+"medium_green_min": 26,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-390",
+
+"activity": "كيانات مجمعة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 29,
+
+"medium_green_min": 30,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-391",
+
+"activity": "كيانات مجمعة",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 29,
+
+"medium_green_min": 30,
+
+"medium_green_max": 34,
+
+"high_green_min": 35,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-392",
+
+"activity": "التصنيع - المعادن والصناعات الكيماوية، الصناعات التحويلية العامة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 15,
+
+"medium_green_min": 16,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 25,
+
+"platinum_min": 25,
+
+"platinum_max": 25
+
+},
+
+{
+
+"rule_id": "NISAB-393",
+
+"activity": "التصنيع - المعادن والصناعات الكيماوية، الصناعات التحويلية العامة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 25,
+
+"high_green_min": 26,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-394",
+
+"activity": "التصنيع - المعادن والصناعات الكيماوية، الصناعات التحويلية العامة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 25,
+
+"high_green_min": 26,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-395",
+
+"activity": "التصنيع - المعادن والصناعات الكيماوية، الصناعات التحويلية العامة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 25,
+
+"high_green_min": 26,
+
+"high_green_max": 30,
+
+"platinum_min": 30,
+
+"platinum_max": 30
+
+},
+
+{
+
+"rule_id": "NISAB-396",
+
+"activity": "التصنيع - المعادن والصناعات الكيماوية، الصناعات التحويلية العامة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 32,
+
+"high_green_min": 33,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-397",
+
+"activity": "التصنيع - المعادن والصناعات الكيماوية، الصناعات التحويلية العامة",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 32,
+
+"high_green_min": 33,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-398",
+
+"activity": "التصنيع - المواد الخام المعالجة، والأغذية والملابس والأثاث والبناء",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 10,
+
+"low_green_max": 14,
+
+"medium_green_min": 15,
+
+"medium_green_max": 20,
+
+"high_green_min": 21,
+
+"high_green_max": 24,
+
+"platinum_min": 24,
+
+"platinum_max": 24
+
+},
+
+{
+
+"rule_id": "NISAB-399",
+
+"activity": "التصنيع - المواد الخام المعالجة، والأغذية والملابس والأثاث والبناء",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-400",
+
+"activity": "التصنيع - المواد الخام المعالجة، والأغذية والملابس والأثاث والبناء",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-401",
+
+"activity": "التصنيع - المواد الخام المعالجة، والأغذية والملابس والأثاث والبناء",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 24,
+
+"high_green_min": 25,
+
+"high_green_max": 29,
+
+"platinum_min": 29,
+
+"platinum_max": 29
+
+},
+
+{
+
+"rule_id": "NISAB-402",
+
+"activity": "التصنيع - المواد الخام المعالجة، والأغذية والملابس والأثاث والبناء",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-403",
+
+"activity": "التصنيع - المواد الخام المعالجة، والأغذية والملابس والأثاث والبناء",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-404",
+
+"activity": "تجارة الجملة والتجزئة - تكنولوجيا، والآلات والملابس والخدمات وغيرها",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 17,
+
+"low_green_max": 21,
+
+"medium_green_min": 22,
+
+"medium_green_max": 26,
+
+"high_green_min": 27,
+
+"high_green_max": 34,
+
+"platinum_min": 34,
+
+"platinum_max": 34
+
+},
+
+{
+
+"rule_id": "NISAB-405",
+
+"activity": "تجارة الجملة والتجزئة - تكنولوجيا، والآلات والملابس والخدمات وغيرها",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 23,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 32,
+
+"high_green_min": 33,
+
+"high_green_max": 40,
+
+"platinum_min": 40,
+
+"platinum_max": 40
+
+},
+
+{
+
+"rule_id": "NISAB-406",
+
+"activity": "تجارة الجملة والتجزئة - تكنولوجيا، والآلات والملابس والخدمات وغيرها",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 28,
+
+"medium_green_min": 29,
+
+"medium_green_max": 33,
+
+"high_green_min": 34,
+
+"high_green_max": 41,
+
+"platinum_min": 41,
+
+"platinum_max": 41
+
+},
+
+{
+
+"rule_id": "NISAB-407",
+
+"activity": "تجارة الجملة والتجزئة - تكنولوجيا، والآلات والملابس والخدمات وغيرها",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 26,
+
+"low_green_max": 30,
+
+"medium_green_min": 31,
+
+"medium_green_max": 35,
+
+"high_green_min": 36,
+
+"high_green_max": 43,
+
+"platinum_min": 43,
+
+"platinum_max": 43
+
+},
+
+{
+
+"rule_id": "NISAB-408",
+
+"activity": "تجارة الجملة والتجزئة - تكنولوجيا، والآلات والملابس والخدمات وغيرها",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 31,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 41,
+
+"high_green_min": 42,
+
+"high_green_max": 51,
+
+"platinum_min": 51,
+
+"platinum_max": 51
+
+},
+
+{
+
+"rule_id": "NISAB-409",
+
+"activity": "تجارة الجملة والتجزئة - تكنولوجيا، والآلات والملابس والخدمات وغيرها",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 32,
+
+"low_green_max": 36,
+
+"medium_green_min": 37,
+
+"medium_green_max": 42,
+
+"high_green_min": 43,
+
+"high_green_max": 52,
+
+"platinum_min": 52,
+
+"platinum_max": 52
+
+},
+
+{
+
+"rule_id": "NISAB-410",
+
+"activity": "تجارة الجملة والتجزئة - المواد، الأغذية، الأثاث والسلع الزراعية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 16,
+
+"low_green_max": 20,
+
+"medium_green_min": 21,
+
+"medium_green_max": 25,
+
+"high_green_min": 26,
+
+"high_green_max": 31,
+
+"platinum_min": 31,
+
+"platinum_max": 31
+
+},
+
+{
+
+"rule_id": "NISAB-411",
+
+"activity": "تجارة الجملة والتجزئة - المواد، الأغذية، الأثاث والسلع الزراعية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 22,
+
+"low_green_max": 25,
+
+"medium_green_min": 26,
+
+"medium_green_max": 30,
+
+"high_green_min": 31,
+
+"high_green_max": 35,
+
+"platinum_min": 35,
+
+"platinum_max": 35
+
+},
+
+{
+
+"rule_id": "NISAB-412",
+
+"activity": "تجارة الجملة والتجزئة - المواد، الأغذية، الأثاث والسلع الزراعية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 23,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 31,
+
+"high_green_min": 32,
+
+"high_green_max": 36,
+
+"platinum_min": 36,
+
+"platinum_max": 36
+
+},
+
+{
+
+"rule_id": "NISAB-413",
+
+"activity": "تجارة الجملة والتجزئة - المواد، الأغذية، الأثاث والسلع الزراعية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 24,
+
+"low_green_max": 27,
+
+"medium_green_min": 28,
+
+"medium_green_max": 32,
+
+"high_green_min": 33,
+
+"high_green_max": 37,
+
+"platinum_min": 37,
+
+"platinum_max": 37
+
+},
+
+{
+
+"rule_id": "NISAB-414",
+
+"activity": "تجارة الجملة والتجزئة - المواد، الأغذية، الأثاث والسلع الزراعية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 30,
+
+"low_green_max": 34,
+
+"medium_green_min": 35,
+
+"medium_green_max": 39,
+
+"high_green_min": 40,
+
+"high_green_max": 45,
+
+"platinum_min": 45,
+
+"platinum_max": 45
+
+},
+
+{
+
+"rule_id": "NISAB-415",
+
+"activity": "تجارة الجملة والتجزئة - المواد، الأغذية، الأثاث والسلع الزراعية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 31,
+
+"low_green_max": 35,
+
+"medium_green_min": 36,
+
+"medium_green_max": 40,
+
+"high_green_min": 41,
+
+"high_green_max": 46,
+
+"platinum_min": 46,
+
+"platinum_max": 46
+
+},
+
+{
+
+"rule_id": "NISAB-416",
+
+"activity": "الخدمات الزراعية، وصيد الأسماك والطيور والمواشي والأغنام، ونوادي الفروسية",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 8,
+
+"medium_green_min": 9,
+
+"medium_green_max": 11,
+
+"high_green_min": 12,
+
+"high_green_max": 14,
+
+"platinum_min": 14,
+
+"platinum_max": 14
+
+},
+
+{
+
+"rule_id": "NISAB-417",
+
+"activity": "الخدمات الزراعية، وصيد الأسماك والطيور والمواشي والأغنام، ونوادي الفروسية",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 8,
+
+"medium_green_min": 9,
+
+"medium_green_max": 11,
+
+"high_green_min": 12,
+
+"high_green_max": 14,
+
+"platinum_min": 14,
+
+"platinum_max": 14
+
+},
+
+{
+
+"rule_id": "NISAB-418",
+
+"activity": "الخدمات الزراعية، وصيد الأسماك والطيور والمواشي والأغنام، ونوادي الفروسية",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 8,
+
+"medium_green_min": 9,
+
+"medium_green_max": 11,
+
+"high_green_min": 12,
+
+"high_green_max": 14,
+
+"platinum_min": 14,
+
+"platinum_max": 14
+
+},
+
+{
+
+"rule_id": "NISAB-419",
+
+"activity": "الخدمات الزراعية، وصيد الأسماك والطيور والمواشي والأغنام، ونوادي الفروسية",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 8,
+
+"medium_green_min": 9,
+
+"medium_green_max": 11,
+
+"high_green_min": 12,
+
+"high_green_max": 14,
+
+"platinum_min": 14,
+
+"platinum_max": 14
+
+},
+
+{
+
+"rule_id": "NISAB-420",
+
+"activity": "الخدمات الزراعية، وصيد الأسماك والطيور والمواشي والأغنام، ونوادي الفروسية",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 10,
+
+"medium_green_min": 11,
+
+"medium_green_max": 12,
+
+"high_green_min": 13,
+
+"high_green_max": 15,
+
+"platinum_min": 15,
+
+"platinum_max": 15
+
+},
+
+{
+
+"rule_id": "NISAB-421",
+
+"activity": "الخدمات الزراعية، وصيد الأسماك والطيور والمواشي والأغنام، ونوادي الفروسية",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 7,
+
+"low_green_max": 10,
+
+"medium_green_min": 11,
+
+"medium_green_max": 12,
+
+"high_green_min": 13,
+
+"high_green_max": 15,
+
+"platinum_min": 15,
+
+"platinum_max": 15
+
+},
+
+{
+
+"rule_id": "NISAB-422",
+
+"activity": "مطاعم مع الخدمة (لا تشمل مطاعم الوجبات السريعة)",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-423",
+
+"activity": "مطاعم مع الخدمة (لا تشمل مطاعم الوجبات السريعة)",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-424",
+
+"activity": "مطاعم مع الخدمة (لا تشمل مطاعم الوجبات السريعة)",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-425",
+
+"activity": "مطاعم مع الخدمة (لا تشمل مطاعم الوجبات السريعة)",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-426",
+
+"activity": "مطاعم مع الخدمة (لا تشمل مطاعم الوجبات السريعة)",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 25,
+
+"medium_green_min": 26,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+"high_green_max": 31,
+
+"platinum_min": 31,
+
+"platinum_max": 31
+
+},
+
+{
+
+"rule_id": "NISAB-427",
+
+"activity": "مطاعم مع الخدمة (لا تشمل مطاعم الوجبات السريعة)",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 21,
+
+"low_green_max": 26,
+
+"medium_green_min": 27,
+
+"medium_green_max": 29,
+
+"high_green_min": 30,
+
+"high_green_max": 32,
+
+"platinum_min": 32,
+
+"platinum_max": 32
+
+},
+
+{
+
+"rule_id": "NISAB-428",
+
+"activity": "الإنتاج الزراعي والحيواني والدواجن",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 7,
+
+"medium_green_min": 8,
+
+"medium_green_max": 10,
+
+"high_green_min": 11,
+
+"high_green_max": 15,
+
+"platinum_min": 15,
+
+"platinum_max": 15
+
+},
+
+{
+
+"rule_id": "NISAB-429",
+
+"activity": "الإنتاج الزراعي والحيواني والدواجن",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 7,
+
+"medium_green_min": 8,
+
+"medium_green_max": 10,
+
+"high_green_min": 11,
+
+"high_green_max": 15,
+
+"platinum_min": 15,
+
+"platinum_max": 15
+
+},
+
+{
+
+"rule_id": "NISAB-430",
+
+"activity": "الإنتاج الزراعي والحيواني والدواجن",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 7,
+
+"medium_green_min": 8,
+
+"medium_green_max": 10,
+
+"high_green_min": 11,
+
+"high_green_max": 15,
+
+"platinum_min": 15,
+
+"platinum_max": 15
+
+},
+
+{
+
+"rule_id": "NISAB-431",
+
+"activity": "الإنتاج الزراعي والحيواني والدواجن",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 5,
+
+"low_green_max": 7,
+
+"medium_green_min": 8,
+
+"medium_green_max": 10,
+
+"high_green_min": 11,
+
+"high_green_max": 15,
+
+"platinum_min": 15,
+
+"platinum_max": 15
+
+},
+
+{
+
+"rule_id": "NISAB-432",
+
+"activity": "الإنتاج الزراعي والحيواني والدواجن",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 6,
+
+"low_green_max": 9,
+
+"medium_green_min": 10,
+
+"medium_green_max": 11,
+
+"high_green_min": 12,
+
+"high_green_max": 16,
+
+"platinum_min": 16,
+
+"platinum_max": 16
+
+},
+
+{
+
+"rule_id": "NISAB-433",
+
+"activity": "الإنتاج الزراعي والحيواني والدواجن",
+
+"size": "عمالقة",
+
+"red_range": "0%",
+
+"low_green_min": 6,
+
+"low_green_max": 9,
+
+"medium_green_min": 10,
+
+"medium_green_max": 11,
+
+"high_green_min": 12,
+
+"high_green_max": 16,
+
+"platinum_min": 16,
+
+"platinum_max": 16
+
+},
+
+{
+
+"rule_id": "NISAB-434",
+
+"activity": "التموين والإعاشة",
+
+"size": "صغيرة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 12,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-435",
+
+"activity": "التموين والإعاشة",
+
+"size": "متوسطة فئة-أ",
+
+"red_range": "0%",
+
+"low_green_min": 14,
+
+"low_green_max": 17,
+
+"medium_green_min": 18,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-436",
+
+"activity": "التموين والإعاشة",
+
+"size": "متوسطة فئة-ب",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-437",
+
+"activity": "التموين والإعاشة",
+
+"size": "متوسطة فئة-ج",
+
+"red_range": "0%",
+
+"low_green_min": 15,
+
+"low_green_max": 18,
+
+"medium_green_min": 19,
+
+"medium_green_max": 21,
+
+"high_green_min": 22,
+
+"high_green_max": 26,
+
+"platinum_min": 26,
+
+"platinum_max": 26
+
+},
+
+{
+
+"rule_id": "NISAB-438",
+
+"activity": "التموين والإعاشة",
+
+"size": "كبيرة",
+
+"red_range": "0%",
+
+"low_green_min": 20,
+
+"low_green_max": 25,
+
+"medium_green_min": 26,
+
+"medium_green_max": 28,
+
+"high_green_min": 29,
+
+```
+{
+  "rule_id": "NISAB-438",
+  "activity": "التموين والإعاشة",
+  "size": "كبيرة",
+  "red_range": "0%",
+  "low_green_min": 20,
+  "low_green_max": 25,
+  "medium_green_min": 26,
+  "medium_green_max": 28,
+  "high_green_min": 29,
+  "high_green_max": 31,
+  "platinum_min": 31,
+  "platinum_max": 31
+},
+{
+  "rule_id": "NISAB-439",
+  "activity": "التموين والإعاشة",
+  "size": "عمالقة",
+  "red_range": "0%",
+  "low_green_min": 21,
+  "low_green_max": 26,
+  "medium_green_min": 27,
+  "medium_green_max": 29,
+  "high_green_min": 30,
+  "high_green_max": 32,
+  "platinum_min": 32,
+  "platinum_max": 32
+},
+{
+  "rule_id": "NISAB-440",
+  "activity": "المقاهي ومحلات تقديم المشروبات",
+  "size": "صغيرة فئة-ب",
+  "red_range": "0%",
+  "low_green_min": 12,
+  "low_green_max": 17,
+  "medium_green_min": 18,
+  "medium_green_max": 21,
+  "high_green_min": 22,
+  "high_green_max": 26,
+  "platinum_min": 26,
+  "platinum_max": 26
+},
+{
+  "rule_id": "NISAB-441",
+  "activity": "المقاهي ومحلات تقديم المشروبات",
+  "size": "متوسطة فئة-أ",
+  "red_range": "0%",
+  "low_green_min": 14,
+  "low_green_max": 17,
+  "medium_green_min": 18,
+  "medium_green_max": 21,
+  "high_green_min": 22,
+  "high_green_max": 26,
+  "platinum_min": 26,
+  "platinum_max": 26
+},
+{
+  "rule_id": "NISAB-442",
+  "activity": "المقاهي ومحلات تقديم المشروبات",
+  "size": "متوسطة فئة-ب",
+  "red_range": "0%",
+  "low_green_min": 15,
+  "low_green_max": 18,
+  "medium_green_min": 19,
+  "medium_green_max": 21,
+  "high_green_min": 22,
+  "high_green_max": 26,
+  "platinum_min": 26,
+  "platinum_max": 26
+},
+{
+  "rule_id": "NISAB-443",
+  "activity": "المقاهي ومحلات تقديم المشروبات",
+  "size": "متوسطة فئة-ج",
+  "red_range": "0%",
+  "low_green_min": 15,
+  "low_green_max": 18,
+  "medium_green_min": 19,
+  "medium_green_max": 21,
+  "high_green_min": 22,
+  "high_green_max": 26,
+  "platinum_min": 26,
+  "platinum_max": 26
+},
+{
+  "rule_id": "NISAB-444",
+  "activity": "المقاهي ومحلات تقديم المشروبات",
+  "size": "كبيرة",
+  "red_range": "0%",
+  "low_green_min": 20,
+  "low_green_max": 25,
+  "medium_green_min": 26,
+  "medium_green_max": 28,
+  "high_green_min": 29,
+  "high_green_max": 31,
+  "platinum_min": 31,
+  "platinum_max": 31
+},
+{
+  "rule_id": "NISAB-445",
+  "activity": "المقاهي ومحلات تقديم المشروبات",
+  "size": "عمالقة",
+  "red_range": "0%",
+  "low_green_min": 21,
+  "low_green_max": 26,
+  "medium_green_min": 27,
+  "medium_green_max": 29,
+  "high_green_min": 30,
+  "high_green_max": 32,
+  "platinum_min": 32,
+  "platinum_max": 32
+},
+{
+  "rule_id": "NISAB-446",
+  "activity": "مطاعم خدمة سريعة ومحلات الآيسكريم",
+  "size": "صغيرة فئة-ب",
+  "red_range": "0%",
+  "low_green_min": 12,
+  "low_green_max": 17,
+  "medium_green_min": 18,
+  "medium_green_max": 21,
+  "high_green_min": 22,
+  "high_green_max": 26,
+  "platinum_min": 26,
+  "platinum_max": 26
+},
+{
+  "rule_id": "NISAB-447",
+  "activity": "مطاعم خدمة سريعة ومحلات الآيسكريم",
+  "size": "متوسطة فئة-أ",
+  "red_range": "0%",
+  "low_green_min": 14,
+  "low_green_max": 17,
+  "medium_green_min": 18,
+  "medium_green_max": 21,
+  "high_green_min": 22,
+  "high_green_max": 26,
+  "platinum_min": 26,
+  "platinum_max": 26
+},
+{
+  "rule_id": "NISAB-448",
+  "activity": "مطاعم خدمة سريعة ومحلات الآيسكريم",
+  "size": "متوسطة فئة-ب",
+  "red_range": "0%",
+  "low_green_min": 15,
+  "low_green_max": 18,
+  "medium_green_min": 19,
+  "medium_green_max": 21,
+  "high_green_min": 22,
+  "high_green_max": 26,
+  "platinum_min": 26,
+  "platinum_max": 26
+},
+{
+  "rule_id": "NISAB-449",
+  "activity": "مطاعم خدمة سريعة ومحلات الآيسكريم",
+  "size": "متوسطة فئة-ج",
+  "red_range": "0%",
+  "low_green_min": 15,
+  "low_green_max": 18,
+  "medium_green_min": 19,
+  "medium_green_max": 21,
+  "high_green_min": 22,
+  "high_green_max": 26,
+  "platinum_min": 26,
+  "platinum_max": 26
+},
+{
+  "rule_id": "NISAB-450",
+  "activity": "مطاعم خدمة سريعة ومحلات الآيسكريم",
+  "size": "كبيرة",
+  "red_range": "0%",
+  "low_green_min": 20,
+  "low_green_max": 25,
+  "medium_green_min": 26,
+  "medium_green_max": 28,
+  "high_green_min": 29,
+  "high_green_max": 31,
+  "platinum_min": 31,
+  "platinum_max": 31
+},
+{
+  "rule_id": "NISAB-451",
+  "activity": "مطاعم خدمة سريعة ومحلات الآيسكريم",
+  "size": "عمالقة",
+  "red_range": "0%",
+  "low_green_min": 21,
+  "low_green_max": 26,
+  "medium_green_min": 27,
+  "medium_green_max": 29,
+  "high_green_min": 30,
+  "high_green_max": 32,
+  "platinum_min": 32,
+  "platinum_max": 32
+}
+```
+
+]
+
+}
+
+### **ملف 2: دليل توطين.pdf**
+
+```json
+{
+  "file_name": "دليل توطين.pdf",
+  "file_id": "fca99a63-62fd-4a29-b033-10802edd77e1",
+  "document_type": "دليل إرشادي",
+  "description": "دليل برنامج نطاقات (الإصدار 3.0) الصادر عن وزارة العمل والتنمية الاجتماعية. يشرح آلية عمل البرنامج، تصنيف الكيانات، طريقة حساب نطاق الكيان، أوزان العمالة الوطنية والحالات الخاصة، الحد الأدنى للعمالة السعودية، والمهن المقصورة على السعوديين.",
+  "compliance_model": "تفاضلي",
+  "operational_rules": [
+    {
+      "rule_id": "TWTN-001",
+      "category": "تصنيف الكيانات",
+      "description": "يتم تصنيف الكيانات حسب حجمها (عدد العمال) ونشاطها الاقتصادي. الكيانات التي لديها 6 عمال أو أكثر يتم تصنيفها إلى أحجام: صغيرة ب (6-49)، متوسطة أ (50-99)، متوسطة ب (100-199)، متوسطة ج (200-499)، كبيرة (500-2999)، وعمالقة (3000 فأكثر). الكيانات التي لديها 5 عمال أو أقل تصنف كصغيرة أ.",
+      "details": "الكيانات المجمعة: يتم تجميع الكيانات التي يقل عدد عمالها عن 6 تحت مالك واحد في كيان واحد يسمى 'كيانات مجمعة'. إذا تجاوز عدد عمال نشاط متشابه 6، يتم التعامل معه ككيان قائم."
+    },
+    {
+      "rule_id": "TWTN-002",
+      "category": "النطاقات",
+      "description": "يتم تصنيف الكيانات إلى ستة نطاقات بناءً على نسبة التوطين: أحمر، أصفر، أخضر منخفض، أخضر متوسط، أخضر مرتفع، بلاتيني.",
+      "details": "النطاق الأحمر: الأقل توطيناً. النطاق الأصفر: لم يحقق نسبة التوطين المطلوبة. النطاق الأخضر: ينقسم إلى ثلاثة مستويات (منخفض، متوسط، مرتفع). النطاق البلاتيني: الكيانات المتميزة في التوطين."
+    },
+    {
+      "rule_id": "TWTN-003",
+      "category": "طريقة حساب نطاق الكيان",
+      "description": "يتم حساب معامل نسبة التوطين بقسمة مجموع متوسطات العمالة السعودية على (مجموع متوسطات العمالة السعودية + مجموع متوسطات العمالة الوافدة) مضروباً في 100. يتم حساب المتوسط على مدى 26 أسبوعاً سابقة.",
+      "details": "يتم تحديث البيانات مرة كل نهاية أسبوع. يتم احتساب العامل السعودي فور تسجيله في التأمينات الاجتماعية. يتم احتساب العامل الوافد عند وصوله إلى المملكة."
+    },
+    {
+      "rule_id": "TWTN-004",
+      "category": "أوزان العمالة الوطنية والحالات الخاصة",
+      "description": "يتم احتساب العمالة السعودية والحالات الخاصة بأوزان مختلفة لأغراض حساب نسبة التوطين.",
+      "details": [
+        "العامل السعودي: يُحتسب بواحد صحيح إذا كان أجره الشهري 3000 ريال فأكثر.",
+        "العامل السعودي بأجر 1500-2999 ريال: يُحتسب بنصف عامل.",
+        "العامل السعودي بأجر أقل من 1500 ريال: لا يُحتسب.",
+        "العامل بدوام جزئي: يُحتسب بنصف عامل سعودي (بحد أدنى 1500 ريال).",
+        "الطالب: يُحتسب بنصف عامل سعودي (بحد أدنى 1500 ريال)، بحد أقصى 10% من عدد السعوديين (40% لخدمات التغذية).",
+        "ذو الإعاقة القادر على العمل: يُحتسب بـ 4 عمال سعوديين (بحد أدنى 3000 ريال)، بحد أقصى 10% من عدد السعوديين.",
+        "السجين المفرج عنه: يُحتسب بعاملين سعوديين لمدة عامين (بحد أدنى 3000 ريال)، بحد أقصى 10% من عدد السعوديين.",
+        "مواطنو دول مجلس التعاون الخليجي: يُحتسبون كسعوديين.",
+        "القبائل النازحة: تُحتسب ضمن العمالة السعودية.",
+        "العامل عن بعد: يُحتسب بواحد صحيح.",
+        "العامل المُعار: يُحتسب بواحد صحيح.",
+        "اللاعب في الأندية الرياضية: يُحتسب بواحد صحيح (بشرط أن يكون النشاط الفرعي نوادي رياضية).",
+        "الجنسيات (فلسطيني بوثيقة مصرية، تركستان، مقيم بلوشي): يُحتسب بربع عامل وافد (بحد أقصى 50% من متوسط الوافدين).",
+        "جنسية اتحاد ميانمار (برماوي): يُحتسب بربع عامل سعودي.",
+        "الوافد الخاص: يُحتسب كسعودي.",
+        "المالك: يُحتسب كعامل سعودي واحد على منشأة الفرع الرئيسي فقط."
+      ]
+    },
+    {
+      "rule_id": "TWTN-005",
+      "category": "الحد الأدنى للعمالة السعودية",
+      "description": "يجب أن يكون لدى المنشأة موظف سعودي واحد على الأقل بصفة مستمرة لبلوغ النطاق الأخضر. إذا لم تلتزم المنشأة، تطبق عليها أحكام النطاق الأحمر ويتم إيقاف خدمات الوزارة.",
+      "details": "يجوز احتساب صاحب العمل أو الشريك السعودي كعامل لدى الكيان إذا كان مسجلاً في التأمينات الاجتماعية لصالح الكيان ولم يكن محسوباً في نسبة التوطين لدى كيان آخر."
+    },
+    {
+      "rule_id": "TWTN-006",
+      "category": "المهن المقصورة على السعوديين",
+      "description": "لا يجوز لغير السعودي ممارسة المهن التالية، ولا يجوز إصدار تأشيرات أو رخص عمل أو تجديدها أو نقل خدمات عليها.",
+      "details": [
+        "كبير إداريين موارد بشرية",
+        "مدير شؤون عمل وعمال",
+        "مدير شؤون الموظفين",
+        "اختصاصي شؤون الأفراد",
+        "مدير علاقات الأفراد",
+        "كاتب توظيف",
+        "كاتب شؤون الأفراد",
+        "كاتب شؤون موظفين",
+        "كاتب دوام",
+        "كاتب استقبال عام",
+        "كاتب استقبال فندقي",
+        "كاتب استقبال مرضى",
+        "كاتب شكاوى",
+        "أمين صندوق",
+        "حارس أمن خاص",
+        "مسؤول علاقات حكومية",
+        "ناسخ أو مصلح مفاتيح",
+        "مخلص جمركي",
+        "العاملات في محلات المستلزمات النسائية"
+      ]
+    },
+    {
+      "rule_id": "TWTN-007",
+      "category": "خدمات الوزارة لكل نطاق",
+      "description": "تقدم الوزارة تسهيلات وخدمات مختلفة لكل نطاق، تتناقص من النطاق البلاتيني إلى النطاق الأحمر.",
+      "details": {
+        "البلاتيني والأخضر المرتفع": "استقبال طلبات رصيد التأشيرات لأي مهنة، تغيير مهن العمالة الوافدة، تجديد رخص العمل، نقل الخدمات.",
+        "الأخضر المتوسط": "استقبال طلبات رصيد التأشيرات، تغيير مهن العمالة الوافدة، تجديد رخص العمل، نقل الخدمات.",
+        "الأخضر المنخفض": "استقبال طلبات رصيد التأشيرات، تغيير مهن العمالة الوافدة، تجديد رخص العمل، نقل الخدمات (بشروط).",
+        "الأصفر": "إيقاف استقبال طلبات التأشيرات الجديدة، عدم السماح بنقل الخدمات إليها، عدم السماح بتغيير المهن، عدم السماح بتجديد رخص العمل للعمالة التي أمضت سنتين أو أكثر.",
+        "الأحمر": "إيقاف جميع الخدمات: لا تأشيرات جديدة، لا رخص عمل جديدة، لا تجديد رخص عمل، لا نقل خدمات، لا تغيير مهن، لا فتح ملفات جديدة."
+      }
+    }
+  ]
+}
+```
+
+### **ملف 3: دليل تصنيف رخص العمل.pdf**
+
+```json
+{
+  "file_name": "دليل تصنيف رخص العمل.pdf",
+  "file_id": "fe74d1ff-bd7b-4a6d-9a10-610deb518828",
+  "document_type": "دليل إرشادي",
+  "description": "دليل يشرح آلية تصنيف رخص العمل للعمالة الوافدة بناءً على الفئات المهارية (عالية المهارة، ماهرة، أساسية)، والصادر بالقرار الوزاري رقم (4602) وتاريخ 10/1/1447هـ.",
+  "compliance_model": "تفاضلي",
+  "operational_rules": [
+    {
+      "rule_id": "RKH-001",
+      "category": "تصنيف رخص العمل",
+      "description": "يتم تصنيف رخص العمل للعمالة الوافدة إلى ثلاث فئات مهارية: عالية المهارة، ماهرة، وأساسية.",
+      "details": "يعتمد التصنيف على خمسة معايير أساسية: المؤهلات العلمية، الخبرة العملية، المهارات المهنية، الأجر، والعمر."
+    },
+    {
+      "rule_id": "RKH-002",
+      "category": "الفئة الأولى: عالية المهارة",
+      "description": "تُصنف رخصة العمل في هذه الفئة إذا توفرت الشروط التالية:",
+      "details": [
+        "أن تندرج المهنة ضمن المجموعات المهنية الرئيسية (1 إلى 3) من التصنيف السعودي الموحد للمهن.",
+        "ألا يقل إجمالي أجره عن الحد الأدنى المحدد من قبل الوزارة للنشاط الاقتصادي.",
+        "استيفاء متطلبات برنامج الاعتماد المهني للمجموعة المهنية (1 إلى 3).",
+        "استيفاء نظام النقاط المحدد من قبل الوزارة بناءً على المؤهلات العلمية، الخبرة العملية، والأجر."
+      ]
+    },
+    {
+      "rule_id": "RKH-003",
+      "category": "الفئة الثانية: ماهرة",
+      "description": "تُصنف رخصة العمل في هذه الفئة إذا توفرت الشروط التالية:",
+      "details": [
+        "أن تندرج المهنة ضمن المجموعات المهنية الرئيسية (4 إلى 8) من التصنيف السعودي الموحد للمهن.",
+        "ألا يقل إجمالي أجره عن الحد الأدنى المحدد لهذه الفئة.",
+        "استيفاء متطلبات برنامج الاعتماد المهني للمجموعة المهنية (4 إلى 8).",
+        "إذا كانت المهنة ضمن المجموعات (1-3) ولكن لم يستوف الحد الأدنى للأجر المحدد لفئة عالية المهارة."
+      ]
+    },
+    {
+      "rule_id": "RKH-004",
+      "category": "الفئة الثالثة: أساسية",
+      "description": "تُصنف رخصة العمل في هذه الفئة إذا توفرت الشروط التالية:",
+      "details": [
+        "أن تندرج المهنة ضمن المجموعة المهنية الرئيسية (9) من التصنيف السعودي الموحد للمهن.",
+        "استيفاء متطلبات برنامج الاعتماد المهني للمجموعة المهنية (9).",
+        "ألا يتجاوز عمر العامل الوافد 60 عاماً.",
+        "إذا كانت المهنة ضمن المجموعات (1-8) ولكن لم يستوف الحد الأدنى للأجر المحدد لفئة ماهرة."
+      ]
+    },
+    {
+      "rule_id": "RKH-005",
+      "category": "مراحل التنفيذ",
+      "description": "يتم تطبيق التصنيف على مرحلتين رئيسيتين:",
+      "details": {
+        "المرحلة الأولى (اعتباراً من 5 يوليو 2025):": "تصنيف رخص العمل للعمالة الوافدة الموجودة حالياً في المملكة بناءً على مسمى المهنة والأجر.",
+        "المرحلة الثانية (اعتباراً من 3 أغسطس 2025):": "تصنيف رخص العمل للعمالة القادمة إلى المملكة لأول مرة وفقاً للآلية المذكورة."
+      }
+    },
+    {
+      "rule_id": "RKH-006",
+      "category": "آلية التصنيف",
+      "description": "تتم عملية التصنيف بشكل آلي عبر أنظمة الوزارة (منصة قوى)، وتظهر الفئة المهارية في حساب المنشأة.",
+      "details": "يمكن للعامل الذي لم تظهر فئته المهارية بشكل صحيح التقدم بطلب تصحيح المهنة، وفي حال استيفاء معايير الفئة المهارية المرغوب الانتقال إليها، يتم الانتقال."
+    }
+  ]
+}
+```
+
+### **ملف 4: دليل تحسين العلاقة التعاقدية.pdf**
+
+```json
+{
+  "file_name": "دليل تحسين العلاقة التعاقدية.pdf",
+  "file_id": "64b71622-b72e-4a88-bef6-a986358356d5",
+  "document_type": "دليل مستخدم",
+  "description": "دليل يشرح كيفية الاستفادة من خدمات مبادرة تحسين العلاقة التعاقدية، والتي تشمل ثلاث خدمات رئيسية: خدمة التنقل الوظيفي، خدمة الخروج والعودة، وخدمة الخروج النهائي.",
+  "compliance_model": "تفاضلي",
+  "operational_rules": [
+    {
+      "rule_id": "TQDY-001",
+      "category": "خدمة التنقل الوظيفي",
+      "description": "خدمة تنظم عمليات التنقل الوظيفي للوافدين من منشأة إلى أخرى بما يتوافق مع العقود الموثقة.",
+      "details": {
+        "ضوابط المنشأة المستفيدة": [
+          "سريان رخص العمل في منشآت الرقم الموحد.",
+          "أن تكون المنشأة ضمن النطاق الأخضر المتوسط وما فوق.",
+          "الالتزام ببرنامج حماية الأجور بنسبة لا تقل عن 80% لآخر 3 أشهر.",
+          "توثيق عقود العاملين في المنشأة بنسبة 100%.",
+          "ألا تقل نسبة الالتزام في برنامج التقيمي الذاتي عن 80%.",
+          "وجود لائحة تنظيم عمل داخلية معتمدة."
+        ],
+        "ضوابط العامل الوافد": [
+          "أن يكون العامل أحد العمالة المهنية الخاضعة لنظام العمل.",
+          "أن يكون العامل قد أكمل 12 شهراً لدى صاحب العمل الحالي (لأول دخول).",
+          "أن يكون العامل على رأس العمل.",
+          "عدم وجود طلب آخر لنقل الخدمة لدى العامل.",
+          "الالتزام بفترة الإشعار في حال سريان عقد العمل الموثق."
+        ],
+        "حالات استثنائية": [
+          "عدم وجود عقد عمل موثق للعامل.",
+          "عدم دفع أجر العامل لثلاثة أشهر متتالية.",
+          "عدم إصدار رخصة عمل للعامل خلال 90 يوماً من دخول المملكة.",
+          "إذا انتهت رخصة العمل أو الإقامة للعامل.",
+          "موافقة المنشأة الحالية على انتقال العامل."
+        ],
+        "إجراءات الطلب": [
+          "قيام المنشأة الجديدة بإنشاء عرض وظيفي عبر منصة 'قوى'.",
+          "قيام العامل بالاطلاع على العرض الوظيفي وقبوله أو رفضه عبر 'قوى'.",
+          "إشعار المنشأة الحالية بطلب انتقال العامل.",
+          "بدء احتساب فترة الإشعار."
+        ]
+      }
+    },
+    {
+      "rule_id": "TQDY-002",
+      "category": "خدمة الخروج والعودة",
+      "description": "تتيح للعامل الوافد رفع طلب إصدار تأشيرة الخروج والعودة خلال سريان عقد العمل الموثق عبر حسابه في منصة 'أبشر'.",
+      "details": {
+        "شروط الاستفادة": [
+          "أن يكون العامل ضمن العمالة المهنية الخاضعة لنظام العمل.",
+          "أن يكون لدى العامل عقد عمل موثق وساري.",
+          "أن يكون لدى العامل إقامة سارية المفعول وتغطي فترة الخروج والعودة.",
+          "أن يكون جواز السفر صالحاً لمدة لا تقل عن 90 يوماً.",
+          "أن يكون العامل داخل المملكة عند طلب التأشيرة.",
+          "ألا يوجد على العامل مخالفات مرورية."
+        ],
+        "تعليمات خاصة": [
+          "وجود حساب للعامل على منصة 'أبشر أفراد'.",
+          "يتحمل العامل التكاليف المالية المترتبة على طلب التأشيرة.",
+          "تسمح الخدمة للعامل بطلب تأشيرة لمرافقيه.",
+          "يمكن للعامل إلغاء تأشيرة الخروج والعودة.",
+          "يترتب على إخلال العامل بالتزاماته منعه من العودة للعمل في المملكة بشكل نهائي."
+        ],
+        "مدة المعالجة": "تستغرق معالجة الطلب 10 أيام من تاريخ الإنشاء."
+      }
+    },
+    {
+      "rule_id": "TQDY-003",
+      "category": "خدمة الخروج النهائي",
+      "description": "تتيح للعامل الوافد رفع طلب إصدار تأشيرة الخروج النهائي بعد انتهاء عقد العمل الموثق أو خلال سريانه عبر حسابه في منصة 'أبشر'.",
+      "details": {
+        "شروط الاستفادة": [
+          "أن يكون العامل ضمن العمالة المهنية الخاضعة لنظام العمل.",
+          "أن يكون لدى العامل عقد عمل موثق.",
+          "أن يكون لدى العامل إقامة سارية المفعول.",
+          "أن يكون جواز السفر صالحاً لمدة 60 يوماً على الأقل.",
+          "أن يكون العامل داخل المملكة عند تقديم الطلب.",
+          "ألا يكون على العامل ملكية مركبة.",
+          "عدم وجود مخالفات مرورية غير مسددة على العامل."
+        ],
+        "تعليمات خاصة": [
+          "وجود حساب للعامل على منصة 'أبشر أفراد'.",
+          "تسمح الخدمة للعامل بطلب تأشيرة لمرافقيه.",
+          "يمكن للعامل إلغاء تأشيرة الخروج النهائي.",
+          "يترتب على إخلال العامل بالتزاماته منعه من العودة للعمل في المملكة بشكل نهائي."
+        ],
+        "مدة التأشيرة": "خمسة عشر يوماً تحتسب من تاريخ إصدار التأشيرة."
+      }
+    }
+  ]
+}
+```
+
+### **ملف 5: دليل السلامة من مكتب العمل.pdf**
+
+```json
+{
+  "file_name": "دليل السلامة من مكتب العمل.pdf",
+  "file_id": "60724fdd-b447-4a08-8a23-5d31c8af0bad",
+  "document_type": "دليل إرشادي",
+  "description": "دليل إرشادي للمخاطر المتعلقة بالسلامة والصحة المهنية وكيفية التعامل معها، صادر عن إدارة السلامة والصحة المهنية في وزارة الموارد البشرية والتنمية الاجتماعية.",
+  "compliance_model": "تفاضلي",
+  "operational_rules": [
+    {
+      "rule_id": "SLMH-001",
+      "category": "أعمال صيانة الصمامات",
+      "description": "إرشادات السلامة لأعمال صيانة الصمامات.",
+      "details": [
+        "رفع الصمام بالونش: العمل من خلال أفراد مدربين، ارتداء معدات الوقاية الشخصية، اختيار الحبال المناسبة، اختبار معدات الرفع دورياً.",
+        "استخدام لهب التسخين: ارتداء نظارة واقية من الوهج وقفازات للتعامل مع الأسطح الساخنة.",
+        "فك الأجزاء الداخلية: ارتداء قفازات مقاومة للمواد الكيميائية، عمل شهادة استلام وتسليم للتأكد من خلو المعدة من المواد الخطرة.",
+        "أعمال اللحام: ارتداء نظارة واقية، وجود تهوية جيدة.",
+        "استخدام المطرقة: الكشف الدوري على العدد اليدوية واستبعاد التالف منها.",
+        "التنظيف بالمواد البترولية: إبعاد أي مصدر لهب، وجود تهوية جيدة، نشر صحيفة بيانات السلامة (MSDS)."
+      ]
+    },
+    {
+      "rule_id": "SLMH-002",
+      "category": "أعمال قطع المعادن والخراطة",
+      "description": "إرشادات السلامة لأعمال قطع المعادن والخراطة والثقب والتفريز.",
+      "details": [
+        "العمل من خلال أفراد مدربين ومؤهلين.",
+        "ارتداء معدات الوقاية الشخصية (نظارات واقية، حذاء واقي، قفازات ضد القطع).",
+        "وضع لوحات تحذيرية بجوار المعدة.",
+        "جميع التوصيلات الكهربائية سليمة ومعزولة.",
+        "مد الكابلات الكهربائية بعيداً عن مسار الأفراد والمعدات.",
+        "ارتداء ملابس عمل ذات أكمام ضيقة.",
+        "تصميم وعمل حواجز وقائية للمعدات.",
+        "تعريف مفاتيح الفصل الاضطراري لجميع المعدات.",
+        "تركيب دائرة تأريض على التوصيلات الكهربائية."
+      ]
+    },
+    {
+      "rule_id": "SLMH-003",
+      "category": "أعمال اللحام",
+      "description": "إرشادات السلامة لأعمال اللحام بالقوس الكهربائي والغاز.",
+      "details": [
+        "إزالة أي مواد قابلة للاشتعال من مكان العمل.",
+        "ارتداء معدات الوقاية الشخصية المناسبة (نظارات واقية من الوهج، قناع واقي مزود بتهوية).",
+        "العمل بكابلات لحام جيدة العزل مع التفتيش عليها دورياً.",
+        "العمل في جو جيد التهوية لتجنب أبخرة اللحام.",
+        "مد كابلات اللحام بعيداً عن مسار الأفراد.",
+        "لماكينات اللحام (ديزل/كهرباء): عدم التزويد بالوقود إلا بعد إيقافها، تغطية الأجزاء الدوارة بحواجز واقية، الكشف الدوري على التوصيلات الكهربائية.",
+        "للحام داخل أماكن مغلقة: تهوية موضعية أو ارتداء قناع واقي مزود بتهوية من خارج المكان."
+      ]
+    },
+    {
+      "rule_id": "SLMH-004",
+      "category": "أعمال الرفع وتداول مهمات التشغيل",
+      "description": "إرشادات السلامة لأعمال الرفع وتداول مهمات التشغيل.",
+      "details": [
+        "الكشف الدوري على الحبال المستخدمة واستبعاد التالف منها.",
+        "اختيار الحبل المناسب للحمل.",
+        "وضع بيانات تعريف بالحمل والقطر على كل واير تحميل.",
+        "العمل عن طريق أفراد مدربين ومؤهلين.",
+        "عدم التواجد بمسار تحت الحمل المرفوع.",
+        "معايرة الحبال دورياً.",
+        "اختبار معدات الرفع دورياً لتحديد أقصى حمولة."
+      ]
+    },
+    {
+      "rule_id": "SLMH-005",
+      "category": "المخاطر العامة في الورش",
+      "description": "إرشادات للتعامل مع المخاطر العامة في الورش.",
+      "details": [
+        "الإضاءة: تحديث توزيع وزيادة الإضاءة لتجنب الإضاءة المبهرة أو الضعيفة.",
+        "الضوضاء: إجراء قياسات دورية لمستوى الضوضاء، الكشف الدوري على العاملين، ارتداء معدات الوقاية.",
+        "فتح وغلق النوافذ: بحرص لتجنب إصابة الأيدي أو الأصابع.",
+        "التوصيلات الكهربائية: عزل التوصيلات الكهربائية المجاورة للهياكل المعدنية لتجنب الصعق الكهربائي."
+      ]
+    }
+  ]
+}
+```
