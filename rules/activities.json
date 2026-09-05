@@ -1,0 +1,943 @@
+# الانشطه 376ef68b731d805dbc58ffaa9dab86db
+
+# الانشطه
+
+{
+
+"5": {
+
+"isic_code": "XXXX",
+
+"name": "مطاعم الوجبات السريعة",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing", "public_health"],
+
+"sectoral_requirements": ["food_safety", "worker_hygiene", "health_certificates"]
+
+},
+
+"6": {
+
+"isic_code": "XXXX",
+
+"name": "مطاعم المأكولات الشعبية",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing"],
+
+"sectoral_requirements": ["food_safety", "public_health"]
+
+},
+
+"7": {
+
+"isic_code": "XXXX",
+
+"name": "مطاعم المأكولات البحرية",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing", "public_health"],
+
+"sectoral_requirements": ["food_safety", "seafood_handling", "health_certificates"]
+
+},
+
+"8": {
+
+"isic_code": "XXXX",
+
+"name": "مطاعم المأكولات الآسيوية",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing"],
+
+"sectoral_requirements": ["food_safety"]
+
+},
+
+"9": {
+
+"isic_code": "XXXX",
+
+"name": "مطاعم المأكولات الغربية",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing"],
+
+"sectoral_requirements": ["food_safety"]
+
+},
+
+"10": {
+
+"isic_code": "XXXX",
+
+"name": "مطاعم المأكولات الصحية",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing", "public_health"],
+
+"sectoral_requirements": ["food_safety", "nutrition_compliance"]
+
+},
+
+"11": {
+
+"isic_code": "XXXX",
+
+"name": "مقاهي المشروبات الساخنة",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": ["worker_hygiene"]
+
+},
+
+"12": {
+
+"isic_code": "XXXX",
+
+"name": "مقاهي العصائر والمشروبات الباردة",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "municipal_licensing", "food_safety"],
+
+"sectoral_requirements": ["food_safety"]
+
+},
+
+"13": {
+
+"isic_code": "XXXX",
+
+"name": "مخابز ومعجنات",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing"],
+
+"sectoral_requirements": ["food_safety", "worker_hygiene"]
+
+},
+
+"14": {
+
+"isic_code": "XXXX",
+
+"name": "محامص وبن",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"15": {
+
+"isic_code": "XXXX",
+
+"name": "محلات الحلويات الشرقية",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing"],
+
+"sectoral_requirements": ["food_safety"]
+
+},
+
+"16": {
+
+"isic_code": "XXXX",
+
+"name": "محلات الحلويات الغربية",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing"],
+
+"sectoral_requirements": ["food_safety"]
+
+},
+
+"17": {
+
+"isic_code": "XXXX",
+
+"name": "مطابخ الولائم",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "municipal_licensing", "public_health"],
+
+"sectoral_requirements": ["food_safety", "worker_hygiene"]
+
+},
+
+"18": {
+
+"isic_code": "XXXX",
+
+"name": "تموين غذائي (Catering)",
+
+"sector": "food_beverage",
+
+"required_categories": ["common", "food_safety", "public_health"],
+
+"sectoral_requirements": ["food_safety", "transport_safety"]
+
+},
+
+"19": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر السوبرماركت",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": ["public_health"]
+
+},
+
+"20": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر البقالة",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": ["public_health"]
+
+},
+
+"21": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الملابس الجاهزة",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"22": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الأحذية",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"23": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر العطور",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"24": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الإلكترونيات",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"25": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الجوالات",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"26": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الأثاث",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"27": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الأدوات المنزلية",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"28": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الألعاب",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"29": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر القرطاسية",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"30": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الهدايا",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"31": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الساعات",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"32": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الذهب والمجوهرات",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": ["security_compliance"]
+
+},
+
+"33": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر النظارات والبصريات",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing", "public_health"],
+
+"sectoral_requirements": ["health_certificates"]
+
+},
+
+"34": {
+
+"isic_code": "XXXX",
+
+"name": "متاجر الحيوانات الأليفة",
+
+"sector": "retail",
+
+"required_categories": ["common", "municipal_licensing", "public_health"],
+
+"sectoral_requirements": ["animal_health"]
+
+},
+
+"35": {
+
+"isic_code": "XXXX",
+
+"name": "صالونات الحلاقة الرجالية",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "municipal_licensing", "public_health"],
+
+"sectoral_requirements": ["health_certificates"]
+
+},
+
+"36": {
+
+"isic_code": "XXXX",
+
+"name": "صالونات التجميل النسائية",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "municipal_licensing", "public_health"],
+
+"sectoral_requirements": ["health_certificates"]
+
+},
+
+"37": {
+
+"isic_code": "XXXX",
+
+"name": "مراكز العناية بالبشرة",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "public_health"],
+
+"sectoral_requirements": ["health_certificates"]
+
+},
+
+"38": {
+
+"isic_code": "XXXX",
+
+"name": "مراكز العناية بالشعر",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "public_health"],
+
+"sectoral_requirements": ["health_certificates"]
+
+},
+
+"39": {
+
+"isic_code": "XXXX",
+
+"name": "مراكز المساج",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "public_health"],
+
+"sectoral_requirements": ["health_certificates"]
+
+},
+
+"40": {
+
+"isic_code": "XXXX",
+
+"name": "مراكز العناية بالأظافر",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "public_health"],
+
+"sectoral_requirements": ["health_certificates"]
+
+},
+
+"41": {
+
+"isic_code": "XXXX",
+
+"name": "مغاسل الملابس",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": ["public_health"]
+
+},
+
+"42": {
+
+"isic_code": "XXXX",
+
+"name": "مغاسل السجاد",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"43": {
+
+"isic_code": "XXXX",
+
+"name": "خدمات الخياطة والتفصيل",
+
+"sector": "personal_services",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"44": {
+
+"isic_code": "XXXX",
+
+"name": "خدمات التصوير الفوتوغرافي",
+
+"sector": "personal_services",
+
+"required_categories": ["common"],
+
+"sectoral_requirements": []
+
+},
+
+"45": {
+
+"isic_code": "XXXX",
+
+"name": "ورش إصلاح السيارات",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing", "safety_compliance"],
+
+"sectoral_requirements": ["safety_compliance"]
+
+},
+
+"46": {
+
+"isic_code": "XXXX",
+
+"name": "ورش السمكرة والدهان",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing", "safety_compliance"],
+
+"sectoral_requirements": ["hazardous_materials"]
+
+},
+
+"47": {
+
+"isic_code": "XXXX",
+
+"name": "ورش الكهرباء والميكانيكا",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing", "safety_compliance"],
+
+"sectoral_requirements": ["electrical_safety"]
+
+},
+
+"48": {
+
+"isic_code": "XXXX",
+
+"name": "ورش النجارة",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing", "safety_compliance"],
+
+"sectoral_requirements": ["woodwork_safety"]
+
+},
+
+"49": {
+
+"isic_code": "XXXX",
+
+"name": "ورش الحدادة",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing", "safety_compliance"],
+
+"sectoral_requirements": ["fire_safety"]
+
+},
+
+"50": {
+
+"isic_code": "XXXX",
+
+"name": "ورش الألمنيوم",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing", "safety_compliance"],
+
+"sectoral_requirements": []
+
+},
+
+"51": {
+
+"isic_code": "XXXX",
+
+"name": "ورش التكييف والتبريد",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": ["refrigerant_handling"]
+
+},
+
+"52": {
+
+"isic_code": "XXXX",
+
+"name": "ورش إصلاح الأجهزة المنزلية",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"53": {
+
+"isic_code": "XXXX",
+
+"name": "ورش إصلاح الجوالات",
+
+"sector": "workshops",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"54": {
+
+"isic_code": "XXXX",
+
+"name": "ورش إصلاح الساعات",
+
+"sector": "workshops",
+
+"required_categories": ["common"],
+
+"sectoral_requirements": []
+
+},
+
+"55": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات المباني",
+
+"sector": "construction",
+
+"required_categories": ["common", "building_code", "safety_compliance"],
+
+"sectoral_requirements": ["building_code"]
+
+},
+
+"56": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات الطرق",
+
+"sector": "construction",
+
+"required_categories": ["common", "building_code", "safety_compliance"],
+
+"sectoral_requirements": ["road_safety"]
+
+},
+
+"57": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات السباكة",
+
+"sector": "construction",
+
+"required_categories": ["common", "building_code"],
+
+"sectoral_requirements": ["plumbing_code"]
+
+},
+
+"58": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات الكهرباء",
+
+"sector": "construction",
+
+"required_categories": ["common", "building_code"],
+
+"sectoral_requirements": ["electrical_code"]
+
+},
+
+"59": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات التكييف",
+
+"sector": "construction",
+
+"required_categories": ["common", "building_code"],
+
+"sectoral_requirements": ["hvac_code"]
+
+},
+
+"60": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات الديكور الداخلي",
+
+"sector": "construction",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": []
+
+},
+
+"61": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات الهدم والإزالة",
+
+"sector": "construction",
+
+"required_categories": ["common", "building_code", "safety_compliance"],
+
+"sectoral_requirements": ["demolition_safety"]
+
+},
+
+"62": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات الأسفلت",
+
+"sector": "construction",
+
+"required_categories": ["common", "building_code"],
+
+"sectoral_requirements": ["road_safety"]
+
+},
+
+"63": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات البنية التحتية",
+
+"sector": "construction",
+
+"required_categories": ["common", "building_code", "safety_compliance"],
+
+"sectoral_requirements": ["infrastructure_code"]
+
+},
+
+"64": {
+
+"isic_code": "XXXX",
+
+"name": "مقاولات المسطحات الخضراء",
+
+"sector": "construction",
+
+"required_categories": ["common", "municipal_licensing"],
+
+"sectoral_requirements": ["environmental_compliance"]
+
+},
+
+"65": {
+
+"isic_code": "XXXX",
+
+"name": "نقل البضائع",
+
+"sector": "transport",
+
+"required_categories": ["common", "transport_regulations"],
+
+{
+
+"65": {
+
+"isic_code": "XXXX",
+
+"name": "نقل البضائع",
+
+"sector": "transport",
+
+"required_categories": ["common", "transport_regulations", "municipal_licensing"],
+
+"sectoral_requirements": ["vehicle_safety", "driver_compliance"]
+
+},
+
+"66": {
+
+"isic_code": "XXXX",
+
+"name": "نقل الركاب",
+
+"sector": "transport",
+
+"required_categories": ["common", "transport_regulations"],
+
+"sectoral_requirements": ["vehicle_safety", "public_transport_rules"]
+
+},
+
+"67": {
+
+"isic_code": "XXXX",
+
+"name": "خدمات التوصيل (Delivery)",
+
+"sector": "transport",
+
+"required_categories": ["common", "transport_regulations"],
+
+"sectoral_requirements": ["delivery_compliance", "vehicle_safety"]
+
+},
+
+"68": {
+
+"isic_code": "XXXX",
+
+"name": "التخزين والمستودعات",
+
+"sector": "transport",
+
+"required_categories": ["common", "municipal_licensing", "safety_compliance"],
+
+"sectoral_requirements": ["warehouse_safety", "fire_safety"]
+
+},
+
+"69": {
+
+"isic_code": "XXXX",
+
+"name": "الشحن البري",
+
+"sector": "transport",
+
+"required_categories": ["common", "transport_regulations"],
+
+"sectoral_requirements": ["vehicle_safety", "cargo_safety"]
+
+},
+
+"70": {
+
+"isic_code": "XXXX",
+
+"name": "الشحن السريع (Express)",
+
+"sector": "transport",
+
+"required_categories": ["common", "transport_regulations"],
+
+"sectoral_requirements": ["express_delivery_rules", "vehicle_safety"]
+
+}
+
+}
