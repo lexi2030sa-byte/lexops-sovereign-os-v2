@@ -1,0 +1,10 @@
+{
+  "name": "LexOps Sovereign OS",
+  "description": "نظام التشغيل السيادي للرقابة والامتثال وحوكمة بيئة العمل والأجور والنزاعات العمالية 2026",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

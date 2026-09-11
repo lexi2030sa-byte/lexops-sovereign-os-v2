@@ -178,6 +178,7 @@ export default function SovereignClipboardVault({ lang = "ar" }: SovereignClipbo
     const checkIsAdmin = () => {
       const email = auth.currentUser?.email;
       return email && (
+        email === "lexi.2030.sa@gmail.com" ||
         email === "sultan2030famli@gmail.com" || 
         email === "sultanbooy100@gmail.com" || 
         email === "founder@lexops.sa" || 
@@ -256,6 +257,7 @@ export default function SovereignClipboardVault({ lang = "ar" }: SovereignClipbo
     const checkIsAdmin = () => {
       const email = auth.currentUser?.email;
       return email && (
+        email === "lexi.2030.sa@gmail.com" ||
         email === "sultan2030famli@gmail.com" || 
         email === "sultanbooy100@gmail.com" || 
         email === "founder@lexops.sa" || 
@@ -290,6 +292,7 @@ export default function SovereignClipboardVault({ lang = "ar" }: SovereignClipbo
       const checkIsAdmin = () => {
         const email = auth.currentUser?.email;
         return email && (
+          email === "lexi.2030.sa@gmail.com" ||
           email === "sultan2030famli@gmail.com" || 
           email === "sultanbooy100@gmail.com" || 
           email === "founder@lexops.sa" || 

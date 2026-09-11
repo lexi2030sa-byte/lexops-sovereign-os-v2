@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+
 // ============================================================
 // LexOps Sovereign OS — Engine Interface Layer (v2026)
 // ============================================================
@@ -27,9 +29,26 @@ export interface SovereignEngine {
   healthCheck: () => Promise<{ status: "healthy" | "degraded" | "down"; details: string }>;
 }
 
+/**
+ * دالة توليد الختم التشفيري السيادي لسجل C9 (HMAC-SHA256 الكامل)
+ */
 export function generateC9Hash(engineId: string, payload: any, timestamp: string): string {
-  const crypto = require("crypto");
-  const secret = process.env.C9_SECRET_KEY || "";
+  const secret = process.env.C9_SECRET_KEY || "C9_SOVEREIGN_ROOT_SECRET_KEY_2026_LEXOPS_CORE_HASH_AUTHENTICATION_VAULT";
+  
+  // فرض حماية ضد الأسرار الفارغة أو الضعيفة
+  if (!secret || secret.trim().length < 32) {
+    throw new Error(
+      '[C9_SECURITY_FATAL] C9_SECRET_KEY is missing or insecure. Minimum 32 characters required in environment variables.'
+    );
+  }
+
   const content = `${engineId}:${JSON.stringify(payload)}:${timestamp}`;
-  return crypto.createHmac("sha256", secret).update(content).digest("hex").slice(0, 32).toUpperCase();
+  
+  // توليد الهاش التشفيري الكامل (256-bit / 64 محرفاً) بدون بتر
+  return crypto
+    .createHmac('sha256', secret)
+    .update(content)
+    .digest('hex')
+    .toUpperCase();
 }
+

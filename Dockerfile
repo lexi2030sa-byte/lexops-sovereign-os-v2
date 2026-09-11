@@ -4,9 +4,6 @@ WORKDIR /app
 # نسخ ملفات تعريف الحزم والاعتماديات
 COPY package*.json ./
 
-# خطوة الحصانة الحيوية: نسخ مجلد التجاوز المحلي لتفادي كسر تثبيت npm ci
-COPY node-domexception-mock ./node-domexception-mock
-
 # تثبيت الاعتماديات التشغيلية والإنتاجية فقط بأمان وسرعة
 RUN npm ci --only=production
 

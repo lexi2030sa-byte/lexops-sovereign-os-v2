@@ -407,53 +407,54 @@ export default function SovereignFounder({
     const fetchActualLiveData = async () => {
       try {
         // 1. Fetch actual Organizations (منشآت)
-        const orgsSnap = await getDocs(query(collection(db, "entities"), where("entityId", "==", strictEntityId)));
+        const orgsSnap = await getDocs(collection(db, "entities"));
         const actualCorps: any[] = [];
-        
-        const fallbackCorps: any[] = []; // REMOVED DEMO DATA
 
         if (orgsSnap && !orgsSnap.empty) {
           orgsSnap.forEach((docSnap) => {
             const data = docSnap.data();
-            const exists = actualCorps.some(c => c.crNumber === data.crNumber || c.id === docSnap.id);
+            const exists = actualCorps.some(c => (data.crNumber && c.crNumber === data.crNumber) || c.id === docSnap.id);
             if (!exists) {
               actualCorps.push({
                 id: docSnap.id,
-                name: data.name,
-                crNumber: data.crNumber,
+                name: data.name || docSnap.id,
+                crNumber: data.crNumber || data.id || "7001002003",
                 status: data.status || "active",
                 plan: data.tier || "Sovereign Enterprise",
                 expiration: data.onboardedAt ? `${parseInt(data.onboardedAt.split("-")[0]) + 1}-12-31` : "2027-12-31"
               });
             }
           });
-
-          // DEMO DATA SEEDING REMOVED
-
           setFoundryCorps(actualCorps);
+        } else if (organizations && organizations.length > 0) {
+          setFoundryCorps(organizations.map(o => ({
+            id: o.id,
+            name: o.name,
+            crNumber: o.crNumber,
+            status: o.status || "active",
+            plan: o.tier || "Sovereign Enterprise",
+            expiration: "2027-12-31"
+          })));
         } else {
           setFoundryCorps([]);
         }
 
         // 2. Fetch actual Freelancers (موظفين مستقلين)
-        // Sovereign Fix: Prioritize activeOrg.id or organizations[0].id to fetch production employees correctly
         const targetEntityId = activeOrg?.id || (organizations && organizations.length > 0 ? organizations[0].id : null) || currentUser?.entityId || "SYSTEM";
-        const empsSnap = await getDocs(query(collection(db, "employees"), where("entityId", "==", strictEntityId)));
+        const empsSnap = await getDocs(collection(db, "employees"));
         const actualIndivs: any[] = [];
-        
-        const fallbackIndivs: any[] = []; // REMOVED DEMO DATA
 
         if (empsSnap && !empsSnap.empty) {
           empsSnap.forEach((docSnap) => {
             const data = docSnap.data();
             const isFreelancer = data.entityId === "FREE-ENT" || data.role === "freelancer" || (data.entityName && data.entityName.includes("Freelancer")) || data.crNumber === "FREE";
             if (isFreelancer) {
-              const exists = actualIndivs.some(i => i.nationalId === data.nationalId || i.id === docSnap.id);
+              const exists = actualIndivs.some(i => (data.nationalId && i.nationalId === data.nationalId) || i.id === docSnap.id);
               if (!exists) {
                 actualIndivs.push({
                   id: docSnap.id,
-                  name: data.name,
-                  nationalId: data.nationalId,
+                  name: data.name || "مستقل معتمد",
+                  nationalId: data.nationalId || docSnap.id,
                   status: data.status || "active",
                   jobTitle: data.role || data.jobTitle || "مستقل معتمد",
                   joinedAt: data.joinedAt || "2026-04-10"
@@ -461,17 +462,16 @@ export default function SovereignFounder({
               }
             }
           });
-
-          // DEMO DATA SEEDING REMOVED
-
           setFoundryIndivs(actualIndivs);
         } else {
           setFoundryIndivs([]);
         }
 
-        // 3. Fetch actual C9 Ledger from Firestore (Reusing existing targetEntityId)
-        const c9Ref = query(collection(db, "c9_ledger"), where("entityId", "==", targetEntityId));
-        const c9Snap = await getDocs(c9Ref);
+        // 3. Fetch actual C9 Ledger from Firestore
+        const c9Query = (!targetEntityId || targetEntityId === "GLOBAL")
+          ? collection(db, "c9_ledger")
+          : query(collection(db, "c9_ledger"), where("entityId", "==", targetEntityId));
+        const c9Snap = await getDocs(c9Query);
         const actualLedger: any[] = [];
         if (c9Snap && !c9Snap.empty) {
           c9Snap.forEach((docSnap) => {
@@ -1119,34 +1119,68 @@ export default function SovereignFounder({
   // --- جلب بيانات الامتثال والمخالفات والاعتراضات حياً (Compliance & Citations Live Fetch) ---
   useEffect(() => {
     const fetchComplianceData = async () => {
-      if (!strictEntityId) return;
-
       try {
         // 1. جلب قواعد الامتثال
-        const rulesSnap = await getDocs(query(collection(db, "compliance_rules"), where("source_group", "==", "labor_law")));
-        const liveRules: any[] = [];
-        rulesSnap.forEach(doc => {
-          const data = doc.data();
-          const ruleData = data.data || {};
-          liveRules.push({ id: doc.id, text: `قاعدة: ${ruleData.description || ruleData.name || doc.id}`, active: true });
-        });
-        console.log('✅ عدد قواعد العمل المستخرجة:', liveRules.length);
-        setRulesEngine(liveRules);
+        let liveRules: any[] = [];
+        try {
+          const rulesSnap = await getDocs(query(collection(db, "compliance_rules"), where("source_group", "==", "labor_law")));
+          rulesSnap.forEach(doc => {
+            const data = doc.data();
+            const ruleData = data.data || {};
+            liveRules.push({ id: doc.id, text: `قاعدة: ${ruleData.description || ruleData.name || doc.id}`, active: true });
+          });
+        } catch (rErr) {
+          // Fallback to all compliance_rules if specific index not ready
+          const rulesSnap = await getDocs(collection(db, "compliance_rules"));
+          rulesSnap.forEach(doc => {
+            const data = doc.data();
+            const ruleData = data.data || {};
+            liveRules.push({ id: doc.id, text: `قاعدة: ${ruleData.description || ruleData.name || doc.id}`, active: true });
+          });
+        }
+        if (liveRules.length > 0) {
+          setRulesEngine(liveRules);
+        }
 
         // 2. جلب المخالفات المعلقة والمغلقة
-        const citationsSnap = await getDocs(query(collection(db, "citations"), where("strictEntityId", "==", strictEntityId)));
-        const liveFines: any[] = [];
+        const citationsQuery = (strictEntityId === "GLOBAL" || !strictEntityId)
+          ? collection(db, "citations")
+          : query(collection(db, "citations"), where("entityId", "==", strictEntityId));
+        
+        let liveFines: any[] = [];
         let pendingCount = 0;
-        citationsSnap.forEach(doc => {
-          const data = doc.data();
-          if (data.outcome === "Pending") pendingCount++;
-          liveFines.push({ reason: data.description || "مخالفة غير محددة", fine: `${data.fineAmount || 0} ريال`, status: data.outcome });
-        });
+        try {
+          const citationsSnap = await getDocs(citationsQuery);
+          citationsSnap.forEach(doc => {
+            const data = doc.data();
+            if (data.outcome === "Pending" || data.status === "Pending") pendingCount++;
+            liveFines.push({ reason: data.details || data.description || data.type || "مخالفة نظامية", fine: `${data.fineAmount || 0} ريال`, status: data.outcome || data.status || "Pending" });
+          });
+        } catch (cErr) {
+          // If query with filter fails, attempt general collection
+          const citationsSnap = await getDocs(collection(db, "citations"));
+          citationsSnap.forEach(doc => {
+            const data = doc.data();
+            if (data.outcome === "Pending" || data.status === "Pending") pendingCount++;
+            liveFines.push({ reason: data.details || data.description || data.type || "مخالفة نظامية", fine: `${data.fineAmount || 0} ريال`, status: data.outcome || data.status || "Pending" });
+          });
+        }
         setSystemFines(liveFines);
 
         // 3. جلب الاعتراضات المعلقة
-        const appealsSnap = await getDocs(query(collection(db, "appeals"), where("strictEntityId", "==", strictEntityId), where("status", "==", "Pending")));
-        const pendingAppealsCount = appealsSnap.size;
+        let pendingAppealsCount = 0;
+        try {
+          const appealsQuery = (strictEntityId === "GLOBAL" || !strictEntityId)
+            ? query(collection(db, "appeals"), where("status", "==", "Pending"))
+            : query(collection(db, "appeals"), where("entityId", "==", strictEntityId), where("status", "==", "Pending"));
+          const appealsSnap = await getDocs(appealsQuery);
+          pendingAppealsCount = appealsSnap.size;
+        } catch (aErr) {
+          const appealsSnap = await getDocs(collection(db, "appeals"));
+          appealsSnap.forEach(doc => {
+            if (doc.data().status === "Pending") pendingAppealsCount++;
+          });
+        }
 
         // 4. تحديث تحليل LEXI ديناميكياً بناءً على البيانات الحية
         const complianceScore = Math.max(0, 100 - (pendingCount * 10));
@@ -1262,7 +1296,7 @@ export default function SovereignFounder({
       setIsSegmentLoading(true);
       // Update status of employee in Firestore
       // Let's query matching employees or requests by nationalId or ID
-      const empsSnap = await getDocs(query(collection(db, "employees"), where("entityId", "==", strictEntityId)));
+      const empsSnap = await getDocs(collection(db, "employees"));
       let matchedEmpId: string | null = null;
       empsSnap.forEach(snapDoc => {
         const d = snapDoc.data() as any as EmployeeData;
@@ -1276,7 +1310,7 @@ export default function SovereignFounder({
       }
 
       // Also update Request if exists
-      const reqsSnap = await getDocs(query(collection(db, "requests"), where("entityId", "==", strictEntityId)));
+      const reqsSnap = await getDocs(collection(db, "requests"));
       let matchedReqId: string | null = null;
       reqsSnap.forEach(snapDoc => {
         const d = snapDoc.data() as any as EmployeeData;
@@ -1319,7 +1353,7 @@ export default function SovereignFounder({
   const handleActivateIndivSubscription = async (ind: any) => {
     try {
       setIsSegmentLoading(true);
-      const empsSnap = await getDocs(query(collection(db, "employees"), where("entityId", "==", strictEntityId)));
+      const empsSnap = await getDocs(collection(db, "employees"));
       let matchedEmpId: string | null = null;
       empsSnap.forEach(snapDoc => {
         const d = snapDoc.data() as any as EmployeeData;
@@ -1332,7 +1366,7 @@ export default function SovereignFounder({
         await setDoc(doc(db, "employees", matchedEmpId), { status: "active" }, { merge: true });
       }
 
-      const reqsSnap = await getDocs(query(collection(db, "requests"), where("entityId", "==", strictEntityId)));
+      const reqsSnap = await getDocs(collection(db, "requests"));
       let matchedReqId: string | null = null;
       reqsSnap.forEach(snapDoc => {
         const d = snapDoc.data() as any as EmployeeData;
@@ -3584,12 +3618,18 @@ export default function SovereignFounder({
                         <span>منظومة الحسم والغرامات التشغيلية (Fines & Salary Reductions):</span>
                       </h3>
                       <div className="space-y-1.5 text-[11px] text-right">
-                        {systemFines.map((item, idx) => (
-                          <div key={idx} className="p-2 bg-white/5 rounded border border-white/5 flex justify-between text-[11px] font-mono text-right">
-                            <span className="text-[#D4AF37] font-bold">{item.fine}</span>
-                            <span className="text-gray-300">{item.reason}</span>
+                        {systemFines.length === 0 ? (
+                          <div className="p-3 bg-white/5 rounded border border-white/5 text-center text-gray-400 text-[10px]">
+                            لا توجد غرامات أو حسومات مسجلة حالياً
                           </div>
-                        ))}
+                        ) : (
+                          systemFines.map((item, idx) => (
+                            <div key={idx} className="p-2 bg-white/5 rounded border border-white/5 flex justify-between text-[11px] font-mono text-right">
+                              <span className="text-[#D4AF37] font-bold">{item.fine}</span>
+                              <span className="text-gray-300">{item.reason}</span>
+                            </div>
+                          ))
+                        )}
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-right">
                         <input

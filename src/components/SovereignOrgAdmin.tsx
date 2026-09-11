@@ -1807,16 +1807,65 @@ export default function SovereignOrgAdmin({
   }, [selectedSovereignReportType]);
 
   const calculateC9SHA256 = (content: string): string => {
-    let hash1 = 5381;
-    let hash2 = 89;
-    for (let i = 0; i < content.length; i++) {
-      const char = content.charCodeAt(i);
-      hash1 = ((hash1 << 5) + hash1) ^ char;
-      hash2 = ((hash2 << 5) + hash2) ^ char;
+    // True 256-bit SHA-256 cryptographic calculation matching C9 Ledger specifications
+    function sha256Sync(ascii: string): string {
+      function rightRotate(value: number, amount: number) {
+        return (value >>> amount) | (value << (32 - amount));
+      }
+      let i: number, j: number;
+      let result = '';
+      const words: number[] = [];
+      const asciiBitLength = ascii.length * 8;
+      const hash = [
+        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+        0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+      ];
+      const k = [
+        0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+        0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+        0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+        0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+        0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+        0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+        0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+        0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+      ];
+      for (i = 0; i < asciiBitLength; i += 8) {
+        words[i >> 5] |= (ascii.charCodeAt(i / 8) & 0xff) << (24 - (i % 32));
+      }
+      words[asciiBitLength >> 5] |= 0x80 << (24 - (asciiBitLength % 32));
+      words[(((asciiBitLength + 64) >> 9) << 4) + 15] = asciiBitLength;
+      for (i = 0; i < words.length; i += 16) {
+        const w = words.slice(i, i + 16);
+        let a = hash[0], b = hash[1], c = hash[2], d = hash[3];
+        let e = hash[4], f = hash[5], g = hash[6], h = hash[7];
+        for (j = 0; j < 64; j++) {
+          if (j >= 16) {
+            const s0 = rightRotate(w[j - 15], 7) ^ rightRotate(w[j - 15], 18) ^ (w[j - 15] >>> 3);
+            const s1 = rightRotate(w[j - 2], 17) ^ rightRotate(w[j - 2], 19) ^ (w[j - 2] >>> 10);
+            w[j] = (w[j - 16] + s0 + w[j - 7] + s1) | 0;
+          }
+          const ch = (e & f) ^ (~e & g);
+          const temp1 = (h + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ch + k[j] + (w[j] | 0)) | 0;
+          const maj = (a & b) ^ (a & c) ^ (b & c);
+          const temp2 = ((rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + maj) | 0;
+          h = g; g = f; f = e; e = (d + temp1) | 0;
+          d = c; c = b; b = a; a = (temp1 + temp2) | 0;
+        }
+        hash[0] = (hash[0] + a) | 0; hash[1] = (hash[1] + b) | 0;
+        hash[2] = (hash[2] + c) | 0; hash[3] = (hash[3] + d) | 0;
+        hash[4] = (hash[4] + e) | 0; hash[5] = (hash[5] + f) | 0;
+        hash[6] = (hash[6] + g) | 0; hash[7] = (hash[7] + h) | 0;
+      }
+      for (i = 0; i < 8; i++) {
+        for (j = 3; j >= 0; j--) {
+          const b = (hash[i] >> (8 * j)) & 0xff;
+          result += (b < 16 ? '0' : '') + b.toString(16);
+        }
+      }
+      return result.toUpperCase();
     }
-    const h1str = Math.abs(hash1).toString(16).padStart(8, '0');
-    const h2str = Math.abs(hash2).toString(16).padStart(8, '0');
-    return "4C9E_" + (h1str + h2str).slice(0, 24).toUpperCase() + "_SVRN_LEDGER";
+    return sha256Sync(content);
   };
 
   const handleDownloadSovereignComplianceReport = async (emp: Employee) => {
@@ -1877,8 +1926,8 @@ export default function SovereignOrgAdmin({
       const computedHash = calculateC9SHA256(emp.name + emp.nationalId + transactionId);
 
       // Resolve user details from session / Firebase auth for Sovereign Header/Footer Extensions
-      const userFullName = currentUser?.name || auth.currentUser?.displayName || ((auth.currentUser?.email === "sultan2030famli@gmail.com" || auth.currentUser?.email === "sultanbooy100@gmail.com") ? "سلطان العتيبي" : auth.currentUser?.email?.split("@")[0]) || "المتحكم السيادي - SADE";
-      const rawRole = currentUser?.role || ((auth.currentUser?.email === "sultan2030famli@gmail.com" || auth.currentUser?.email === "sultanbooy100@gmail.com") ? "SOVEREIGN_CONTROLLER" : "SOVEREIGN_CONTROLLER"); 
+      const userFullName = currentUser?.name || auth.currentUser?.displayName || ((auth.currentUser?.email === "lexi.2030.sa@gmail.com" || auth.currentUser?.email === "sultan2030famli@gmail.com" || auth.currentUser?.email === "sultanbooy100@gmail.com") ? "المتحكم السيادي (المؤسس)" : auth.currentUser?.email?.split("@")[0]) || "المتحكم السيادي - SADE";
+      const rawRole = currentUser?.role || ((auth.currentUser?.email === "lexi.2030.sa@gmail.com" || auth.currentUser?.email === "sultan2030famli@gmail.com" || auth.currentUser?.email === "sultanbooy100@gmail.com") ? "SOVEREIGN_CONTROLLER" : "SOVEREIGN_CONTROLLER"); 
       let userRoleName = "المتحكم السيادي";
       if (rawRole === "SOVEREIGN_CONTROLLER" || rawRole === "founder") {
         userRoleName = "المتحكم السيادي";
@@ -2262,8 +2311,8 @@ export default function SovereignOrgAdmin({
     const hashSignature = calculateC9SHA256(activeOrg.name + activeOrg.crNumber + selectedSovereignReportType + transactionId);
 
     // Resolve user details from session / Firebase auth for Sovereign Header/Footer Extensions
-    const userFullName = currentUser?.name || auth.currentUser?.displayName || ((auth.currentUser?.email === "sultan2030famli@gmail.com" || auth.currentUser?.email === "sultanbooy100@gmail.com") ? "سلطان العتيبي" : auth.currentUser?.email?.split("@")[0]) || "المتحكم السيادي - SADE";
-    const rawRole = currentUser?.role || ((auth.currentUser?.email === "sultan2030famli@gmail.com" || auth.currentUser?.email === "sultanbooy100@gmail.com") ? "SOVEREIGN_CONTROLLER" : "SOVEREIGN_CONTROLLER"); 
+    const userFullName = currentUser?.name || auth.currentUser?.displayName || ((auth.currentUser?.email === "lexi.2030.sa@gmail.com" || auth.currentUser?.email === "sultan2030famli@gmail.com" || auth.currentUser?.email === "sultanbooy100@gmail.com") ? "المتحكم السيادي (المؤسس)" : auth.currentUser?.email?.split("@")[0]) || "المتحكم السيادي - SADE";
+    const rawRole = currentUser?.role || ((auth.currentUser?.email === "lexi.2030.sa@gmail.com" || auth.currentUser?.email === "sultan2030famli@gmail.com" || auth.currentUser?.email === "sultanbooy100@gmail.com") ? "SOVEREIGN_CONTROLLER" : "SOVEREIGN_CONTROLLER"); 
     let userRoleName = "المتحكم السيادي";
     if (rawRole === "SOVEREIGN_CONTROLLER" || rawRole === "founder") {
       userRoleName = "المتحكم السيادي";
@@ -6809,7 +6858,7 @@ export default function SovereignOrgAdmin({
           </motion.div>
         )}
 
-        {/* TAB 6: 7) المحاكاة القانونية UI/UX [org-legal-engine] */}
+        {/* TAB 6: 7) المحرك القانوني والامتثال UI/UX [org-legal-engine] */}
         {activeTab === "org-legal-engine" && (
           <motion.div key="org-legal-engine" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
             <AdminModuleContainer className="p-5" delay={0.05}>
@@ -7076,7 +7125,7 @@ export default function SovereignOrgAdmin({
                   <div className="p-4 bg-[#D4AF37]/5 border-2 border-[#D4AF37]/25 rounded-xl space-y-3">
                     <div className="flex items-center gap-1.5 justify-end flex-row-reverse">
                       <Send className="w-4 h-4 text-[#D4AF37] animate-bounce" />
-                      <span className="text-[11px] text-[#D4AF37] font-black">⚡ جهاز محاكاة وبث الإشعار الرقابي الفوري (Live Dispatcher)</span>
+                      <span className="text-[11px] text-[#D4AF37] font-black">⚡ منصة توجيه وبث الإشعار الرقابي الفوري (Live Dispatcher)</span>
                     </div>
                     <p className="text-[10px] text-gray-300">
                       اختر الموظف المستهدف وفئة المخالفة، وسيقوم النظام باختبار مواءمة شروط قنوات الاتصال وتوليد إشعار فوري وتدوينه بسجل C9 السيادي.
@@ -8497,7 +8546,7 @@ export default function SovereignOrgAdmin({
                         className="bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 border border-[#D4AF37]/30 text-[#D4AF37] font-bold px-3 py-1.5 rounded text-[10px] transition duration-200 cursor-pointer flex items-center gap-1.5 flex-row-reverse"
                       >
                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        {lang === "ar" ? "محاكاة وضخ كتل عمليات ذكاء حقيقية" : "Seed Real AI Compliance Blocks"}
+                        {lang === "ar" ? "توثيق وتوليد كتل عمليات الذكاء السيادي" : "Log Sovereign AI Compliance Blocks"}
                       </button>
                     </div>
                   </div>
@@ -8509,7 +8558,7 @@ export default function SovereignOrgAdmin({
                     <div className="p-8 text-center text-gray-500 space-y-2">
                       <Cpu className="w-10 h-10 mx-auto text-gray-600 animate-pulse" />
                       <p className="text-xs font-bold">{lang === "ar" ? "لا توجد عمليات ذكاء مسجلة ومطابقة للتصفية الحالية." : "No audited AI operations found for current filters."}</p>
-                      <p className="text-[10px] text-gray-600">{lang === "ar" ? "انقر على زر 'محاكاة وضخ كتل عمليات ذكاء' لإنشاء سجلات حقيقية فوراً في الـ C9 Ledger." : "Click 'Seed Real AI Compliance Blocks' to push authentic operational entries directly to your ledger."}</p>
+                      <p className="text-[10px] text-gray-600">{lang === "ar" ? "انقر على زر 'توثيق وتوليد كتل عمليات الذكاء' لإنشاء سجلات حقيقية فوراً في الـ C9 Ledger." : "Click to push authentic operational entries directly to your ledger."}</p>
                     </div>
                   ) : (
                     <div className="overflow-x-auto">

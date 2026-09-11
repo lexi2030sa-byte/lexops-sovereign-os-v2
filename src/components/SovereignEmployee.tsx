@@ -1235,7 +1235,12 @@ export default function SovereignEmployee({
                         <div className="space-y-2">
                           <h4 className="text-[10px] text-gray-400 font-extrabold text-right uppercase tracking-wider">{isAr ? "سجل طلباتي والخطوات السابقة" : "Previous Leaves Records"}</h4>
                           
-                          {leavesList.map(item => (
+                          {leavesList.length === 0 ? (
+                            <div className="p-4 bg-[#050a17] border border-white/5 rounded-xl text-center text-[10px] text-gray-500">
+                              {isAr ? "لا توجد طلبات إجازة مسجلة حالياً." : "No leave requests submitted yet."}
+                            </div>
+                          ) : (
+                            leavesList.map(item => (
                             <div key={item.id} className="p-3 bg-[#050a17] border border-white/5 rounded-xl flex justify-between items-center text-right">
                               
                               {/* Strict Status tag with colored tags for compliance */}
@@ -1255,7 +1260,7 @@ export default function SovereignEmployee({
                               </div>
 
                             </div>
-                          ))}
+                          )))}
                         </div>
 
                       </motion.div>
@@ -1288,7 +1293,12 @@ export default function SovereignEmployee({
                           <span className="text-[10px] text-gray-400 font-extrabold block">{isAr ? "آخر شهادات الدفع المسجلة" : "Available Statements Slips"}</span>
                           
                           <div className="flex gap-2 w-full overflow-x-auto pb-2 snap-x">
-                            {payslips.map(slip => (
+                            {payslips.length === 0 ? (
+                              <div className="w-full p-4 bg-[#050a17] border border-white/5 rounded-xl text-center text-[10px] text-gray-500">
+                                {isAr ? "لا توجد مسيرات رواتب مسجلة حالياً." : "No payslips available."}
+                              </div>
+                            ) : (
+                              payslips.map(slip => (
                               <div 
                                 key={slip.id}
                                 onClick={() => {
@@ -1307,7 +1317,7 @@ export default function SovereignEmployee({
                                   <span className="text-[8.5px] text-gray-500 block mt-0.5">{slip.status}</span>
                                 </div>
                               </div>
-                            ))}
+                            )))}
                           </div>
                         </div>
 
@@ -1471,9 +1481,18 @@ export default function SovereignEmployee({
 
                         {/* Violations listing according to the selected tab with evidence lightbox button */}
                         <div className="space-y-2">
-                          {localViolations
-                            .filter(v => (openViolationTab === "open" ? v.status === "نشطة" : v.status === "مغلقة"))
-                            .map(viol => (
+                          {localViolations.filter(v => (openViolationTab === "open" ? v.status === "نشطة" : v.status === "مغلقة")).length === 0 ? (
+                            <div className="p-6 bg-[#1c2541]/40 border border-white/5 rounded-xl text-center space-y-2">
+                              <ShieldCheck className="w-8 h-8 text-emerald-400 mx-auto" />
+                              <h5 className="text-xs font-bold text-white">{isAr ? "لا توجد مخالفات مسجلة" : "No infractions registered"}</h5>
+                              <p className="text-[10px] text-gray-400">
+                                {isAr ? "سجلك الوظيفي والامتثالي نظيف 100% ولا توجد أي مخالفات حالياً." : "Your compliance record is clean with zero infractions."}
+                              </p>
+                            </div>
+                          ) : (
+                            localViolations
+                              .filter(v => (openViolationTab === "open" ? v.status === "نشطة" : v.status === "مغلقة"))
+                              .map(viol => (
                               <div key={viol.id} className="p-3 bg-[#1c2541] border border-white/5 rounded-xl text-right space-y-2">
                                 <span className="text-[9px] text-red-400 font-mono font-bold bg-red-500/10 px-1 py-0.2 rounded">
                                   {viol.id}
@@ -1583,7 +1602,7 @@ export default function SovereignEmployee({
                                   </button>
                                 )}
                               </div>
-                            ))}
+                            )))}
                         </div>
 
                         {/* UPGRADED: FLOATING ACTION BUTTON (FAB) for instant general query objection */}

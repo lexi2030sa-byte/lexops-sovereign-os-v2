@@ -6,18 +6,27 @@ export { payrollEngine } from "./payrollEngine";
 export { attendanceEngine } from "./attendanceEngine";
 export { lexiEngine } from "./lexiEngine";
 export { complianceEngine } from "./complianceEngine";
+export { sreEngine } from "./sreEngine";
 
 import { SovereignEngine } from "./types";
 import { payrollEngine } from "./payrollEngine";
 import { attendanceEngine } from "./attendanceEngine";
 import { lexiEngine } from "./lexiEngine";
 import { complianceEngine } from "./complianceEngine";
+import { sreEngine } from "./sreEngine";
 
 export const engineRegistry: Record<string, SovereignEngine> = {
   [payrollEngine.id]: payrollEngine,
   [attendanceEngine.id]: attendanceEngine,
   [lexiEngine.id]: lexiEngine,
   [complianceEngine.id]: complianceEngine,
+  [sreEngine.id]: sreEngine,
+  // Sovereign Short-Code Aliases
+  SPE: payrollEngine,
+  SDE: attendanceEngine,
+  LEXI: lexiEngine,
+  S8: complianceEngine,
+  SRE: sreEngine,
 };
 
 export async function runEngine(engineId: string, payload: any, context: any) {

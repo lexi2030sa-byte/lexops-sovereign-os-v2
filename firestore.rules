@@ -1,28 +1,176 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
+    
+    // -------------------------------------------------------------
+    // دوال الأمان والسيادة — معيار الحصن 700 (Fortress 700 Functions)
+    // -------------------------------------------------------------
+    
     function isAuthenticated() {
       return request.auth != null;
     }
+    
+    function isFounder() {
+      return isAuthenticated() && (
+        (request.auth.token.role != null && request.auth.token.role in ['founder', 'SOVEREIGN_CONTROLLER']) ||
+        (request.auth.token.email != null && request.auth.token.email.matches('(?i)lexi.2030.sa@gmail.com'))
+      );
+    }
+    
+    function isTenantMember(entityId) {
+      return isAuthenticated() && (
+        isFounder() ||
+        (request.auth.token.entityId != null && request.auth.token.entityId == entityId)
+      );
+    }
+    
+    function isTenantAdmin(entityId) {
+      return isTenantMember(entityId) && (
+        isFounder() ||
+        (request.auth.token.role != null && request.auth.token.role in ['orgadmin', 'admin', 'compliance_officer'])
+      );
+    }
 
-    match /c9_ledger/{document=**} {
-      allow read, create: if isAuthenticated();
+    // فحص الاتصال الأولي
+    match /test/{document} {
+      allow read: if true;
+    }
+
+    // -------------------------------------------------------------
+    // 1. سجل الحقيقة C9 السيادي (Immutable Sovereign Ledger)
+    // حظر مطلق للتعديل والحذف - الإضافة والقراءة العامة لضمان شفافية التدقيق
+    // -------------------------------------------------------------
+    match /c9_ledger/{document} {
+      allow read: if true;
+      allow create: if true;
       allow update, delete: if false;
     }
-    match /c9_ledger_blocks/{document=**} {
-      allow read, create: if isAuthenticated();
+
+    match /c9_ledger_blocks/{document} {
+      allow read: if true;
+      allow create: if true;
       allow update, delete: if false;
     }
 
-    match /organizations/{document=**} {
-      allow read, write: if isAuthenticated();
+    match /c9_events/{document} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false;
     }
 
-    match /{collection}/{document=**} {
-      allow read, write: if isAuthenticated() 
-        && collection != 'c9_ledger' 
-        && collection != 'c9_ledger_blocks';
+    // -------------------------------------------------------------
+    // 2. القواعد واللوائح والامتثال التشغيلي (معرفة نظامية عامة)
+    // -------------------------------------------------------------
+    match /socf_rules/{document} {
+      allow read: if true;
+      allow create, update, delete: if isFounder();
+    }
+
+    match /legal_rules/{document} {
+      allow read: if true;
+      allow create, update, delete: if isFounder();
+    }
+
+    match /compliance_rules/{document} {
+      allow read: if true;
+      allow create, update, delete: if isFounder();
+    }
+
+    // المخالفات والغرامات واللوائح
+    match /violations/{document} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() || isFounder();
+      allow delete: if isFounder();
+    }
+
+    match /citations/{document} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() || isFounder();
+      allow delete: if isFounder();
+    }
+
+    // الاشتراكات وقبول مصفوفة الصلاحيات
+    match /subscriptions/{document} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() || isFounder();
+      allow delete: if isFounder();
+    }
+
+    match /matrix_acceptance/{document} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false; // وثيقة قبول غير قابلة للتراجع
+    }
+
+    // الكوادر والموظفين وسجلات الحضور والرواتب
+    match /employees/{document} {
+      allow read: if true;
+      allow create, update, delete: if isAuthenticated() || isFounder();
+    }
+
+    match /attendance/{document} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() || isFounder();
+      allow delete: if isFounder();
+    }
+
+    match /payroll/{document} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() || isFounder();
+      allow delete: if isFounder();
+    }
+
+    // الاعتراضات والالتماسات
+    match /appeals/{document} {
+      allow read: if true;
+      allow create, update: if isAuthenticated() || isFounder();
+      allow delete: if isFounder();
+    }
+
+    // استبيانات الرقابة المجتمعية
+    match /crowdsource_entries/{document} {
+      allow read, create: if true;
+      allow update, delete: if isFounder();
+    }
+
+    // طلبات الانضمام والدعم الفني
+    match /requests/{document} {
+      allow read, create, update: if true;
+      allow delete: if isFounder();
+    }
+
+    match /support_requests/{document} {
+      allow read, create: if true;
+      allow update, delete: if isFounder();
+    }
+
+    // سجلات الكيانات والمنشآت
+    match /entities/{document} {
+      allow read: if true;
+      allow create, update, delete: if isAuthenticated() || isFounder();
+    }
+
+    match /organizations/{document} {
+      allow read: if true;
+      allow create, update, delete: if isAuthenticated() || isFounder();
+    }
+
+    // الحافظة الرقمية المشفرة
+    match /sovereign_clipboards/{document} {
+      allow read, write: if true;
+    }
+
+    // ملفات المستخدمين
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() || isFounder();
+    }
+
+    // -------------------------------------------------------------
+    // 3. الحظر الشامل الافتراضي (Default Absolute Deny)
+    // حظر مطلق لأي مسار آخر غير محدد صراحة لمنع أي تسريب
+    // -------------------------------------------------------------
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }
